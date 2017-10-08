@@ -7,7 +7,7 @@
         Anything you want
     </div>
     <!-- Default to the left -->
-    <strong>Copyright &copy; 2016 <a href="#">Company</a>.</strong> All rights reserved.
+    <strong>Copyright &copy; 2017 <a href="#">Techno Forms (Pvt) Ltd</a>.</strong> All rights reserved.
 </footer>
 <!-- Control Sidebar -->
 <aside class="control-sidebar control-sidebar-dark">
