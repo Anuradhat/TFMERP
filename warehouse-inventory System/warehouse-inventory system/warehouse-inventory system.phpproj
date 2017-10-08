@@ -27,6 +27,7 @@
     <Compile Include="auth_v2.php" />
     <Compile Include="categorie.php" />
     <Compile Include="change_password.php" />
+    <Compile Include="customer.php" />
     <Compile Include="daily_sales.php" />
     <Compile Include="delete_categorie.php" />
     <Compile Include="delete_group.php" />
