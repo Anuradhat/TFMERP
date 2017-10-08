@@ -60,9 +60,9 @@ desired effect
             <!-- Logo -->
             <a href="index2.html" class="logo">
                 <!-- mini logo for sidebar mini 50x50 pixels -->
-                <span class="logo-mini"><b>A</b>LT</span>
+                <span class="logo-mini"><b>T</b>ER</span>
                 <!-- logo for regular state and mobile devices -->
-                <span class="logo-lg"><b>Admin</b>LTE</span>
+                <span class="logo-lg"><b>TFM</b>ERP</span>
             </a>
             <!-- Header Navbar -->
             <nav class="navbar navbar-static-top" role="navigation">
@@ -178,14 +178,14 @@ desired effect
                                 <!-- The user image in the navbar-->
                                 <img src="libs/dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
                                 <!-- hidden-xs hides the username on small devices so only the image appears. -->
-                                <span class="hidden-xs">Alexander Pierce</span>
+                                <span class="hidden-xs">Anuradha Thennakoon</span>
                             </a>
                             <ul class="dropdown-menu">
                                 <!-- The user image in the menu -->
                                 <li class="user-header">
                                     <img src="libs/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
                                     <p>
-                                        Alexander Pierce - Web Developer
+                                        Anuradha Thennakoon - Web Developer
                                         <small>Member since Nov. 2012</small>
                                     </p>
                                 </li>
@@ -233,7 +233,7 @@ desired effect
                         <img src="libs/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
                     </div>
                     <div class="pull-left info">
-                        <p>Alexander Pierce</p>
+                        <p>Anuradha Thennakoon</p>
                         <!-- Status -->
                         <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
                     </div>
