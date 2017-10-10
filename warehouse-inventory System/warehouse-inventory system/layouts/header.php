@@ -84,14 +84,14 @@ desired effect
                                 <span class="label label-warning">10</span>
                             </a>
                             <ul class="dropdown-menu">
-                                <li class="header">You have 10 notifications</li>
+                                <li class="header">You have 10 pending jobs</li>
                                 <li>
                                     <!-- Inner Menu: contains the notifications -->
                                     <ul class="menu">
                                         <li>
                                             <!-- start notification -->
                                             <a href="#">
-                                                <i class="fa fa-users text-aqua"></i> 5 new members joined today
+                                                <i class="fa fa-users text-aqua"></i> 5 Jobs
                                             </a>
                                         </li>
                                         <!-- end notification -->
@@ -172,18 +172,18 @@ desired effect
                 <ul class="sidebar-menu" data-widget="tree">
                     <li class="header">Master files</li>
                     <!-- Optionally, you can add icons to the links -->
-                    <li class="active"><a href="#"><i class="fa fa-link"></i> <span>Link</span></a></li>
-                    <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
+                    <!--<li class="active"><a href="#"><i class="fa fa-link"></i> <span>Link</span></a></li>
+                    <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>-->
                     <li class="treeview">
                         <a href="#">
-                            <i class="fa fa-link"></i> <span>Multilevel</span>
+                            <i class="fa fa-link"></i> <span>Master Files</span>
                             <span class="pull-right-container">
                                 <i class="fa fa-angle-left pull-right"></i>
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            <li><a href="#">Link in level 2</a></li>
-                            <li><a href="#">Link in level 2</a></li>
+                            <li><a href="#">Supplier</a></li>
+                            <li><a href="#">Customer</a></li>
                         </ul>
                     </li>
                 </ul>
