@@ -55,11 +55,7 @@ $all_customers = find_by_sql("call spSelectAllCustomers();")
                                         <th>Action</th>
                                         <th>Customer Code</th>
                                         <th>Customer Name</th>
-                                        <th>Address</th>
                                         <th>Telephone</th>
-                                        <th>Fax</th>
-                                        <th>E-Mail</th>
-                                        <th>Contact Person</th>
                                         <th>VAT</th>
                                         <th>SVAT</th>
                                         <th>Credit Period</th>
@@ -72,7 +68,7 @@ $all_customers = find_by_sql("call spSelectAllCustomers();")
                                         <td>
                                             <div class="form-group">
                                                 <form method="post" action="add_customer.php">
-                                                    <button type="submit" class="btn  btn-info btn-xs glyphicon glyphicon-edit"></button>
+                                                    <button type="submit" class="btn  btn-warning btn-xs glyphicon glyphicon-edit"></button>
                                                 </form>
                                                 <form method="post" action="delete_customer.php">
                                                     <button type="submit" class="btn btn-danger btn-xs glyphicon glyphicon-trash" data-toggle="confirmation"></button>
@@ -81,11 +77,7 @@ $all_customers = find_by_sql("call spSelectAllCustomers();")
                                         </td>
                                         <td><?php echo remove_junk($cus['CustomerCode']); ?></td>
                                         <td><?php echo remove_junk(ucfirst($cus['CustomerName'])); ?></td>
-                                        <td><?php echo remove_junk(ucfirst($cus['DeliveryAddress1']).','.ucfirst($cus['DeliveryAddress2']).ucfirst($cus['DeliveryAddress3'])); ?></td>
                                         <td><?php echo remove_junk($cus['Tel']); ?></td>
-                                        <td><?php echo remove_junk($cus['Fax']); ?></td>
-                                        <td><?php echo remove_junk($cus['Email']); ?> </td>
-                                        <td><?php echo remove_junk(ucfirst($cus['ContactPerson'])); ?></td>
                                         <td><?php echo remove_junk($cus['VATNo']); ?></td>
                                         <td> <?php echo remove_junk($cus['SVATNo']); ?></td>
                                         <td> <?php echo remove_junk($cus['CreditPeriod']); ?></td>
@@ -102,8 +94,9 @@ $all_customers = find_by_sql("call spSelectAllCustomers();")
             </div>
         </div>
     </div>
-
+    <form method="get" action="add_customer.php">
+        <button type="submit" name="add_cat" class="btn btn-primary">Add Customer</button>
+    </form>
 </section>
-
 
 <?php include_once('layouts/footer.php'); ?>

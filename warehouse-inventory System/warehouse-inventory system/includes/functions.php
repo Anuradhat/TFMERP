@@ -16,6 +16,7 @@ function real_escape($str){
 function remove_junk($str){
   $str = nl2br($str);
   $str = htmlspecialchars(strip_tags($str, ENT_QUOTES));
+  $str = $str != '' ? $str : 'NULL';
   return $str;
 }
 /*--------------------------------------------------------------*/
@@ -66,8 +67,8 @@ function redirect($url, $permanent = false)
     {
       header('Location: ' . $url, true, ($permanent === true) ? 301 : 302);
     }
-    
-    
+
+
     exit();
 }
 /*--------------------------------------------------------------*/
@@ -96,7 +97,14 @@ function read_date($str){
 /* Function for  Readable Make date time
 /*--------------------------------------------------------------*/
 function make_date(){
-  return strftime("%Y-%m-%d %H:%M:%S", time());
+  return strftime("%Y-%m-%d", time());
+}
+
+/*--------------------------------------------------------------*/
+/* Function for  Readable Make date time
+/*--------------------------------------------------------------*/
+function make_datetime(){
+    return strftime("%Y-%m-%d %H:%M:%S", time());
 }
 /*--------------------------------------------------------------*/
 /* Function for  Readable date time

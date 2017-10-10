@@ -17,6 +17,7 @@
     <IncludeDebugInformation>false</IncludeDebugInformation>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="add_customer.php" />
     <Compile Include="add_group.php" />
     <Compile Include="add_product.php" />
     <Compile Include="add_sale.php" />

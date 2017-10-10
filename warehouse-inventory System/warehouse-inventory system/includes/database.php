@@ -50,13 +50,64 @@ public function query($sql)
       }
       if (!$this->query_id)
         // only for Develope mode
-              die("Error on this Query :<pre> " . $sql ."</pre>");
+              die("Error on this Query :<pre> " . $sql ." Error: ".$this->con->error."</pre>");
        // For production mode
         //  die("Error on Query");
-
        return $this->query_id;
 
    }
+
+public function query1($sql)
+{
+
+    if (trim($sql != "")) {
+        $query =  $this->con->query($sql);
+        mysqli_next_result($this->db->conn_id);
+    }
+
+}
+
+
+function callProcedure($pv_proc, $pt_args )
+{
+    if (empty($pv_proc) || empty($pt_args))
+    {
+        return false;
+    }
+    $lv_call   = "CALL `$pv_proc`(";
+    $lv_select = "SELECT";
+    $lv_log = "";
+    foreach($pt_args as $lv_key=>$lv_value)
+    {
+        $lv_query = "SET @_$lv_key = '$lv_value'";
+        $lv_log .= $lv_query.";\n";
+        //if (!$lv_result =  $this->con->query($lv_query))
+        //{
+        //    /* Write log */
+        //    return false;
+        //}
+        $lv_call   .= " @_$lv_key,";
+        $lv_select .= " @_$lv_key AS $lv_key,";
+    }
+    $lv_call   = substr($lv_call, 0, -1).")";
+    $lv_select = substr($lv_select, 0, -1);
+    $lv_log .= $lv_call;
+    if ($lv_result = $this->con->query($lv_call))
+    {
+        if($lo_result = $this->con->query($lv_select))
+        {
+            $lt_result = $lo_result->fetch_assoc();
+            $lo_result->free();
+            return $lt_result;
+        }
+        /* Write log */
+        return false;
+    }
+    /* Write log */
+    return false;
+}
+
+
 
 /*--------------------------------------------------------------*/
 /* Function for Query Helper

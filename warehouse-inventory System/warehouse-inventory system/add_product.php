@@ -26,8 +26,8 @@
      $query .=" name,quantity,buy_price,sale_price,categorie_id,media_id,date";
      $query .=") VALUES (";
      $query .=" '{$p_name}', '{$p_qty}', '{$p_buy}', '{$p_sale}', '{$p_cat}', '{$media_id}', '{$date}'";
-     $query .=")";
-     $query .=" ON DUPLICATE KEY UPDATE name='{$p_name}'";
+     $query .=");";
+    // $query .=" ON DUPLICATE KEY UPDATE name='{$p_name}'";
      if($db->query($query)){
        $session->msg('s',"Product added ");
        redirect('add_product.php', false);
