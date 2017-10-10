@@ -24,10 +24,10 @@
             <ul class="control-sidebar-menu">
                 <li>
                     <a href="javascript:;">
-                        <i class="menu-icon fa fa-birthday-cake bg-red"></i>
+                        <i class="menu-icon fa fa-anchor bg-red"></i>
                         <div class="menu-info">
-                            <h4 class="control-sidebar-subheading">Langdon's Birthday</h4>
-                            <p>Will be 23 on April 24th</p>
+                            <h4 class="control-sidebar-subheading">GRN Created</h4>
+                            <p>GRN No 10</p>
                         </div>
                     </a>
                 </li>
