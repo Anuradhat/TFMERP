@@ -18,6 +18,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="add_customer.php" />
+    <Compile Include="add_department.php" />
     <Compile Include="add_group.php" />
     <Compile Include="add_product.php" />
     <Compile Include="add_sale.php" />
@@ -31,13 +32,18 @@
     <Compile Include="customer.php" />
     <Compile Include="daily_sales.php" />
     <Compile Include="delete_categorie.php" />
+    <Compile Include="delete_customer.php" />
+    <Compile Include="delete_department.php" />
     <Compile Include="delete_group.php" />
     <Compile Include="delete_media.php" />
     <Compile Include="delete_product.php" />
     <Compile Include="delete_sale.php" />
     <Compile Include="delete_user.php" />
+    <Compile Include="department.php" />
     <Compile Include="edit_account.php" />
     <Compile Include="edit_categorie.php" />
+    <Compile Include="edit_customer.php" />
+    <Compile Include="edit_department.php" />
     <Compile Include="edit_group.php" />
     <Compile Include="edit_product.php" />
     <Compile Include="edit_sale.php" />
@@ -7247,9 +7253,6 @@
     <Content Include="libs\dist\js\pages\dashboard2.js" />
     <Content Include="libs\images\.DS_Store" />
     <Content Include="libs\js\functions.js" />
-    <Content Include="LICENSE" />
-    <Content Include="oswa_inv.sql" />
-    <Content Include="README.md" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="includes\" />

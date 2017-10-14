@@ -42,7 +42,7 @@ $all_customers = find_by_sql("call spSelectAllCustomers();")
             </div>
         </div>
         <form method="get" action="add_customer.php">
-            <button type="submit" name="add_cat" class="btn btn-primary">Add Customer</button>
+            <button type="submit" name="add_cus" class="btn btn-primary">Add Customer</button>
         </form>
         <!-- /.box-header -->
         <div class="box-body">
@@ -70,11 +70,13 @@ $all_customers = find_by_sql("call spSelectAllCustomers();")
                                         <tr>
                                             <td>
                                                 <div class="form-group">
-                                                    <form method="post" action="add_customer.php">
-                                                        <button type="submit" class="btn  btn-warning btn-xs glyphicon glyphicon-edit"></button>
+                                                    <form method="post" action="edit_customer.php" >
+                                                        <button type="submit" name="customer" class="btn  btn-warning btn-xs glyphicon glyphicon-edit"></button>
+                                                        <input type="hidden" name="CustomerCode" value="<?php echo remove_junk($cus['CustomerCode']);?>" />
                                                     </form>
                                                     <form method="post" action="delete_customer.php">
-                                                        <button type="submit" class="btn btn-danger btn-xs glyphicon glyphicon-trash" data-toggle="confirmation"></button>
+                                                        <button type="submit" name="customer" class="btn btn-danger btn-xs glyphicon glyphicon-trash"></button>
+                                                        <input type="hidden" name="CustomerCode" value="<?php echo remove_junk($cus['CustomerCode']);?>" />
                                                     </form>
                                                 </div>
                                             </td>

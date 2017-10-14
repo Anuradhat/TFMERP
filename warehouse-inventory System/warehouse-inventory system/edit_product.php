@@ -4,6 +4,7 @@
   // Checkin What level user has permission to view this page
    page_require_level(2);
 ?>
+
 <?php
 $product = find_by_id('products',(int)$_GET['id']);
 $all_categories = find_all('categories');
@@ -13,6 +14,8 @@ if(!$product){
   redirect('product.php');
 }
 ?>
+
+
 <?php
  if(isset($_POST['product'])){
     $req_fields = array('product-title','product-categorie','product-quantity','buying-price', 'saleing-price' );

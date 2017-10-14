@@ -1,17 +1,37 @@
 <?php
-$page_title = 'Add Customer';
+$page_title = 'Edit Customer';
 require_once('includes/load.php');
 page_require_level(2);
 ?>
 
 <?php
-if(isset($_POST['add_customer'])){
-    $req_fields = array('CustomerCode','CustomerName','NIC','CustomerAddress2','CustomerAddress3','ContactPerson', 'Tel');
+if(isset($_POST['customer'])){
+   $p_cuscode = remove_junk($db->escape($_POST['CustomerCode']));
+
+   if(!$p_cuscode){
+        $session->msg("d","Missing customer identification.");
+        redirect('customer.php');
+    }
+   else
+   {
+       $customer = find_by_sp("call spSelectCustomerFromCode('{$p_cuscode}');");
+
+       if(!$customer){
+        $session->msg("d","Missing customer details.");
+        redirect('customer.php');
+       }
+   }
+}
+?>
+
+<?php
+if(isset($_POST['edit_customer'])){
+    $req_fields = array('hCustomerCode','CustomerName','NIC','CustomerAddress2','CustomerAddress3','ContactPerson', 'Tel');
     
     validate_fields($req_fields);
     
     if(empty($errors)){
-        $p_CustomerCode  = remove_junk($db->escape($_POST['CustomerCode']));
+        $p_CustomerCode  = remove_junk($db->escape($_POST['hCustomerCode']));
         $p_CustomerName  = remove_junk($db->escape($_POST['CustomerName']));
         $p_NIC  = remove_junk($db->escape($_POST['NIC']));
         $p_CustomerAddress1 = remove_junk($db->escape($_POST['CustomerAddress1']));
@@ -28,7 +48,7 @@ if(isset($_POST['add_customer'])){
         $p_DeliveryAddress2 = remove_junk($db->escape($_POST['DeliveryAddress2']));
         $p_DeliveryAddress3 = remove_junk($db->escape($_POST['DeliveryAddress3']));
         $p_DeliveryTo = remove_junk($db->escape($_POST['DeliveryTo']));
-       
+        
         $p_CreditPeriod  = remove_junk($db->escape($_POST['CreditPeriod']));
         $p_VATNo  = remove_junk($db->escape($_POST['VATNo']));
         $p_SVATNo = remove_junk($db->escape($_POST['SVATNo']));
@@ -37,38 +57,22 @@ if(isset($_POST['add_customer'])){
         $date    = make_date();
         $user = "anush";
 
-        //$query  = "INSERT INTO tfmCustomerM (";
-        //$query .=" CustomerCode,CustomerName,DeliveryAddress1,DeliveryAddress2,DeliveryAddress3,Tel,Fax,Email,ContactPerson,VATNo,SVATNo,CreditPeriod,SalesPersonCode";
-        //$query .=") VALUES (";
-        //$query .=" '{$p_CustomerCode}', '{$p_CustomerName}', '{$p_DeliveryAddress1}', '{$p_DeliveryAddress2}', '{$p_DeliveryAddress3}', '{$p_Tel}', '{$p_Fax}',";
-        //$query .=" '{$p_Email}','{$p_ContactPerson}', '{$p_VATNo}', '{$p_SVATNo}',{$p_CreditPeriod},'{$p_SalesPersonCode}'";
-        //$query .=");";
-
-        $cus_count = find_by_sp("call spSelectCustomerFromCode('{$p_CustomerCode}');");
-
-        if($cus_count)
-        {
-            $session->msg("d", "This customer code exist in the system.");
-            redirect('add_customer.php',false);
-        }
-
-
-        $query  = "call spInsertCustomer('{$p_CustomerCode}','{$p_CustomerName}','{$p_NIC}','{$p_CustomerAddress1}','{$p_CustomerAddress2}',
+        $query  = "call spUpdateCustomer('{$p_CustomerCode}','{$p_CustomerName}','{$p_NIC}','{$p_CustomerAddress1}','{$p_CustomerAddress2}',
                    '{$p_CustomerAddress3}','{$p_DeliveryAddress1}','{$p_DeliveryAddress2}','{$p_DeliveryAddress3}','{$p_DeliveryTo}','{$p_Tel}',
                    '{$p_Fax}','{$p_Email}','{$p_ContactPerson}','{$p_VATNo}','{$p_SVATNo}',{$p_CreditPeriod},'{$p_SalesPersonCode}',
                    '{$date}','{$user}');";
 
         if($db->query($query)){
-            $session->msg('s',"Customer added ");
-            redirect('add_customer.php', false);
-        } else {
-            $session->msg('d',' Sorry failed to added!');
+            $session->msg('s',"Customer updated");
             redirect('customer.php', false);
+        } else {
+            $session->msg('d',' Sorry failed to updated!');
+            //redirect('customer.php', false);
         }
 
     } else{
         $session->msg("d", $errors);
-        redirect('add_customer.php',false);
+        redirect('edit_customer.php',false);
     }
 }
 
@@ -79,7 +83,7 @@ if(isset($_POST['add_customer'])){
 <section class="content-header">
     <h1>
         Customer Master
-        <small>Enter New Customer Details</small>
+        <small>Optional description</small>
     </h1>
     <ol class="breadcrumb">
         <li>
@@ -99,7 +103,7 @@ if(isset($_POST['add_customer'])){
 <!-- Main content -->
 <section class="content">
     <!-- Your Page Content Here -->
-    <form method="post" action="add_customer.php">
+    <form method="post" action="edit_customer.php">
         <div class="box box-default">
             <div class="box-header with-border">
                 <h3 class="box-title">Basic Details</h3>
@@ -116,26 +120,27 @@ if(isset($_POST['add_customer'])){
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Customer Code</label>
-                            <input type="text" class="form-control" name="CustomerCode" placeholder="Customer Code" required="required" />
-                        </div>
+                            <input type="text" class="form-control" name="CustomerCode" placeholder="Customer Code" required="required" value="<?php echo remove_junk($customer['CustomerCode']);?>" readonly="readonly" disabled="disabled"/>
+                             <input type="hidden" name="hCustomerCode" value="<?php echo remove_junk($customer['CustomerCode']);?>" />
+                         </div>
 
                         <div class="form-group">
                             <label>NIC</label>
-                            <input type="text" class="form-control" name="NIC" placeholder="National Identity Card No" />
+                            <input type="text" class="form-control" name="NIC" placeholder="National Identity Card No" value="<?php echo remove_junk($customer['Nic']); ?>"/>
                         </div>
                     </div>
 
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Customer Name</label>
-                            <input type="text" class="form-control" name="CustomerName" placeholder="Customer Name" required="required" />
+                            <input type="text" class="form-control" name="CustomerName" placeholder="Customer Name" required="required" value="<?php echo remove_junk($customer['CustomerName']); ?>" />
                         </div>
 
                         <div class="form-group">
                             <label>Customer Address</label>
-                            <input type="text" class="form-control" name="CustomerAddress1" placeholder="Street Number" />
-                            <input type="text" class="form-control" name="CustomerAddress2" placeholder="Street Name" required="required" />
-                            <input type="text" class="form-control" name="CustomerAddress3" placeholder="City" required="required" />
+                            <input type="text" class="form-control" name="CustomerAddress1" placeholder="Street Number" value="<?php echo remove_junk($customer['CustomerAddress1']); ?>" />
+                            <input type="text" class="form-control" name="CustomerAddress2" placeholder="Street Name" required="required" value="<?php echo remove_junk($customer['CustomerAddress2']); ?>" />
+                            <input type="text" class="form-control" name="CustomerAddress3" placeholder="City" required="required" value="<?php echo remove_junk($customer['CustomerAddress3']); ?>" />
                         </div>
                     </div>
                 </div>
@@ -158,24 +163,24 @@ if(isset($_POST['add_customer'])){
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Telephone</label>
-                            <input type="tel" class="form-control" name="Tel" placeholder="Customer Telephone" required="required" />
+                            <input type="tel" class="form-control" name="Tel" placeholder="Customer Telephone" required="required" value="<?php echo remove_junk($customer['Tel']); ?>"/>
                         </div>
 
                         <div class="form-group">
                             <label>E-mail</label>
-                            <input type="email" class="form-control" name="Email" placeholder="Customer Email" />
+                            <input type="email" class="form-control" name="Email" placeholder="Customer Email" value="<?php echo remove_junk($customer['Email']); ?>"/>
                         </div>
                     </div>
 
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Fax</label>
-                            <input type="tel" class="form-control" name="Fax" placeholder="Customer Fax" />
+                            <input type="tel" class="form-control" name="Fax" placeholder="Customer Fax" value="<?php echo remove_junk($customer['Fax']); ?>"/>
                         </div>
 
                         <div class="form-group">
                             <label>Contact Person</label>
-                            <input type="text" class="form-control" name="ContactPerson" placeholder="Contact Person" required="required" />
+                            <input type="text" class="form-control" name="ContactPerson" placeholder="Contact Person" required="required" value="<?php echo remove_junk($customer['ContactPerson']); ?>"/>
                         </div>
                     </div>
 
@@ -199,16 +204,16 @@ if(isset($_POST['add_customer'])){
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Delivery Address</label>
-                            <input type="text" class="form-control" name="DeliveryAddress1" placeholder="Street Number" />
-                            <input type="text" class="form-control" name="DeliveryAddress2" placeholder="Street Name" />
-                            <input type="text" class="form-control" name="DeliveryAddress3" placeholder="City" />
+                            <input type="text" class="form-control" name="DeliveryAddress1" placeholder="Street Number" value="<?php echo remove_junk($customer['DeliveryAddress1']); ?>"/>
+                            <input type="text" class="form-control" name="DeliveryAddress2" placeholder="Street Name" value="<?php echo remove_junk($customer['DeliveryAddress2']); ?>"/>
+                            <input type="text" class="form-control" name="DeliveryAddress3" placeholder="City" value="<?php echo remove_junk($customer['DeliveryAddress3']); ?>"/>
                         </div>
                     </div>
 
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Delivery To</label>
-                            <input type="text" class="form-control" name="DeliveryTo" placeholder="Person Name" />
+                            <input type="text" class="form-control" name="DeliveryTo" placeholder="Person Name" value="<?php echo remove_junk($customer['DeliveryTo']); ?>"/>
                         </div>
                     </div>
                 </div>
@@ -232,19 +237,19 @@ if(isset($_POST['add_customer'])){
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Credit Period</label>
-                            <input type="text" class="form-control" name="CreditPeriod" placeholder="Credit Period (days)" />
+                            <input type="number" class="form-control" name="CreditPeriod" placeholder="Credit Period (days)" value="<?php echo remove_junk($customer['CreditPeriod']); ?>"/>
                         </div>
 
                         <div class="form-group">
                             <label>SVAT No</label>
-                            <input type="text" class="form-control" name="SVATNo" placeholder="SVAT Number" />
+                            <input type="text" class="form-control" name="SVATNo" placeholder="SVAT Number" value="<?php echo remove_junk($customer['SVATNo']); ?>"/>
                         </div>
                     </div>
 
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>VAT No</label>
-                            <input type="text" class="form-control" name="VATNo" placeholder="VAT Number" />
+                            <input type="text" class="form-control" name="VATNo" placeholder="VAT Number" value="<?php echo remove_junk($customer['VATNo']); ?>"/>
                         </div>
 
                         <div class="form-group">
@@ -259,7 +264,7 @@ if(isset($_POST['add_customer'])){
             </div>
         </div>
 
-        <button type="submit" name="add_customer" class="btn btn-success btn-lg">Save  </button>
+        <button type="submit" name="edit_customer" class="btn btn-success btn-lg">Save  </button>
        </form>
 
         <div class="form-group"></div>

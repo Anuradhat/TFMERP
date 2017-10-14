@@ -33,9 +33,56 @@ function find_by_id($table,$id)
           if($result = $db->fetch_assoc($sql))
             return $result;
           else
+              return null;
+    }
+}
+
+/*--------------------------------------------------------------*/
+/*  Function for Find data from stored procedure
+/*--------------------------------------------------------------*/
+function find_by_sp($sql)
+{
+    global $db;
+    if($sql){
+        $sql = $db->query($sql);
+        if($result = $db->fetch_assoc($sql))
+            return $result;
+          else
             return null;
      }
 }
+
+/*--------------------------------------------------------------*/
+/* Function for Delete data from stored procedure
+/*--------------------------------------------------------------*/
+function delete_by_sp($sql)
+{
+  global $db;
+  if($sql)
+   {
+    $db->query($sql);
+    return ($db->affected_rows() === 1) ? true : false;
+   }
+}
+
+/*--------------------------------------------------------------*/
+/* Function for check data exist for given select stored procedure
+/*--------------------------------------------------------------*/
+function row_count_sp($sql)
+{
+    global $db;
+    if($sql){
+        $result = $db->query($sql);
+        $num_rows = mysql_num_rows($result);
+
+        if($num_rows)
+            return $num_rows;
+        else
+            return null;
+    }
+}
+
+
 /*--------------------------------------------------------------*/
 /* Function for Delete data from table by id
 /*--------------------------------------------------------------*/
