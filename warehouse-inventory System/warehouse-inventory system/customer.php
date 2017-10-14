@@ -41,6 +41,9 @@ $all_customers = find_by_sql("call spSelectAllCustomers();")
                 </button>
             </div>
         </div>
+        <form method="get" action="add_customer.php">
+            <button type="submit" name="add_cat" class="btn btn-primary">Add Customer</button>
+        </form>
         <!-- /.box-header -->
         <div class="box-body">
             <div class="row">
@@ -63,26 +66,26 @@ $all_customers = find_by_sql("call spSelectAllCustomers();")
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php foreach ($all_customers as $cus):?>
-                                    <tr>
-                                        <td>
-                                            <div class="form-group">
-                                                <form method="post" action="add_customer.php">
-                                                    <button type="submit" class="btn  btn-warning btn-xs glyphicon glyphicon-edit"></button>
-                                                </form>
-                                                <form method="post" action="delete_customer.php">
-                                                    <button type="submit" class="btn btn-danger btn-xs glyphicon glyphicon-trash" data-toggle="confirmation"></button>
-                                                </form>
-                                            </div>
-                                        </td>
-                                        <td><?php echo remove_junk($cus['CustomerCode']); ?></td>
-                                        <td><?php echo remove_junk(ucfirst($cus['CustomerName'])); ?></td>
-                                        <td><?php echo remove_junk($cus['Tel']); ?></td>
-                                        <td><?php echo remove_junk($cus['VATNo']); ?></td>
-                                        <td> <?php echo remove_junk($cus['SVATNo']); ?></td>
-                                        <td> <?php echo remove_junk($cus['CreditPeriod']); ?></td>
-                                        <td><?php echo remove_junk(ucfirst($cus['SalesPersonCode'])); ?></td>
-                                    </tr>
+                                    <?php foreach ($all_customers as $cus): ?>
+                                        <tr>
+                                            <td>
+                                                <div class="form-group">
+                                                    <form method="post" action="add_customer.php">
+                                                        <button type="submit" class="btn  btn-warning btn-xs glyphicon glyphicon-edit"></button>
+                                                    </form>
+                                                    <form method="post" action="delete_customer.php">
+                                                        <button type="submit" class="btn btn-danger btn-xs glyphicon glyphicon-trash" data-toggle="confirmation"></button>
+                                                    </form>
+                                                </div>
+                                            </td>
+                                            <td><?php echo remove_junk($cus['CustomerCode']); ?></td>
+                                            <td><?php echo remove_junk(ucfirst($cus['CustomerName'])); ?></td>
+                                            <td><?php echo remove_junk($cus['Tel']); ?></td>
+                                            <td><?php echo remove_junk($cus['VATNo']); ?></td>
+                                            <td> <?php echo remove_junk($cus['SVATNo']); ?></td>
+                                            <td> <?php echo remove_junk($cus['CreditPeriod']); ?></td>
+                                            <td><?php echo remove_junk(ucfirst($cus['SalesPersonCode'])); ?></td>
+                                        </tr>
                                     <?php endforeach; ?>
                                 </tbody>
                             </table>
@@ -94,9 +97,7 @@ $all_customers = find_by_sql("call spSelectAllCustomers();")
             </div>
         </div>
     </div>
-    <form method="get" action="add_customer.php">
-        <button type="submit" name="add_cat" class="btn btn-primary">Add Customer</button>
-    </form>
+
 </section>
 
 <?php include_once('layouts/footer.php'); ?>
