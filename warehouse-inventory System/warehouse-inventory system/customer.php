@@ -19,7 +19,7 @@ $all_customers = find_by_sql("call spSelectAllCustomers();")
                 <i class="fa fa-dashboard"></i>Master
             </a>
         </li>
-        <li class="active">Cutomer</li>
+        <li class="active">Customer</li>
     </ol>
     <style>
         form {
@@ -33,7 +33,7 @@ $all_customers = find_by_sql("call spSelectAllCustomers();")
     <!-- Your Page Content Here -->
     <div class="box box-default">
         <div class="box-header with-border">
-            <h3 class="box-title">Cutomer Details</h3>
+            <h3 class="box-title">Customer Details</h3>
 
             <div class="box-tools pull-right">
                 <button type="button" class="btn btn-box-tool" data-widget="collapse">
