@@ -17,6 +17,9 @@
     <IncludeDebugInformation>false</IncludeDebugInformation>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="delete_tax.php" />
+    <Compile Include="edit_tax.php" />
+    <Compile Include="add_tax.php" />
     <Compile Include="add_subcategory.php" />
     <Compile Include="add_category.php" />
     <Compile Include="add_customer.php" />
@@ -30,6 +33,7 @@
     <Compile Include="auth.php" />
     <Compile Include="auth_v2.php" />
     <Compile Include="delete_subcategory.php" />
+    <Compile Include="tax.php" />
     <Compile Include="edit_subcategory.php" />
     <Compile Include="subcategory.php" />
     <Compile Include="category.php" />

@@ -2,6 +2,8 @@
 $page_title = 'Subcategory Master - Edit Subcategory';
 require_once('includes/load.php');
 page_require_level(2);
+
+$all_Category = find_by_sql("call spSelectAllCategory();")
 ?>
 
 
@@ -34,11 +36,12 @@ if(isset($_POST['edit_subcategory'])){
     if(empty($errors)){
         $p_SubcategoryCode  = remove_junk($db->escape($_POST['hSubcategoryCode']));
         $p_SubcategoryDesc  = remove_junk($db->escape($_POST['SubcategoryDesc']));
+        $p_Commission   = remove_junk($db->escape($_POST['Commission']));
 
         $date    = make_date();
         $user = "anush";
 
-        $query  = "call spUpdateSubcategory('{$p_SubcategoryCode}','{$p_SubcategoryDesc}','{$date}','{$user}');";
+        $query  = "call spUpdateSubcategory('{$p_SubcategoryCode}','{$p_SubcategoryDesc}',{$p_Commission},'{$date}','{$user}');";
 
         if($db->query($query)){
             $session->msg('s',"Subcategory updated");
@@ -96,16 +99,29 @@ if(isset($_POST['edit_subcategory'])){
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label>Subcategory Code</label>
-                            <input type="text" class="form-control" name="SubcategoryCode" placeholder="Subcategory Code" required="required" value="<?php echo remove_junk($subcategory['SubcategoryCode']);?>" readonly="readonly" disabled="disabled" />
-                            <input type="hidden" name="hSubcategoryCode" value="<?php echo remove_junk($subcategory['SubcategoryCode']);?>" />
+                            <label>Category</label>
+                            <select class="form-control" name="Category" placeholder="Select Category" required="required" readonly="readonly" disabled="disabled">
+                                <option value="">Select Category</option><?php  foreach ($all_Category as $cat): ?>
+                                <option value="<?php echo $cat['CategoryCode'] ?>" <?php if($cat['CategoryCode'] === $subcategory['CategoryCode']): echo "selected"; endif; ?>  ><?php echo $cat['CategoryDesc'] ?>
+                                </option><?php endforeach; ?>
+                            </select>
+                        </div>
+               
+                        <div class="form-group">
+                            <label>Subcategory Description</label>
+                            <input type="text" class="form-control" name="SubcategoryDesc" placeholder="Subcategory Description" required="required" value="<?php echo remove_junk($subcategory['SubcategoryDesc']);?>" />
                         </div>
                     </div>
 
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label>Subcategory Description</label>
-                            <input type="text" class="form-control" name="SubcategoryDesc" placeholder="Subcategory Description" required="required" value="<?php echo remove_junk($subcategory['SubcategoryDesc']);?>" />
+                            <label>Subcategory Code</label>
+                            <input type="text" class="form-control" name="SubcategoryCode" placeholder="Subcategory Code" required="required" value="<?php echo remove_junk($subcategory['SubcategoryCode']);?>" readonly="readonly" disabled="disabled" />
+                            <input type="hidden" name="hSubcategoryCode" value="<?php echo remove_junk($subcategory['SubcategoryCode']);?>" />
+                        </div> 
+                        <div class="form-group">
+                            <label>Commission (%)</label>
+                            <input type="number" class="form-control" name="Commission" placeholder="Commission (%)" value="<?php echo remove_junk($subcategory['Commission']);?>"/>
                         </div>
                     </div>
                 </div>

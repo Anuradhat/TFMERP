@@ -43,6 +43,7 @@ function find_by_id($table,$id)
 function find_by_sp($sql)
 {
     global $db;
+    $db->db_connect();
     if($sql){
         $sql = $db->query($sql);
         mysqli_next_result( $db->conn_id );

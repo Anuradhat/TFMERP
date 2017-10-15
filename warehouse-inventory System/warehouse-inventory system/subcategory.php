@@ -56,8 +56,10 @@ $all_Subcategory = find_by_sql("call spSelectAllSubcategory();")
                                 <thead>
                                     <tr>
                                         <th>Action</th>
+                                        <th>Category</th>
                                         <th>Subcategory Code</th>
                                         <th>Subcategory Description</th>
+                                        <th>Commission (%)</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -76,10 +78,16 @@ $all_Subcategory = find_by_sql("call spSelectAllSubcategory();")
                                             </div>
                                         </td>
                                         <td>
+                                            <?php echo remove_junk($scat['CategoryDesc']); ?>
+                                        </td>
+                                        <td>
                                             <?php echo remove_junk($scat['SubcategoryCode']); ?>
                                         </td>
                                         <td>
                                             <?php echo remove_junk(ucfirst($scat['SubcategoryDesc'])); ?>
+                                        </td>
+                                        <td>
+                                            <?php echo remove_junk($scat['Commission']); ?>
                                         </td>
                                     </tr>
                                     <?php endforeach; ?>

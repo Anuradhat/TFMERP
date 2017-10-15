@@ -1,16 +1,16 @@
 <?php
-$page_title = 'Category Master';
+$page_title = 'Tax Master';
 require_once('includes/load.php');
 page_require_level(1);
 
-$all_Category = find_by_sql("call spSelectAllCategory();")
+$all_taxrates = find_by_sql("call spSelectAllTaxRates();")
 ?>
 
 
 <?php include_once('layouts/header.php'); ?>
 <section class="content-header">
     <h1>
-        Category Master
+        Tax Master
         <small>Optional description</small>
     </h1>
     <ol class="breadcrumb">
@@ -19,7 +19,7 @@ $all_Category = find_by_sql("call spSelectAllCategory();")
                 <i class="fa fa-dashboard"></i>Master
             </a>
         </li>
-        <li class="active">Category</li>
+        <li class="active">Tax</li>
     </ol>
     <style>
         form {
@@ -33,7 +33,7 @@ $all_Category = find_by_sql("call spSelectAllCategory();")
     <!-- Your Page Content Here -->
     <div class="box box-default">
         <div class="box-header with-border">
-            <h3 class="box-title">Category Details</h3>
+            <h3 class="box-title">Tax Details</h3>
 
             <div class="box-tools pull-right">
                 <button type="button" class="btn btn-box-tool" data-widget="collapse">
@@ -41,8 +41,8 @@ $all_Category = find_by_sql("call spSelectAllCategory();")
                 </button>
             </div>
         </div>
-        <form method="get" action="add_category.php">
-            <button type="submit" name="add_cat" class="btn btn-primary">Add Category</button>
+        <form method="get" action="add_tax.php">
+            <button type="submit" name="add_tax" class="btn btn-primary">Add Tax</button>
         </form>
         <!-- /.box-header -->
         <div class="box-body">
@@ -56,34 +56,34 @@ $all_Category = find_by_sql("call spSelectAllCategory();")
                                 <thead>
                                     <tr>
                                         <th>Action</th>
-                                        <th>Department</th>
-                                        <th>Category Code</th>
-                                        <th>Category Description</th>
+                                        <th>Tax Code</th>
+                                        <th>Tax Description</th>
+                                        <th>Tax Rate</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php foreach ($all_Category as $cat): ?>
+                                    <?php foreach ($all_taxrates as $tax): ?>
                                     <tr>
                                         <td>
                                             <div class="form-group">
-                                                <form method="post" action="edit_category.php">
-                                                    <button type="submit" name="category" class="btn  btn-warning btn-xs glyphicon glyphicon-edit"></button>
-                                                    <input type="hidden" name="CategoryCode" value="<?php echo remove_junk($cat['CategoryCode']);?>" />
+                                                <form method="post" action="edit_tax.php">
+                                                    <button type="submit" name="taxrate" class="btn  btn-warning btn-xs glyphicon glyphicon-edit"></button>
+                                                    <input type="hidden" name="TaxCode" value="<?php echo remove_junk($tax['TaxCode']);?>" />
                                                 </form>
-                                                <form method="post" action="delete_category.php">
-                                                    <button type="submit" name="category" class="btn btn-danger btn-xs glyphicon glyphicon-trash"></button>
-                                                    <input type="hidden" name="CategoryCode" value="<?php echo remove_junk($cat['CategoryCode']);?>" />
+                                                <form method="post" action="delete_tax.php">
+                                                    <button type="submit" name="taxrate" class="btn btn-danger btn-xs glyphicon glyphicon-trash"></button>
+                                                    <input type="hidden" name="TaxCode" value="<?php echo remove_junk($tax['TaxCode']);?>" />
                                                 </form>
                                             </div>
                                         </td>
                                         <td>
-                                            <?php echo remove_junk(ucfirst($cat['DepartmentDesc'])); ?>
+                                            <?php echo remove_junk($tax['TaxCode']); ?>
                                         </td>
                                         <td>
-                                            <?php echo remove_junk($cat['CategoryCode']); ?>
+                                            <?php echo remove_junk(ucfirst($tax['TaxDesc'])); ?>
                                         </td>
                                         <td>
-                                            <?php echo remove_junk(ucfirst($cat['CategoryDesc'])); ?>
+                                            <?php echo remove_junk(ucfirst($tax['TaxRate'])); ?>
                                         </td>
                                     </tr>
                                     <?php endforeach; ?>

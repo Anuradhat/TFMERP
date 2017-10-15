@@ -2,22 +2,28 @@
 $page_title = 'Category Master - New Category';
 require_once('includes/load.php');
 page_require_level(2);
+
+$all_departments = find_by_sql("call spSelectAllDepartments();")
+
 ?>
 
 <?php
 if(isset($_POST['add_category'])){
-    $req_fields = array('CategoryCode','CategoryDesc');
+    $req_fields = array('Department','CategoryCode','CategoryDesc');
 
     validate_fields($req_fields);
 
     if(empty($errors)){
+        $p_DepartmentCode  = remove_junk($db->escape($_POST['Department']));
         $p_CategoryCode  = remove_junk($db->escape($_POST['CategoryCode']));
         $p_CategoryDesc  = remove_junk($db->escape($_POST['CategoryDesc']));
+
+        $catcode = $p_DepartmentCode.$p_CategoryCode;
 
         $date    = make_date();
         $user = "anush";
 
-        $cat_count = find_by_sp("call spSelectCategoryFromCode('{$p_CategoryCode}');");
+        $cat_count = find_by_sp("call spSelectCategoryFromCode('{$catcode}');");
 
         if($cat_count)
         {
@@ -25,9 +31,7 @@ if(isset($_POST['add_category'])){
             redirect('add_category.php',false);
         }
 
-        $db->db_connect();
-
-        $query  = "call spInsertCategory('{$p_CategoryCode}','{$p_CategoryDesc}','{$date}','{$user}');";
+        $query  = "call spInsertCategory('{$p_DepartmentCode}','{$catcode}','{$p_CategoryDesc}','{$date}','{$user}');";
 
         if($db->query($query)){
             $session->msg('s',"Category added ");
@@ -86,15 +90,26 @@ if(isset($_POST['add_category'])){
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label>Category Code</label>
-                            <input type="text" class="form-control" name="CategoryCode" placeholder="Category Code" required="required" />
+                            <label>Department</label>
+                            <select class="form-control" name="Department" placeholder="Select Department" required="required">
+                                <option value="">Select Department</option>
+                                <?php  foreach ($all_departments as $dep): ?>
+                                <option value="<?php echo $dep['DepartmentCode'] ?>"><?php echo $dep['DepartmentDesc'] ?>
+                                </option><?php endforeach; ?>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Category Description</label>
+                            <input type="text" class="form-control" name="CategoryDesc" placeholder="Category Description" required="required" />
                         </div>
                     </div>
 
                     <div class="col-md-6">
+
                         <div class="form-group">
-                            <label>Category Description</label>
-                            <input type="text" class="form-control" name="CategoryDesc" placeholder="Category Description" required="required" />
+                            <label>Category Code</label>
+                            <input type="text" class="form-control" name="CategoryCode" placeholder="Category Code" required="required" />
                         </div>
                     </div>
                 </div>
