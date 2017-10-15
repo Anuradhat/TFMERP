@@ -12,7 +12,7 @@ require_once('includes/load.php');
     <?php echo display_msg($msg); ?>
     <form method="post" action="auth.php" class="clearfix">
         <div style="width: 400px; height: max-content" class="box box-primary box-group box-solid  center-block">
-            <div class="box-body">
+            <div class="box-body with-border">
                 <div class="form-group">
                     <label for="username" class="control-label">Username</label>
                     <input type="name" class="form-control" name="username" placeholder="Username">

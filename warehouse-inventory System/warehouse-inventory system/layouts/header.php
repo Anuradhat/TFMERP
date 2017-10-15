@@ -184,7 +184,7 @@ desired effect
                         </a>
                         <ul class="treeview-menu">
                             <li><a href="customer.php">Customer</a></li>
-                            <li><a href="#">Supplier</a></li>
+                            <li><a href="Supplier.php">Supplier</a></li>
                         </ul>
                     </li>
                 </ul>
