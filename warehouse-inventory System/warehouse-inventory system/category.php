@@ -1,16 +1,16 @@
 <?php
-$page_title = 'Department Master';
+$page_title = 'Category Master';
 require_once('includes/load.php');
 page_require_level(1);
 
-$all_departments = find_by_sql("call spSelectAllDepartments();")
+$all_Category = find_by_sql("call spSelectAllCategory();")
 ?>
 
 
 <?php include_once('layouts/header.php'); ?>
 <section class="content-header">
     <h1>
-        Department Master
+        Category Master
         <small>Optional description</small>
     </h1>
     <ol class="breadcrumb">
@@ -19,7 +19,7 @@ $all_departments = find_by_sql("call spSelectAllDepartments();")
                 <i class="fa fa-dashboard"></i>Master
             </a>
         </li>
-        <li class="active">Department</li>
+        <li class="active">Category</li>
     </ol>
     <style>
         form {
@@ -33,7 +33,7 @@ $all_departments = find_by_sql("call spSelectAllDepartments();")
     <!-- Your Page Content Here -->
     <div class="box box-default">
         <div class="box-header with-border">
-            <h3 class="box-title">Department Details</h3>
+            <h3 class="box-title">Category Details</h3>
 
             <div class="box-tools pull-right">
                 <button type="button" class="btn btn-box-tool" data-widget="collapse">
@@ -41,8 +41,8 @@ $all_departments = find_by_sql("call spSelectAllDepartments();")
                 </button>
             </div>
         </div>
-        <form method="get" action="add_department.php">
-            <button type="submit" name="add_dep" class="btn btn-primary">Add Department</button>
+        <form method="get" action="add_category.php">
+            <button type="submit" name="add_cat" class="btn btn-primary">Add Category</button>
         </form>
         <!-- /.box-header -->
         <div class="box-body">
@@ -56,30 +56,30 @@ $all_departments = find_by_sql("call spSelectAllDepartments();")
                                 <thead>
                                     <tr>
                                         <th>Action</th>
-                                        <th>Department Code</th>
-                                        <th>Department Description</th>
+                                        <th>Category Code</th>
+                                        <th>Category Description</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php foreach ($all_departments as $dep): ?>
+                                    <?php foreach ($all_Category as $cat): ?>
                                     <tr>
                                         <td>
                                             <div class="form-group">
-                                                <form method="post" action="edit_department.php">
-                                                    <button type="submit" name="department" class="btn  btn-warning btn-xs glyphicon glyphicon-edit"></button>
-                                                    <input type="hidden" name="DepartmentCode" value="<?php echo remove_junk($dep['DepartmentCode']);?>" />
+                                                <form method="post" action="edit_category.php">
+                                                    <button type="submit" name="category" class="btn  btn-warning btn-xs glyphicon glyphicon-edit"></button>
+                                                    <input type="hidden" name="CategoryCode" value="<?php echo remove_junk($cat['CategoryCode']);?>" />
                                                 </form>
-                                                <form method="post" action="delete_department.php">
-                                                    <button type="submit" name="department" class="btn btn-danger btn-xs glyphicon glyphicon-trash"></button>
-                                                    <input type="hidden" name="DepartmentCode" value="<?php echo remove_junk($dep['DepartmentCode']);?>" />
+                                                <form method="post" action="delete_category.php">
+                                                    <button type="submit" name="category" class="btn btn-danger btn-xs glyphicon glyphicon-trash"></button>
+                                                    <input type="hidden" name="CategoryCode" value="<?php echo remove_junk($cat['CategoryCode']);?>" />
                                                 </form>
                                             </div>
                                         </td>
                                         <td>
-                                            <?php echo remove_junk($dep['DepartmentCode']); ?>
+                                            <?php echo remove_junk($cat['CategoryCode']); ?>
                                         </td>
                                         <td>
-                                            <?php echo remove_junk(ucfirst($dep['DepartmentDesc'])); ?>
+                                            <?php echo remove_junk(ucfirst($cat['CategoryDesc'])); ?>
                                         </td>
                                     </tr>
                                     <?php endforeach; ?>

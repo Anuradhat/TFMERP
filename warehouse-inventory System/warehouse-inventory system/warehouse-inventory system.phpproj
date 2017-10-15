@@ -17,6 +17,8 @@
     <IncludeDebugInformation>false</IncludeDebugInformation>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="add_subcategory.php" />
+    <Compile Include="add_category.php" />
     <Compile Include="add_customer.php" />
     <Compile Include="add_department.php" />
     <Compile Include="add_group.php" />
@@ -27,11 +29,14 @@
     <Compile Include="ajax.php" />
     <Compile Include="auth.php" />
     <Compile Include="auth_v2.php" />
-    <Compile Include="categorie.php" />
+    <Compile Include="delete_subcategory.php" />
+    <Compile Include="edit_subcategory.php" />
+    <Compile Include="subcategory.php" />
+    <Compile Include="category.php" />
     <Compile Include="change_password.php" />
     <Compile Include="customer.php" />
     <Compile Include="daily_sales.php" />
-    <Compile Include="delete_categorie.php" />
+    <Compile Include="delete_category.php" />
     <Compile Include="delete_customer.php" />
     <Compile Include="delete_department.php" />
     <Compile Include="delete_group.php" />
@@ -41,7 +46,7 @@
     <Compile Include="delete_user.php" />
     <Compile Include="department.php" />
     <Compile Include="edit_account.php" />
-    <Compile Include="edit_categorie.php" />
+    <Compile Include="edit_category.php" />
     <Compile Include="edit_customer.php" />
     <Compile Include="edit_department.php" />
     <Compile Include="edit_group.php" />

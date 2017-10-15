@@ -1,5 +1,5 @@
 <?php
-$page_title = 'Edit Department';
+$page_title = 'Department Master - Edit Department';
 require_once('includes/load.php');
 page_require_level(2);
 ?>

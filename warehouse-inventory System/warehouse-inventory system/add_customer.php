@@ -1,5 +1,5 @@
 <?php
-$page_title = 'Add Customer';
+$page_title = 'Customer Master - New Customer';
 require_once('includes/load.php');
 page_require_level(2);
 ?>

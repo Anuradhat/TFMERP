@@ -1,5 +1,5 @@
 <?php
-$page_title = 'Edit Customer';
+$page_title = 'Customer Master - Edit Customer';
 require_once('includes/load.php');
 page_require_level(2);
 ?>

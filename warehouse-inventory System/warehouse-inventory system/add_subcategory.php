@@ -1,45 +1,45 @@
 <?php
-$page_title = 'Department Master - New Department';
+$page_title = 'Subcategory Master - New Subcategory';
 require_once('includes/load.php');
 page_require_level(2);
 ?>
 
 <?php
-if(isset($_POST['add_department'])){
-    $req_fields = array('DepartmentCode','DepartmentDesc');
+if(isset($_POST['add_subcategory'])){
+    $req_fields = array('SubcategoryCode','SubcategoryDesc');
 
     validate_fields($req_fields);
 
     if(empty($errors)){
-        $p_DepartmentCode  = remove_junk($db->escape($_POST['DepartmentCode']));
-        $p_DepartmentDesc  = remove_junk($db->escape($_POST['DepartmentDesc']));
+        $p_SubcategoryCode  = remove_junk($db->escape($_POST['SubcategoryCode']));
+        $p_SubcategoryDesc  = remove_junk($db->escape($_POST['SubcategoryDesc']));
 
         $date    = make_date();
         $user = "anush";
 
-        $dep_count = find_by_sp("call spSelectDepartmentFromCode('{$p_DepartmentCode}');");
+        $scat_count = find_by_sp("call spSelectSubcategoryFromCode('{$p_SubcategoryCode}');");
 
-        if($dep_count)
+        if($scat_count)
         {
-            $session->msg("d", "This department code exist in the system.");
-            redirect('add_department.php',false);
+            $session->msg("d", "This subcategory code exist in the system.");
+            redirect('add_subcategory.php',false);
         }
 
         $db->db_connect();
 
-        $query  = "call spInsertDepartment('{$p_DepartmentCode}','{$p_DepartmentDesc}','{$date}','{$user}');";
+        $query  = "call spInsertSubcategory('{$p_SubcategoryCode}','{$p_SubcategoryDesc}','{$date}','{$user}');";
 
         if($db->query($query)){
-            $session->msg('s',"Department added ");
-            redirect('add_department.php', false);
+            $session->msg('s',"Subcategory added ");
+            redirect('add_subcategory.php', false);
         } else {
             $session->msg('d',' Sorry failed to added!');
-            redirect('department.php', false);
+            redirect('subcategory.php', false);
         }
 
     } else{
         $session->msg("d", $errors);
-        redirect('add_department.php',false);
+        redirect('add_subcategory.php',false);
     }
 }
 
@@ -49,8 +49,8 @@ if(isset($_POST['add_department'])){
 <?php include_once('layouts/header.php'); ?>
 <section class="content-header">
     <h1>
-        Department Master
-        <small>Enter New Department Details</small>
+        Subcategory Master
+        <small>Enter New Subcategory Details</small>
     </h1>
     <ol class="breadcrumb">
         <li>
@@ -58,7 +58,7 @@ if(isset($_POST['add_department'])){
                 <i class="fa fa-dashboard"></i>Master
             </a>
         </li>
-        <li class="active">Department</li>
+        <li class="active">Subcategory</li>
     </ol>
     <style>
         form {
@@ -70,7 +70,7 @@ if(isset($_POST['add_department'])){
 <!-- Main content -->
 <section class="content">
     <!-- Your Page Content Here -->
-    <form method="post" action="add_department.php">
+    <form method="post" action="add_subcategory.php">
         <div class="box box-default">
             <div class="box-header with-border">
                 <h3 class="box-title">Basic Details</h3>
@@ -86,15 +86,15 @@ if(isset($_POST['add_department'])){
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label>Department Code</label>
-                            <input type="text" class="form-control" name="DepartmentCode" placeholder="Department Code" required="required" />
+                            <label>Subcategory Code</label>
+                            <input type="text" class="form-control" name="SubcategoryCode" placeholder="Subcategory Code" required="required" />
                         </div>
                     </div>
 
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label>Department Description</label>
-                            <input type="text" class="form-control" name="DepartmentDesc" placeholder="Department Description" required="required" />
+                            <label>Subcategory Description</label>
+                            <input type="text" class="form-control" name="SubcategoryDesc" placeholder="Subcategory Description" required="required" />
                         </div>
                     </div>
                 </div>
@@ -102,10 +102,10 @@ if(isset($_POST['add_department'])){
         </div>
 
 
-        <button type="submit" name="add_department" class="btn btn-success btn-lg">Save  </button>
+        <button type="submit" name="add_subcategory" class="btn btn-success btn-lg">Save  </button>
     </form>
 
-        <div class="form-group"></div>
+    <div class="form-group"></div>
 
 </section>
 

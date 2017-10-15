@@ -1,5 +1,5 @@
 <?php
-$page_title = 'All categories';
+$page_title = 'Customer Master';
 require_once('includes/load.php');
 page_require_level(1);
 

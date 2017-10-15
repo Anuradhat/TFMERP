@@ -45,10 +45,12 @@ function find_by_sp($sql)
     global $db;
     if($sql){
         $sql = $db->query($sql);
+        mysqli_next_result( $db->conn_id );
         if($result = $db->fetch_assoc($sql))
             return $result;
           else
             return null;
+
      }
 }
 
