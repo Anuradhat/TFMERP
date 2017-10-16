@@ -8,6 +8,7 @@ and open the template in the editor.
 $page_title = 'Supplier';
 require_once('includes/load.php');
 page_require_level(1);
+$All_suppliers = find_by_sql("call spSelectAllSuppliers")
 ?>
 <?php
 include_once 'layouts/header.php';
@@ -61,6 +62,22 @@ include_once 'layouts/header.php';
                                         <th>currency</th>
                                     </tr>
                                 </thead>
+                                <tbody>
+                                    <?php foreach ($All_suppliers as $sup): ?>
+                                    <tr>
+                                        <td><?php echo remove_junk($sup['SupplierCode']); ?></td>
+                                        <td><?php echo remove_junk($sup['SupplierName']); ?></td>
+                                        <td><?php echo remove_junk($sup['SupplierTel']); ?></td>
+                                        <td><?php echo remove_junk($sup['SupplierFax']); ?></td>
+                                        <td><?php echo remove_junk($sup['SupplierEmail']); ?></td>
+                                        <td><?php echo remove_junk($sup['SupplierContactPerson']); ?></td>
+                                        <td><?php echo remove_junk($sup['SupplierVatNo']); ?></td>
+                                        <td><?php echo remove_junk($sup['SupplierSVatNo']); ?></td>
+                                        <td><?php echo remove_junk($sup['SupplierCreditPeriod']); ?></td>
+                                        <td><?php echo remove_junk($sup['CurrencyDescription']); ?></td>
+                                    </tr>
+                                        <?php endforeach; ?>
+                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -69,5 +86,6 @@ include_once 'layouts/header.php';
         </div>
     </div>
 </section>
-<?php include_once 'layouts/footer.php'; ?>
+<?php include_once 'layouts/footer.php'; 
+
     
