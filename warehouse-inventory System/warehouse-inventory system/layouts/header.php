@@ -177,7 +177,7 @@ desired effect
                     <li class="treeview">
                         <a href="#">
 
-                            <i class="fa fa-link"></i> <span>Master Files</span>
+                            <i class="fa fa-link"></i> <span>Customer / Supplier</span>
                             <span class="pull-right-container">
                                 <i class="fa fa-angle-left pull-right"></i>
                             </span>
@@ -185,6 +185,22 @@ desired effect
                         <ul class="treeview-menu">
                             <li><a href="customer.php">Customer</a></li>
                             <li><a href="Supplier.php">Supplier</a></li>
+                        </ul>
+                    </li>
+                    <li class="treeview">
+                        <a href="#">
+
+                            <i class="fa fa-link"></i> <span>Item</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="tax.php">Tax</a></li>
+                            <li><a href="department.php">Department</a></li>
+                            <li><a href="category.php">Category</a></li>
+                            <li><a href="subcategory.php">Sub Category</a></li>
+                            
                         </ul>
                     </li>
                 </ul>
