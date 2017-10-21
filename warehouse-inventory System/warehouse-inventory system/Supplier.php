@@ -42,6 +42,12 @@ include_once 'layouts/header.php';
                 <i class="fa fa-minus"></i>
             </button>
         </div>
+        <form method="get" action="addSupplier.php">
+            <div>
+                <button id="addsupplier" type="submit" name="addCus" class="btn btn-primary">Add Supplier</button>
+            </div>
+        </form>
+
         <div class="box-body">
             <div id="1stRow" class="row form-group">
                 <div class="col-lg-12 col-md-12 col-sm-12">
@@ -64,19 +70,19 @@ include_once 'layouts/header.php';
                                 </thead>
                                 <tbody>
                                     <?php foreach ($All_suppliers as $sup): ?>
-                                    <tr>
-                                        <td><?php echo remove_junk($sup['SupplierCode']); ?></td>
-                                        <td><?php echo remove_junk($sup['SupplierName']); ?></td>
-                                        <td><?php echo remove_junk($sup['SupplierTel']); ?></td>
-                                        <td><?php echo remove_junk($sup['SupplierFax']); ?></td>
-                                        <td><?php echo remove_junk($sup['SupplierEmail']); ?></td>
-                                        <td><?php echo remove_junk($sup['SupplierContactPerson']); ?></td>
-                                        <td><?php echo remove_junk($sup['SupplierVatNo']); ?></td>
-                                        <td><?php echo remove_junk($sup['SupplierSVatNo']); ?></td>
-                                        <td><?php echo remove_junk($sup['SupplierCreditPeriod']); ?></td>
-                                        <td><?php echo remove_junk($sup['CurrencyDescription']); ?></td>
-                                    </tr>
-                                        <?php endforeach; ?>
+                                        <tr>
+                                            <td><?php echo remove_junk($sup['SupplierCode']); ?></td>
+                                            <td><?php echo remove_junk($sup['SupplierName']); ?></td>
+                                            <td><?php echo remove_junk($sup['SupplierTel']); ?></td>
+                                            <td><?php echo remove_junk($sup['SupplierFax']); ?></td>
+                                            <td><?php echo remove_junk($sup['SupplierEmail']); ?></td>
+                                            <td><?php echo remove_junk($sup['SupplierContactPerson']); ?></td>
+                                            <td><?php echo remove_junk($sup['SupplierVatNo']); ?></td>
+                                            <td><?php echo remove_junk($sup['SupplierSVatNo']); ?></td>
+                                            <td><?php echo remove_junk($sup['SupplierCreditPeriod']); ?></td>
+                                            <td><?php echo remove_junk($sup['CurrencyDescription']); ?></td>
+                                        </tr>
+                                    <?php endforeach; ?>
                                 </tbody>
                             </table>
                         </div>
@@ -86,6 +92,7 @@ include_once 'layouts/header.php';
         </div>
     </div>
 </section>
-<?php include_once 'layouts/footer.php'; 
+<?php
+include_once 'layouts/footer.php';
 
-    
+
