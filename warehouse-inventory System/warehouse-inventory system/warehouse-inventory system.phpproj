@@ -33,6 +33,8 @@
     <Compile Include="auth.php" />
     <Compile Include="auth_v2.php" />
     <Compile Include="delete_subcategory.php" />
+    <Compile Include="layouts\userlogin.php" />
+    <Compile Include="Supplier.php" />
     <Compile Include="tax.php" />
     <Compile Include="edit_subcategory.php" />
     <Compile Include="subcategory.php" />
@@ -7225,6 +7227,7 @@
     <Content Include="libs\dist\css\skins\skin-yellow.min.css" />
     <Content Include="libs\dist\css\skins\_all-skins.css" />
     <Content Include="libs\dist\css\skins\_all-skins.min.css" />
+    <Content Include="libs\dist\iCheck\icheck.min.js" />
     <Content Include="libs\dist\img\avatar.png" />
     <Content Include="libs\dist\img\avatar04.png" />
     <Content Include="libs\dist\img\avatar2.png" />
@@ -7891,6 +7894,7 @@
     <Folder Include="libs\dist\img\credit\" />
     <Folder Include="libs\dist\js\" />
     <Folder Include="libs\dist\js\pages\" />
+    <Folder Include="libs\dist\iCheck\" />
     <Folder Include="libs\images\" />
     <Folder Include="libs\js\" />
   </ItemGroup>

@@ -3,10 +3,10 @@ ob_start();
 require_once('includes/load.php');
   if($session->isUserLoggedIn(true)) { redirect('home.php', false);}
 ?>
-<?php include_once('layouts/header.php'); ?>
+<?php include_once('layouts/userlogin.php'); ?>
 <div class="login-page">
     <div class="text-center">
-        <h1>Welcome</h1>
+        <!--<h1>Log In</h1>-->
         <p>Sign in to start your session</p>
     </div>
     <?php echo display_msg($msg); ?>
@@ -28,4 +28,6 @@ require_once('includes/load.php');
         </div>
     </form>
 </div>
-<?php include_once('layouts/footer.php'); ?>
+</div>
+</body>
+</html>

@@ -8,7 +8,7 @@ and open the template in the editor.
 $page_title = 'Supplier';
 require_once('includes/load.php');
 page_require_level(1);
-$All_suppliers = find_by_sql("call spSelectAllSuppliers")
+$all_suppliers = find_by_sql("call spSelectAllSuppliers();")
 ?>
 <?php
 include_once 'layouts/header.php';
