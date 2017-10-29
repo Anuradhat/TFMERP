@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!--<!DOCTYPE html>-->
 <!--
 To change this license header, choose License Headers in Project Properties.
 To change this template file, choose Tools | Templates
@@ -42,9 +42,9 @@ include_once 'layouts/header.php';
                 <i class="fa fa-minus"></i>
             </button>
         </div>
-        <form method="get" action="addSupplier.php">
+        <form method="get" action="SupplierAdd.php">
             <div>
-                <button id="addsupplier" type="submit" name="addCus" class="btn btn-primary">Add Supplier</button>
+                <button id="addsupplier" type="submit" name="addSup" class="btn btn-primary">Add Supplier</button>
             </div>
         </form>
 
@@ -56,6 +56,7 @@ include_once 'layouts/header.php';
                             <table class="table table-condensed table-hover table-striped">
                                 <thead>
                                     <tr>
+                                        <th></th>
                                         <th>Code</th>
                                         <th>Name</th>
                                         <th>Tel</th>
@@ -69,8 +70,18 @@ include_once 'layouts/header.php';
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php foreach ($All_suppliers as $sup): ?>
+                                    <?php foreach ($all_suppliers as $sup): ?>
                                         <tr>
+                                            <td>
+                                                <form method="post" action="supplieredit.php">
+                                                    <button type="submit" name="editsupplier" class="btn  btn-warning btn-xs glyphicon glyphicon-edit"></button>
+                                                    <input type="hidden" name="SupplierCode" value="<?php echo remove_junk($cus['SupplierCode']);?>" />
+                                                </form>
+                                                <form method="post" action="supplierdelete.php">
+                                                    <button type="submit" name="deletesupplier" class="btn btn-danger btn-xs glyphicon glyphicon-trash"></button>
+                                                    <input type="hidden" name="SupplierCode" value="<?php echo remove_junk($cus['SupplierCode']);?>" />
+                                                </form>
+                                            </td>
                                             <td><?php echo remove_junk($sup['SupplierCode']); ?></td>
                                             <td><?php echo remove_junk($sup['SupplierName']); ?></td>
                                             <td><?php echo remove_junk($sup['SupplierTel']); ?></td>

@@ -35,6 +35,7 @@
     <Compile Include="delete_subcategory.php" />
     <Compile Include="layouts\userlogin.php" />
     <Compile Include="Supplier.php" />
+    <Compile Include="SupplierAdd.php" />
     <Compile Include="tax.php" />
     <Compile Include="edit_subcategory.php" />
     <Compile Include="subcategory.php" />

@@ -17,6 +17,8 @@ function remove_junk($str){
   $str = nl2br($str);
   $str = htmlspecialchars(strip_tags($str, ENT_QUOTES));
   $str = $str != '' ? $str : 'NULL';
+  $str = stripslashes($str);
+  $str = trim($str);
   return $str;
 }
 /*--------------------------------------------------------------*/

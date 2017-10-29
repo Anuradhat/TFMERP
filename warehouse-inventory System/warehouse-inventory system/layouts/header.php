@@ -53,6 +53,9 @@ desired effect
 |               | sidebar-mini                            |
 |---------------------------------------------------------|
 -->
+<div class="form-control">
+
+</div>
 <body class="hold-transition skin-blue sidebar-mini">
     <div class="wrapper">
         <?php  if ($session->isUserLoggedIn(true)): ?>
