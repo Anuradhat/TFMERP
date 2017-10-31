@@ -25,8 +25,7 @@ if(isset($_POST['add_department'])){
             redirect('add_department.php',false);
         }
 
-        $db->db_connect();
-
+        
         $query  = "call spInsertDepartment('{$p_DepartmentCode}','{$p_DepartmentDesc}','{$date}','{$user}');";
 
         if($db->query($query)){
@@ -72,6 +71,24 @@ if(isset($_POST['add_department'])){
     <!-- Your Page Content Here -->
     <form method="post" action="add_department.php">
         <div class="box box-default">
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-md-12 ">
+                        <div class="btn-group">
+                            <button type="submit" name="add_department" class="btn btn-primary">&nbsp;Save&nbsp;&nbsp;</button>
+                            <button type="reset" class="btn btn-success">&nbsp;Reset&nbsp;&nbsp;</button>
+                            <button type="button" class="btn btn-warning">Cancel  </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <?php echo display_msg($msg); ?>
+            </div>
+        </div>
+        <div class="box box-default">
             <div class="box-header with-border">
                 <h3 class="box-title">Basic Details</h3>
 
@@ -100,12 +117,9 @@ if(isset($_POST['add_department'])){
                 </div>
             </div>
         </div>
-
-
-        <button type="submit" name="add_department" class="btn btn-success btn-lg">Save  </button>
     </form>
 
-        <div class="form-group"></div>
+    <div class="form-group"></div>
 
 </section>
 

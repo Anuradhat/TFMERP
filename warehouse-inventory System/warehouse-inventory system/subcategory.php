@@ -3,7 +3,7 @@ $page_title = 'Subcategory Master';
 require_once('includes/load.php');
 page_require_level(1);
 
-$all_Subcategory = find_by_sql("call spSelectAllSubcategory();")
+$all_Subcategory = find_by_sql("call spSelectAllSubcategory();");
 ?>
 
 

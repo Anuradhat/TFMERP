@@ -1,134 +1,345 @@
 <?php
-  $page_title = 'Add Product';
-  require_once('includes/load.php');
-  // Checkin What level user has permission to view this page
-  page_require_level(2);
-  $all_categories = find_all('categories');
-  $all_photo = find_all('media');
+$page_title = 'Product Master - New Product';
+require_once('includes/load.php');
+// Checkin What level user has permission to view this page
+page_require_level(2);
+
+$all_departments = find_by_sql("call spSelectAllDepartments();");
+$all_Category = find_by_sql("call spSelectAllCategory();");
+$all_Subcategory = find_by_sql("call spSelectAllSubcategory();");
+$all_Supplier = find_by_sql("call spSelectAllSuppliers();");
+$all_Taxs = find_by_sql("call spSelectAllTaxRates();");
+
 ?>
+
+
 <?php
- if(isset($_POST['add_product'])){
-   $req_fields = array('product-title','product-categorie','product-quantity','buying-price', 'saleing-price' );
-   validate_fields($req_fields);
-   if(empty($errors)){
-     $p_name  = remove_junk($db->escape($_POST['product-title']));
-     $p_cat   = remove_junk($db->escape($_POST['product-categorie']));
-     $p_qty   = remove_junk($db->escape($_POST['product-quantity']));
-     $p_buy   = remove_junk($db->escape($_POST['buying-price']));
-     $p_sale  = remove_junk($db->escape($_POST['saleing-price']));
-     if (is_null($_POST['product-photo']) || $_POST['product-photo'] === "") {
-       $media_id = '0';
-     } else {
-       $media_id = remove_junk($db->escape($_POST['product-photo']));
-     }
-     $date    = make_date();
-     $query  = "INSERT INTO products (";
-     $query .=" name,quantity,buy_price,sale_price,categorie_id,media_id,date";
-     $query .=") VALUES (";
-     $query .=" '{$p_name}', '{$p_qty}', '{$p_buy}', '{$p_sale}', '{$p_cat}', '{$media_id}', '{$date}'";
-     $query .=");";
-    // $query .=" ON DUPLICATE KEY UPDATE name='{$p_name}'";
-     if($db->query($query)){
-       $session->msg('s',"Product added ");
-       redirect('add_product.php', false);
-     } else {
-       $session->msg('d',' Sorry failed to added!');
-       redirect('product.php', false);
-     }
+if(isset($_POST['add_product'])){
+    $req_fields = array('ProductCode','ProductDesc','DepartmentCode','CategoryCode','SubcategoryCode','SupplierCode','CostPrice','SalePrice','SalesComPer','ReorderLevel');
 
-   } else{
-     $session->msg("d", $errors);
-     redirect('add_product.php',false);
-   }
+    validate_fields($req_fields);
 
- }
+    if(empty($errors)){
+        $p_ProductCode = remove_junk($db->escape($_POST['ProductCode']));
+        $p_ProductDesc  = remove_junk($db->escape($_POST['ProductDesc']));
+        $p_OtherDesc  = remove_junk($db->escape($_POST['OtherDesc']));
+        $p_DepartmentCode  = remove_junk($db->escape($_POST['DepartmentCode']));
+        $p_CategoryCode  = remove_junk($db->escape($_POST['CategoryCode']));
+        $p_SubcategoryCode  = remove_junk($db->escape($_POST['SubcategoryCode']));
+        $p_SupplierCode  = remove_junk($db->escape($_POST['SupplierCode']));
+        $p_CostPrice  =  remove_junk(string2Value($db->escape($_POST['CostPrice'])));
+        $p_SalePrice  = remove_junk(string2Value($db->escape($_POST['SalePrice'])));
+        $p_WholeSalePrice  = remove_junk(string2Value($db->escape($_POST['WholeSalePrice'])));
+        $p_DiscountAmount  = remove_junk(string2Value($db->escape($_POST['DiscountAmount'])));
+        $p_SalesComPer  = remove_junk(string2Value($db->escape($_POST['SalesComPer'])));
+        $p_DiscountPer  = remove_junk(string2Value($db->escape($_POST['DiscountPer'])));
+        $p_ReorderLevel  = remove_junk(string2Value($db->escape($_POST['ReorderLevel'])));
+        $p_Warranty  = remove_junk(string2Boolean($db->escape($_POST['Warranty'])));
+        $p_Tax  =    $db->escape_array($_POST['Taxs']);
+
+        $p_Warranty = string2Boolean($p_Warranty);
+        $Tax_Selected = string2Boolean(count($p_Tax) > 0);
+        $date    = make_date();
+        $user = "anush";
+
+        $prod_code = $p_SubcategoryCode.$p_ProductCode;
+
+        $prod_count = find_by_sp("call spSelectProductFromCode('{$prod_code}');");
+
+        if($prod_count)
+        {
+            $session->msg("d", "This product code exist in the system.");
+            redirect('add_product.php',false);
+        }
+
+
+        try
+        {
+             $db->begin();
+            //$db->query("start transaction");
+
+           $query  = "call spInsertProduct('{$prod_code}','{$p_ProductDesc}','{$p_OtherDesc}','{$p_DepartmentCode}','{$p_CategoryCode}','{$p_SubcategoryCode}',
+                   '{$p_SupplierCode}',{$p_CostPrice},{$p_SalePrice},{$p_WholeSalePrice},{$p_DiscountAmount},{$p_SalesComPer},{$p_DiscountPer},{$p_ReorderLevel},
+                    {$p_Warranty},{$Tax_Selected},'{$date}','{$user}');";
+
+           $db->query($query);
+
+
+           foreach ($p_Tax as &$value) 
+           {
+               $query  = "call spInsertProductTax('{$prod_code}','{$value}','{$date}','{$user}');";
+              $db->query($query);
+           }
+
+             $db->commit();
+
+            $session->msg('s',"Product added ");
+            redirect('add_product.php', false);
+
+        }
+        catch(Exception $ex)
+        {
+           $db->rollback();
+
+           $session->msg('d',' Sorry failed to added!');
+           redirect('product.php', false);
+        }
+
+
+    
+        //if($db->query($query)){
+        //    $session->msg('s',"Product added ");
+        //    redirect('add_product.php', false);
+        //} else {
+        //    $session->msg('d',' Sorry failed to added!');
+        //    redirect('product.php', false);
+        //}
+
+    } else{
+        $session->msg("d", $errors);
+        redirect('add_product.php',false);
+    }
+}
 
 ?>
-<?php include_once('layouts/header.php'); ?>
-<div class="row">
-  <div class="col-md-12">
-    <?php echo display_msg($msg); ?>
-  </div>
-</div>
-  <div class="row">
-  <div class="col-md-8">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <strong>
-            <span class="glyphicon glyphicon-th"></span>
-            <span>Add New Product</span>
-         </strong>
-        </div>
-        <div class="panel-body">
-         <div class="col-md-12">
-          <form method="post" action="add_product.php" class="clearfix">
-              <div class="form-group">
-                <div class="input-group">
-                  <span class="input-group-addon">
-                   <i class="glyphicon glyphicon-th-large"></i>
-                  </span>
-                  <input type="text" class="form-control" name="product-title" placeholder="Product Title">
-               </div>
-              </div>
-              <div class="form-group">
-                <div class="row">
-                  <div class="col-md-6">
-                    <select class="form-control" name="product-categorie">
-                      <option value="">Select Product Category</option>
-                    <?php  foreach ($all_categories as $cat): ?>
-                      <option value="<?php echo (int)$cat['id'] ?>">
-                        <?php echo $cat['name'] ?></option>
-                    <?php endforeach; ?>
-                    </select>
-                  </div>
-                  <div class="col-md-6">
-                    <select class="form-control" name="product-photo">
-                      <option value="">Select Product Photo</option>
-                    <?php  foreach ($all_photo as $photo): ?>
-                      <option value="<?php echo (int)$photo['id'] ?>">
-                        <?php echo $photo['file_name'] ?></option>
-                    <?php endforeach; ?>
-                    </select>
-                  </div>
-                </div>
-              </div>
 
-              <div class="form-group">
-               <div class="row">
-                 <div class="col-md-4">
-                   <div class="input-group">
-                     <span class="input-group-addon">
-                      <i class="glyphicon glyphicon-shopping-cart"></i>
-                     </span>
-                     <input type="number" class="form-control" name="product-quantity" placeholder="Product Quantity">
-                  </div>
-                 </div>
-                 <div class="col-md-4">
-                   <div class="input-group">
-                     <span class="input-group-addon">
-                       <i class="glyphicon glyphicon-usd"></i>
-                     </span>
-                     <input type="number" class="form-control" name="buying-price" placeholder="Buying Price">
-                     <span class="input-group-addon">.00</span>
-                  </div>
-                 </div>
-                  <div class="col-md-4">
-                    <div class="input-group">
-                      <span class="input-group-addon">
-                        <i class="glyphicon glyphicon-usd"></i>
-                      </span>
-                      <input type="number" class="form-control" name="saleing-price" placeholder="Selling Price">
-                      <span class="input-group-addon">.00</span>
-                   </div>
-                  </div>
-               </div>
-              </div>
-              <button type="submit" name="add_product" class="btn btn-danger">Add product</button>
-          </form>
-         </div>
+
+
+
+
+
+
+<?php include_once('layouts/header.php'); ?>
+<section class="content-header">
+    <h1>
+        Product Master
+        <small>Enter New Product Details</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li>
+            <a href="#">
+                <i class="fa fa-dashboard"></i>Master
+            </a>
+        </li>
+        <li class="active">Product</li>
+    </ol>
+    <style>
+        form {
+            display: inline;
+        }
+    </style>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <!-- Your Page Content Here -->
+    <form method="post" action="add_product.php">
+        <div class="row">
+            <div class="col-md-12"><?php echo display_msg($msg); ?>
+            </div>
         </div>
-      </div>
-    </div>
-  </div>
+        <div class="box box-default">
+            <div class="box-header with-border">
+                <h3 class="box-title">Basic Details</h3>
+
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                        <i class="fa fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Product Code</label>
+                            <input type="text" class="form-control" name="ProductCode" placeholder="Product Code" required="required" />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Other Description</label>
+                            <input type="text" class="form-control" name="OtherDesc" placeholder="Other Description" />
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Product Description</label>
+                            <input type="text" class="form-control" name="ProductDesc" placeholder="Product Description" required="required" />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Supplier</label>
+                            <select class="form-control select2" style="width: 100%;" name="SupplierCode"required="required" >
+                                <option value="">Select Supplier</option>
+                                 <?php  foreach ($all_Supplier as $supp): ?>
+                                <option value="<?php echo $supp['SupplierCode'] ?>"><?php echo $supp['SupplierName'] ?>
+                                </option><?php endforeach; ?>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="box box-default">
+            <div class="box-header with-border">
+                <h3 class="box-title">Product Level Details</h3>
+
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                        <i class="fa fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Department</label>
+                            <select class="form-control select2" style="width: 100%;" name="DepartmentCode" required="required">
+                                <option value="">Select Department</option><?php  foreach ($all_departments as $dep): ?>
+                                <option value="<?php echo $dep['DepartmentCode'] ?>"><?php echo $dep['DepartmentDesc'] ?>
+                                </option><?php endforeach; ?>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Sub Category</label>
+                            <select class="form-control select2" style="width: 100%;" name="SubcategoryCode" required="required" id="ddlSubCategory">
+                                <option value="">Select Sub Category</option>
+                            </select>
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6">
+                        <label>Category</label>
+                        <select class="form-control select2" style="width: 100%;" name="CategoryCode" required="required" id="ddlCategory">
+                            <option value="">Select Category</option><?php  foreach ($all_Category as $cat): ?>
+                            <option value="<?php echo $cat['CategoryCode'] ?>"><?php echo $cat['CategoryDesc'] ?>
+                            </option><?php endforeach; ?>
+                        </select>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="box box-default">
+            <div class="box-header with-border">
+                <h3 class="box-title">Pricing Information</h3>
+
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                        <i class="fa fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Cost Price</label>
+                            <input type="text" class="form-control" name="CostPrice" placeholder="Cost Price" required="required" />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Whole Sale Price</label>
+                            <input type="text" class="form-control" name="WholeSalePrice" placeholder="Whole Sale Price" />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Discount Percentage</label>
+                            <input type="text" class="form-control" name="DiscountPer" placeholder="Discount Percentage (%)" />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Item Tax(s)</label>
+                            <select class="form-control select2" name="Taxs[]" multiple="multiple" data-placeholder="Select Tax(s)" style="width: 100%;">
+                                <option value="">Select Tax(s)</option><?php  foreach ($all_Taxs as $tax): ?>
+                                <option value="<?php echo $tax['TaxCode'] ?>"><?php echo $tax['TaxDesc'] ?>
+                                </option><?php endforeach; ?>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Sale Price</label>
+                            <input type="text" class="form-control" name="SalePrice" placeholder="Sale Price" required="required"/>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Discount Amount</label>
+                            <input type="text" class="form-control" name="DiscountAmount" placeholder="Discount Amount" />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Sales Commission</label>
+                            <input type="text" class="form-control" name="SalesComPer" placeholder="Sales Commission (%)" required="required"/>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="box box-default">
+            <div class="box-header with-border">
+                <h3 class="box-title">Other Details</h3>
+
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                        <i class="fa fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Re-order Level</label>
+                            <input type="number" class="form-control" name="ReorderLevel" placeholder="Reorder Level" required="required"/>
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group checkbox">
+                            <label class="form-check-label">
+                                <input type="checkbox" name="Warranty" class="form-check-input">
+                                Warranty
+                            </label>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" name="add_product" class="btn btn-success btn-lg">Save  </button>
+       </form>
+</section>
 
 <?php include_once('layouts/footer.php'); ?>
+
+
+<script>
+        $('#ddlCategory').change(function () {
+            value = $(this).val();
+            $.ajax({
+                type: "POST",
+                url: "product_BL.php", // Name of the php files
+                data: { "_category": value },
+                success: function (result) {
+                    $("#ddlSubCategory").html(result); // clear before append
+                }
+            });
+        });
+</script>

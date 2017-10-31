@@ -18,7 +18,7 @@ if(isset($_POST['add_category'])){
         $p_CategoryCode  = remove_junk($db->escape($_POST['CategoryCode']));
         $p_CategoryDesc  = remove_junk($db->escape($_POST['CategoryDesc']));
 
-        $catcode = $p_DepartmentCode.$p_CategoryCode;
+        $catcode = $p_CategoryCode;
 
         $date    = make_date();
         $user = "anush";

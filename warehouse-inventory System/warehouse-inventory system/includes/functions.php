@@ -16,11 +16,31 @@ function real_escape($str){
 function remove_junk($str){
   $str = nl2br($str);
   $str = htmlspecialchars(strip_tags($str, ENT_QUOTES));
-  $str = $str != '' ? $str : 'NULL';
-  $str = stripslashes($str);
-  $str = trim($str);
   return $str;
 }
+
+/*--------------------------------------------------------------*/
+/* Validate value
+/*--------------------------------------------------------------*/
+function string2Value($str){
+    if(empty($str) || !is_numeric($str))
+        return 0;
+    else
+        return $str;
+}
+
+/*--------------------------------------------------------------*/
+/* Validate Boolean
+/*--------------------------------------------------------------*/
+function string2Boolean($str){
+    if(empty($str))
+        return 0;
+    else if ($str == "on" || $str == true)
+        return 1;
+    else
+        return 0;
+}
+
 /*--------------------------------------------------------------*/
 /* Function for Uppercase first character
 /*--------------------------------------------------------------*/
@@ -126,6 +146,17 @@ function randString($length = 5)
   for($x=0; $x<$length; $x++)
    $str .= $cha[mt_rand(0,strlen($cha))];
   return $str;
+}
+
+function EqualValue($val,$arr)
+{
+    foreach ($arr as &$value) {
+      if( $val == $value[0])
+       {
+           return true;
+       }
+    }
+    return false;
 }
 
 

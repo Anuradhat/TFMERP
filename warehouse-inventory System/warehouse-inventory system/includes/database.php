@@ -44,10 +44,9 @@ public function db_disconnect()
 /*--------------------------------------------------------------*/
 public function query($sql)
    {
-       $this->db_connect();
-
       if (trim($sql != "")) {
           $this->query_id = $this->con->query($sql);
+          $this->next_result();
       }
       if (!$this->query_id)
         // only for Develope mode
@@ -113,6 +112,31 @@ function callProcedure($pv_proc, $pt_args )
 /*--------------------------------------------------------------*/
 /* Function for Query Helper
 /*--------------------------------------------------------------*/
+// Begin transaction
+function begin(){
+    //$this->query("BEGIN");
+    //mysqli_autocommit($this->con,false);
+    mysqli_begin_transaction($this->con,MYSQLI_TRANS_START_READ_WRITE);
+}
+
+//Commit transaction
+function commit(){
+   // mysqli_autocommit($this->con,false);
+    mysqli_commit($this->con);
+}
+
+//Rollback transaction
+function rollback(){
+    //$this->query("ROLLBACK");
+    mysqli_rollback($this->con);
+}
+
+public function next_result()
+{
+    mysqli_next_result($this->con);
+}
+
+
 public function fetch_array($statement)
 {
   return mysqli_fetch_array($statement);
@@ -144,6 +168,20 @@ public function affected_rows()
  public function escape($str){
    return $this->con->real_escape_string($str);
  }
+
+ /*--------------------------------------------------------------*/
+ /* Function for Remove escapes special in array
+ /* characters in a string for use in an SQL statement
+ /*--------------------------------------------------------------*/
+ public function escape_array($arr){
+     $array = array();
+
+     foreach ($arr as &$value) {
+         $array[] = $this->con->real_escape_string($value);
+     }
+     return $array;
+ }
+
 /*--------------------------------------------------------------*/
 /* Function for while loop
 /*--------------------------------------------------------------*/

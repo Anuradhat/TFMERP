@@ -34,6 +34,7 @@
     <Compile Include="auth_v2.php" />
     <Compile Include="delete_subcategory.php" />
     <Compile Include="layouts\userlogin.php" />
+    <Compile Include="product_BL.php" />
     <Compile Include="Supplier.php" />
     <Compile Include="SupplierAdd.php" />
     <Compile Include="tax.php" />

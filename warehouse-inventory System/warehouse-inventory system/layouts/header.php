@@ -15,7 +15,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- Font Awesome -->
     <link rel="stylesheet" href="/libs/bower_components/font-awesome/css/font-awesome.min.css">
     <!-- Ionicons -->
-    <link rel="stylesheet" href="/libs/bower_components/Ionicons/css/ionicons.min.css">
+    <link rel="stylesheet" href="libs/bower_components/Ionicons/css/ionicons.min.css">
+    <!-- Select2 -->
+    <link rel="stylesheet" href="libs/bower_components/select2/dist/css/select2.min.css">
     <!-- Theme style -->
     <!--<link rel="stylesheet" href="libs/dist/css/AdminLTE.min.css">-->
     <link href="/libs/dist/css/AdminLTE.min.css" rel="stylesheet" />
@@ -53,9 +55,6 @@ desired effect
 |               | sidebar-mini                            |
 |---------------------------------------------------------|
 -->
-<div class="form-control">
-
-</div>
 <body class="hold-transition skin-blue sidebar-mini">
     <div class="wrapper">
         <?php  if ($session->isUserLoggedIn(true)): ?>
