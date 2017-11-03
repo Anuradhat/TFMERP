@@ -22,6 +22,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <link rel="stylesheet" href="libs/bower_components/bootstrap-slider/slider.css">
     <!-- Select2 -->
     <link rel="stylesheet" href="libs/bower_components/select2/dist/css/select2.min.css">
+    <!-- DataTables -->
+    <link rel="stylesheet" href="libs/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
  
 
     <!-- Theme style -->
@@ -179,37 +181,37 @@ desired effect
                 <!-- /.search form -->
                 <!-- Sidebar Menu -->
                 <ul class="sidebar-menu" data-widget="tree">
-                    <li class="header">Master files</li>
+                    <li class="header">Master Data</li>
                     <!-- Optionally, you can add icons to the links -->
                     <!--<li class="active"><a href="#"><i class="fa fa-link"></i> <span>Link</span></a></li>
                     <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>-->
                     <li class="treeview">
                         <a href="#">
 
-                            <i class="fa fa-link"></i> <span>Customer / Supplier</span>
+                            <i class="fa fa-address-book-o"></i> <span>Customer / Supplier</span>
                             <span class="pull-right-container">
                                 <i class="fa fa-angle-left pull-right"></i>
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            <li><a href="customer.php">Customer</a></li>
-                            <li><a href="Supplier.php">Supplier</a></li>
+                            <li><a href="customer.php"><i class="fa fa-user-circle-o"></i> Customer</a></li>
+                            <li><a href="supplier.php"><i class="fa fa-user-circle"></i>Supplier</a></li>
                         </ul>
                     </li>
                     <li class="treeview">
                         <a href="#">
 
-                            <i class="fa fa-link"></i> <span>Items</span>
+                            <i class="fa fa-tags"></i> <span>Items</span>
                             <span class="pull-right-container">
                                 <i class="fa fa-angle-left pull-right"></i>
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            <li><a href="department.php">Department</a></li>
-                            <li><a href="category.php">Category</a></li>
-                            <li><a href="subcategory.php">Sub Category</a></li>
-                            <li><a href="tax.php">Tax</a></li>
-                            
+                            <li><a href="department.php"><i class="fa fa-th-list"></i>Department</a></li>
+                            <li><a href="category.php"><i class="fa fa-list"></i>Category</a></li>
+                            <li><a href="subcategory.php"><i class="fa fa-th-large"></i>Sub Category</a></li>
+                            <li><a href="tax.php"><i class="fa fa-money"></i>Tax</a></li>
+                            <li><a href="product.php"><i class="fa fa-th"></i>Product</a></li>
                         </ul>
                     </li>
                 </ul>

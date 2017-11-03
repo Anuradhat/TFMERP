@@ -85,6 +85,9 @@ immediately after the control sidebar -->
 <script src="libs/bower_components/jquery/dist/jquery.min.js"></script>
 <!-- Bootstrap 3.3.7 -->
 <script src="libs/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<!-- DataTables -->
+<script src="libs/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="libs/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
 <!-- FastClick -->
 <script src="libs/bower_components/fastclick/lib/fastclick.js"></script>
 <!-- AdminLTE App -->
@@ -100,15 +103,16 @@ immediately after the control sidebar -->
 
 
 <script>
-  $(function () {
-      $('.slider').slider()
+    $(function () {
+        $('.table').DataTable();
+        $('.slider').slider();
   })
 </script>
 
 <script>
   $(function () {
     //Initialize Select2 Elements
-      $('.select2').select2()
+      $('.select2').select2();
   })
 </script>
 

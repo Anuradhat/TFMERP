@@ -113,7 +113,7 @@ if(isset($_POST['add_tax'])){
                         </div>
 
                         <div class="form-group">
-                            <label>Tax Rate (%)&nbsp;<output for="fader" id="rate">0</output> </label>
+                            <label>Tax Rate (<output class="inline" for="fader" id="rate">0</output>%)</label>
                             <input type="range" class="form-control" data-slider-id="blue" min="0" max="100" value="0" step="1" data-slider-tooltip="show"  name="TaxRate" placeholder="Tax Rate (%)" required="required" oninput="outputUpdate(value)" />
                         
                         </div>

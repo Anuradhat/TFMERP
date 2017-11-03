@@ -1,4 +1,6 @@
 <?php
+ob_start();
+
 $page_title = 'Product Master - New Product';
 require_once('includes/load.php');
 // Checkin What level user has permission to view this page
@@ -134,6 +136,20 @@ if(isset($_POST['add_product'])){
 <section class="content">
     <!-- Your Page Content Here -->
     <form method="post" action="add_product.php">
+        <div class="box box-default">
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-md-12 ">
+                        <div class="btn-group">
+                            <button type="submit" name="add_product" class="btn btn-primary">&nbsp;Save&nbsp;&nbsp;</button>
+                            <button type="reset" class="btn btn-success">&nbsp;Reset&nbsp;&nbsp;</button>
+                            <button type="button" class="btn btn-warning" onclick="window.location = 'product.php'">Cancel  </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="row">
             <div class="col-md-12"><?php echo display_msg($msg); ?>
             </div>
@@ -322,8 +338,6 @@ if(isset($_POST['add_product'])){
                 </div>
             </div>
         </div>
-
-        <button type="submit" name="add_product" class="btn btn-success btn-lg">Save  </button>
        </form>
 </section>
 

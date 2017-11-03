@@ -88,7 +88,7 @@ if(isset($_POST['edit_customer'])){
 <section class="content-header">
     <h1>
         Customer Master
-        <small>Optional description</small>
+        <small>Update Customer Details</small>
     </h1>
     <ol class="breadcrumb">
         <li>

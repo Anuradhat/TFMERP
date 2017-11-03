@@ -120,7 +120,7 @@ if(isset($_POST['edit_tax'])){
                         </div>
 
                         <div class="form-group">
-                            <label>Tax Rate (%)&nbsp;<output for="fader" id="rate"><?php echo remove_junk($tax['TaxRate']);?></output> </label>
+                            <label>Tax Rate (<output class="inline" for="fader" id="rate"><?php echo remove_junk($tax['TaxRate']);?></output>%)</label>
                             <input type="range" min="0" max="100" value="<?php echo remove_junk($tax['TaxRate']);?>" step="1" class="form-control" name="TaxRate" placeholder="Tax Rate (%)" required="required" oninput="outputUpdate(value)" />
                         </div>
                     </div>

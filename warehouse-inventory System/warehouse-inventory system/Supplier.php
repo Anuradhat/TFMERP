@@ -34,19 +34,36 @@ include_once 'layouts/header.php';
 </section>
 
 <section class="content">
+
+    <!-- Your Page Content Here -->
+    <div class="box box-default">
+        <div class="box-body">
+            <div class="row">
+                <div class="col-md-12 ">
+                    <div class="btn-group">
+                        <button type="button" name="add_supplier" onclick="window.location = 'add_supplier.php'" class="btn btn-primary">&nbsp;&nbsp;New&nbsp;&nbsp;</button>
+                        <button type="button" class="btn btn-warning" onclick="window.location = 'home.php'">Cancel  </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12"><?php echo display_msg($msg); ?>
+        </div>
+    </div>
+
     <div class="box box-default">
         <div class="box-header with-border">
             <h3 class="box-title">Supplier Details</h3>
-            <div class="box-tools pull-left"></div>
-            <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                <i class="fa fa-minus"></i>
-            </button>
-        </div>
-        <form method="get" action="SupplierAdd.php">
-            <div>
-                <button id="addsupplier" type="submit" name="addSup" class="btn btn-primary">Add Supplier</button>
+
+            <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                    <i class="fa fa-minus"></i>
+                </button>
             </div>
-        </form>
+        </div>
 
         <div class="box-body">
             <div id="1stRow" class="row form-group">

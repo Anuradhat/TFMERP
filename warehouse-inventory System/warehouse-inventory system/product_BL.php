@@ -20,7 +20,5 @@ if (isset($_POST['_category'])) {
     echo $value;
 }
 
-function EqualValue()
-
 
 ?>

@@ -90,6 +90,11 @@ if(isset($_POST['add_subcategory'])){
             </div>
         </div>
 
+        <div class="row">
+            <div class="col-md-12"><?php echo display_msg($msg); ?>
+            </div>
+        </div>
+
         <div class="box box-default">
             <div class="box-header with-border">
                 <h3 class="box-title">Basic Details</h3>
