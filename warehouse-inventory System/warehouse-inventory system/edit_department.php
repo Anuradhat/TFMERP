@@ -91,6 +91,19 @@ if(isset($_POST['edit_department'])){
     <!-- Your Page Content Here -->
     <form method="post" action="edit_department.php">
         <div class="box box-default">
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-md-12 ">
+                        <div class="btn-group">
+                            <button type="submit" name="edit_department" class="btn btn-primary">&nbsp;Save&nbsp;&nbsp;</button>
+                            <button type="button" class="btn btn-warning" onclick="window.location = 'department.php'">Cancel  </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="box box-default">
             <div class="box-header with-border">
                 <h3 class="box-title">Basic Details</h3>
 
@@ -120,12 +133,7 @@ if(isset($_POST['edit_department'])){
                 </div>
             </div>
         </div>
-
-
-        <button type="submit" name="edit_department" class="btn btn-success btn-lg">Save  </button>
     </form>
-
-    <div class="form-group"></div>
 
 </section>
 

@@ -1,7 +1,11 @@
 <?php
+ob_start();
+
 $page_title = 'Subcategory Master - Edit Subcategory';
 require_once('includes/load.php');
 page_require_level(2);
+
+preventGetAction('subcategory.php');
 
 $all_Category = find_by_sql("call spSelectAllCategory();")
 ?>
@@ -36,7 +40,7 @@ if(isset($_POST['edit_subcategory'])){
     if(empty($errors)){
         $p_SubcategoryCode  = remove_junk($db->escape($_POST['hSubcategoryCode']));
         $p_SubcategoryDesc  = remove_junk($db->escape($_POST['SubcategoryDesc']));
-        $p_Commission   = remove_junk($db->escape($_POST['Commission']));
+        $p_Commission   = remove_junk(string2Value($db->escape($_POST['Commission'])));
 
         $date    = make_date();
         $user = "anush";
@@ -84,6 +88,20 @@ if(isset($_POST['edit_subcategory'])){
 <section class="content">
     <!-- Your Page Content Here -->
     <form method="post" action="edit_subcategory.php">
+
+        <div class="box box-default">
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-md-12 ">
+                        <div class="btn-group">
+                            <button type="submit" name="edit_subcategory" class="btn btn-primary">&nbsp;Save&nbsp;&nbsp;</button>
+                            <button type="button" class="btn btn-warning" onclick="window.location = 'subcategory.php'">Cancel  </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="box box-default">
             <div class="box-header with-border">
                 <h3 class="box-title">Basic Details</h3>
@@ -100,7 +118,7 @@ if(isset($_POST['edit_subcategory'])){
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Category</label>
-                            <select class="form-control" name="Category" placeholder="Select Category" required="required" readonly="readonly" disabled="disabled">
+                            <select class="form-control select2" name="Category" placeholder="Select Category" required="required" readonly="readonly" disabled="disabled">
                                 <option value="">Select Category</option><?php  foreach ($all_Category as $cat): ?>
                                 <option value="<?php echo $cat['CategoryCode'] ?>" <?php if($cat['CategoryCode'] === $subcategory['CategoryCode']): echo "selected"; endif; ?>  ><?php echo $cat['CategoryDesc'] ?>
                                 </option><?php endforeach; ?>
@@ -120,20 +138,22 @@ if(isset($_POST['edit_subcategory'])){
                             <input type="hidden" name="hSubcategoryCode" value="<?php echo remove_junk($subcategory['SubcategoryCode']);?>" />
                         </div> 
                         <div class="form-group">
-                            <label>Commission (%)</label>
-                            <input type="number" class="form-control" name="Commission" placeholder="Commission (%)" value="<?php echo remove_junk($subcategory['Commission']);?>"/>
+                            <label>Commission (<output class="inline" for="fader" id="rate"><?php echo remove_junk($subcategory['Commission']);?></output>%)</label>
+                            <input type="range" class="form-control" data-slider-id="blue" min="0" max="100"  step="1" data-slider-tooltip="show" name="Commission" placeholder="Commission (%)" oninput="outputUpdate(value)" value="<?php echo remove_junk($subcategory['Commission']);?>"/>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-
-        <button type="submit" name="edit_subcategory" class="btn btn-success btn-lg">Save  </button>
     </form>
-
-    <div class="form-group"></div>
 
 </section>
 
 <?php include_once('layouts/footer.php'); ?>
+
+<script>
+    function outputUpdate(vol) {
+        document.querySelector('#rate').value = vol;
+    }
+</script>

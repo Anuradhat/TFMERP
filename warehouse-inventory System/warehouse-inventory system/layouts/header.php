@@ -1,4 +1,5 @@
 <?php $user = current_user(); ?>
+
 <!DOCTYPE html>
 <!--
 This is a starter template page. Use this page to start your new project from
@@ -11,13 +12,18 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <title> <?php echo $page_title; ?> - TFM ERP</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+
     <link rel="stylesheet" href="/libs/bower_components/bootstrap/dist/css/bootstrap.min.css">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="/libs/bower_components/font-awesome/css/font-awesome.min.css">
     <!-- Ionicons -->
     <link rel="stylesheet" href="libs/bower_components/Ionicons/css/ionicons.min.css">
+    <!-- bootstrap slider -->
+    <link rel="stylesheet" href="libs/bower_components/bootstrap-slider/slider.css">
     <!-- Select2 -->
     <link rel="stylesheet" href="libs/bower_components/select2/dist/css/select2.min.css">
+ 
+
     <!-- Theme style -->
     <!--<link rel="stylesheet" href="libs/dist/css/AdminLTE.min.css">-->
     <link href="/libs/dist/css/AdminLTE.min.css" rel="stylesheet" />
@@ -193,16 +199,16 @@ desired effect
                     <li class="treeview">
                         <a href="#">
 
-                            <i class="fa fa-link"></i> <span>Item</span>
+                            <i class="fa fa-link"></i> <span>Items</span>
                             <span class="pull-right-container">
                                 <i class="fa fa-angle-left pull-right"></i>
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            <li><a href="tax.php">Tax</a></li>
                             <li><a href="department.php">Department</a></li>
                             <li><a href="category.php">Category</a></li>
                             <li><a href="subcategory.php">Sub Category</a></li>
+                            <li><a href="tax.php">Tax</a></li>
                             
                         </ul>
                     </li>

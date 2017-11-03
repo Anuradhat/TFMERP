@@ -16,7 +16,7 @@ if(isset($_POST['add_subcategory'])){
         $p_CategoryCode     = remove_junk($db->escape($_POST['Category']));
         $p_SubcategoryCode  = remove_junk($db->escape($_POST['SubcategoryCode']));
         $p_SubcategoryDesc  = remove_junk($db->escape($_POST['SubcategoryDesc']));
-        $p_Commission       = remove_junk($db->escape($_POST['Commission']));
+        $p_Commission       = remove_junk(string2Value($db->escape($_POST['Commission'])));
 
         $scatcode = $p_CategoryCode.$p_SubcategoryCode;
 
@@ -77,6 +77,20 @@ if(isset($_POST['add_subcategory'])){
     <!-- Your Page Content Here -->
     <form method="post" action="add_subcategory.php">
         <div class="box box-default">
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-md-12 ">
+                        <div class="btn-group">
+                            <button type="submit" name="add_subcategory" class="btn btn-primary">&nbsp;Save&nbsp;&nbsp;</button>
+                            <button type="reset" class="btn btn-success">&nbsp;Reset&nbsp;&nbsp;</button>
+                            <button type="button" class="btn btn-warning" onclick="window.location = 'subcategory.php'">Cancel  </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="box box-default">
             <div class="box-header with-border">
                 <h3 class="box-title">Basic Details</h3>
 
@@ -92,7 +106,7 @@ if(isset($_POST['add_subcategory'])){
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Category</label>
-                            <select class="form-control" name="Category" placeholder="Select Category" required="required">
+                            <select class="form-control select2" name="Category" placeholder="Select Category" required="required">
                                 <option value="">Select Category</option><?php  foreach ($all_Category as $cat): ?>
                                 <option value="<?php echo $cat['CategoryCode'] ?>"><?php echo $cat['CategoryDesc'] ?>
                                 </option><?php endforeach; ?>
@@ -112,20 +126,20 @@ if(isset($_POST['add_subcategory'])){
                         </div>
 
                         <div class="form-group">
-                            <label>Commission (%)</label>
-                            <input type="number" class="form-control" name="Commission" placeholder="Commission (%)"/>
+                            <label >Commission (<output class="inline" for="fader" id="rate">0</output>%)</label>
+                            <input type="range" class="form-control" data-slider-id="blue" min="0" max="100" value="0" step="1" data-slider-tooltip="show" name="Commission" placeholder="Commission (%)" oninput="outputUpdate(value)" />
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
-
-        <button type="submit" name="add_subcategory" class="btn btn-success btn-lg">Save  </button>
     </form>
-
-    <div class="form-group"></div>
-
 </section>
 
 <?php include_once('layouts/footer.php'); ?>
+
+<script>
+    function outputUpdate(vol) {
+        document.querySelector('#rate').value = vol;
+    }
+</script>

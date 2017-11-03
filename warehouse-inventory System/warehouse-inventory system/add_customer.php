@@ -1,12 +1,16 @@
 <?php
+ob_start();
+
 $page_title = 'Customer Master - New Customer';
 require_once('includes/load.php');
 page_require_level(2);
+
+
 ?>
 
 <?php
 if(isset($_POST['add_customer'])){
-    $req_fields = array('CustomerCode','CustomerName','NIC','CustomerAddress2','CustomerAddress3','ContactPerson', 'Tel');
+    $req_fields = array('CustomerCode','CustomerName','CustomerAddress2','CustomerAddress3','ContactPerson', 'Tel');
     
     validate_fields($req_fields);
     
@@ -29,7 +33,7 @@ if(isset($_POST['add_customer'])){
         $p_DeliveryAddress3 = remove_junk($db->escape($_POST['DeliveryAddress3']));
         $p_DeliveryTo = remove_junk($db->escape($_POST['DeliveryTo']));
        
-        $p_CreditPeriod  = remove_junk($db->escape($_POST['CreditPeriod']));
+        $p_CreditPeriod  = remove_junk(string2Value($db->escape($_POST['CreditPeriod'])));
         $p_VATNo  = remove_junk($db->escape($_POST['VATNo']));
         $p_SVATNo = remove_junk($db->escape($_POST['SVATNo']));
         $p_SalesPersonCode = remove_junk($db->escape($_POST['SalesPersonCode']));
@@ -100,6 +104,25 @@ if(isset($_POST['add_customer'])){
 <section class="content">
     <!-- Your Page Content Here -->
     <form method="post" action="add_customer.php">
+
+        <div class="box box-default">
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-md-12 ">
+                        <div class="btn-group">
+                            <button type="submit" name="add_customer" class="btn btn-primary">&nbsp;Save&nbsp;&nbsp;</button>
+                            <button type="reset" class="btn btn-success">&nbsp;Reset&nbsp;&nbsp;</button>
+                            <button type="button" class="btn btn-warning" onclick="window.location = 'customer.php'">Cancel  </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12"><?php echo display_msg($msg); ?>
+            </div>
+        </div>
+
         <div class="box box-default">
             <div class="box-header with-border">
                 <h3 class="box-title">Basic Details</h3>
@@ -249,7 +272,7 @@ if(isset($_POST['add_customer'])){
 
                         <div class="form-group">
                             <label>Sales Person</label>
-                            <select class="form-control" name="SalesPersonCode">
+                            <select class="form-control select2" name="SalesPersonCode">
                                 <option value="">Select Sales Person</option>
                             </select>
                         </div>
@@ -259,10 +282,7 @@ if(isset($_POST['add_customer'])){
             </div>
         </div>
 
-        <button type="submit" name="add_customer" class="btn btn-success btn-lg">Save  </button>
        </form>
-
-        <div class="form-group"></div>
 
 </section>
 

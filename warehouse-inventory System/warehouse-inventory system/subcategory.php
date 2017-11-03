@@ -1,4 +1,6 @@
 <?php
+ob_start();
+
 $page_title = 'Subcategory Master';
 require_once('includes/load.php');
 page_require_level(1);
@@ -31,6 +33,26 @@ $all_Subcategory = find_by_sql("call spSelectAllSubcategory();");
 <!-- Main content -->
 <section class="content">
     <!-- Your Page Content Here -->
+
+    <div class="box box-default">
+        <div class="box-body">
+            <div class="row">
+                <div class="col-md-12 ">
+                    <div class="btn-group">
+                        <button type="button" name="add_subcategory" onclick="window.location = 'add_subcategory.php'" class="btn btn-primary">&nbsp;&nbsp;New&nbsp;&nbsp;</button>
+                        <button type="button" class="btn btn-warning" onclick="window.location = 'home.php'">Cancel  </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <?php echo display_msg($msg); ?>
+        </div>
+    </div>
+
     <div class="box box-default">
         <div class="box-header with-border">
             <h3 class="box-title">Subcategory Details</h3>
@@ -41,9 +63,6 @@ $all_Subcategory = find_by_sql("call spSelectAllSubcategory();");
                 </button>
             </div>
         </div>
-        <form method="get" action="add_subcategory.php">
-            <button type="submit" name="add_scat" class="btn btn-primary">Add Subcategory</button>
-        </form>
         <!-- /.box-header -->
         <div class="box-body">
             <div class="row">

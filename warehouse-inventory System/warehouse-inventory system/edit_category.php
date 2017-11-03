@@ -1,7 +1,11 @@
 <?php
+ob_start();
+
 $page_title = 'Category Master - Edit Category';
 require_once('includes/load.php');
 page_require_level(2);
+
+preventGetAction('category.php');
 
 $all_departments = find_by_sql("call spSelectAllDepartments();")
 ?>
@@ -83,6 +87,20 @@ if(isset($_POST['edit_category'])){
 <section class="content">
     <!-- Your Page Content Here -->
     <form method="post" action="edit_category.php">
+
+        <div class="box box-default">
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-md-12 ">
+                        <div class="btn-group">
+                            <button type="submit" name="edit_category" class="btn btn-primary">&nbsp;Save&nbsp;&nbsp;</button>
+                            <button type="button" class="btn btn-warning" onclick="window.location = 'category.php'">Cancel  </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="box box-default">
             <div class="box-header with-border">
                 <h3 class="box-title">Basic Details</h3>
@@ -99,7 +117,7 @@ if(isset($_POST['edit_category'])){
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Department</label>
-                            <select class="form-control" name="Department" placeholder="Select Department" required="required" readonly="readonly" disabled="disabled">
+                            <select class="form-control select2" name="Department" placeholder="Select Department" required="required" readonly="readonly" disabled="disabled">
                                 <!-- <option value="">Select Department</option>
                                 <?php  foreach ($all_departments as $dep): ?>-->
                                 <option value="<?php echo $dep['DepartmentCode'] ?>"  <?php if($dep['DepartmentCode'] === $category['DepartmentCode']): echo "selected"; endif; ?> ><?php echo $dep['DepartmentDesc'] ?>
@@ -123,12 +141,7 @@ if(isset($_POST['edit_category'])){
                 </div>
             </div>
         </div>
-
-
-        <button type="submit" name="edit_category" class="btn btn-success btn-lg">Save  </button>
     </form>
-
-    <div class="form-group"></div>
 
 </section>
 

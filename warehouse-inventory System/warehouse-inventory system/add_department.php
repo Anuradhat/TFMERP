@@ -1,5 +1,6 @@
 <?php
 ob_start();
+
 $page_title = 'Department Master - New Department';
 require_once('includes/load.php');
 page_require_level(2);
@@ -79,7 +80,7 @@ if(isset($_POST['add_department'])){
                         <div class="btn-group">
                             <button type="submit" name="add_department" class="btn btn-primary">&nbsp;Save&nbsp;&nbsp;</button>
                             <button type="reset" class="btn btn-success">&nbsp;Reset&nbsp;&nbsp;</button>
-                            <button type="button" class="btn btn-warning">Cancel  </button>
+                            <button type="button" class="btn btn-warning" onclick="window.location = 'department.php'">Cancel  </button>
                         </div>
                     </div>
                 </div>

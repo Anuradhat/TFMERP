@@ -1,7 +1,11 @@
 <?php
+ob_start();
+
 require_once('includes/load.php');
  // Checkin What level user has permission to view this page
  page_require_level(2);
+
+ preventGetAction('tax.php');
 ?>
 
 
@@ -17,7 +21,7 @@ if(isset($_POST['taxrate'])){
     $delete_id = delete_by_sp("call spDeleteTaxRates('{$p_TaxCode}');");
 
     if($delete_id){
-        $session->msg("s","Tax deleted.");
+        $session->msg("s","Tax deleted");
         redirect('tax.php');
     } else {
         $session->msg("d","tax deletion failed.");

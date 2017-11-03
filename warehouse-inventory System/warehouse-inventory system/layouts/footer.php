@@ -85,20 +85,34 @@ immediately after the control sidebar -->
 <script src="libs/bower_components/jquery/dist/jquery.min.js"></script>
 <!-- Bootstrap 3.3.7 -->
 <script src="libs/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-<!-- Select2 -->
-<script src="libs/bower_components/select2/dist/js/select2.full.min.js"></script>
+<!-- FastClick -->
+<script src="libs/bower_components/fastclick/lib/fastclick.js"></script>
 <!-- AdminLTE App -->
 <script src="libs/dist/js/adminlte.min.js"></script>
-<!-- Optionally, you can add Slimscroll and FastClick plugins.
-     Both of these plugins are recommended to enhance the
-     user experience. -->
+<!-- Bootstrap slider -->
+<script src="libs/bower_components/bootstrap-slider/bootstrap-slider.js"></script>
+<!-- Select2 -->
+<script src="libs/bower_components/select2/dist/js/select2.full.min.js"></script>
+
+
+<!-- AdminLTE App -->
+<script src="libs/dist/js/adminlte.min.js"></script>
+
+
+<script>
+  $(function () {
+      $('.slider').slider()
+  })
+</script>
+
 <script>
   $(function () {
     //Initialize Select2 Elements
-    $('.select2').select2()
-
+      $('.select2').select2()
   })
 </script>
+
+
 </body>
 </html>
 <?php if(isset($db)) { $db->db_disconnect(); } ?>

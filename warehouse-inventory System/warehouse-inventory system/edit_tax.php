@@ -2,6 +2,8 @@
 $page_title = 'Tax Master - Edit Tax';
 require_once('includes/load.php');
 page_require_level(2);
+
+preventGetAction('tax.php');
 ?>
 
 <?php
@@ -85,6 +87,19 @@ if(isset($_POST['edit_tax'])){
     <!-- Your Page Content Here -->
     <form method="post" action="edit_tax.php">
         <div class="box box-default">
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-md-12 ">
+                        <div class="btn-group">
+                            <button type="submit" name="edit_tax" class="btn btn-primary">&nbsp;Save&nbsp;&nbsp;</button>
+                            <button type="button" class="btn btn-warning" onclick="window.location = 'tax.php'">Cancel  </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="box box-default">
             <div class="box-header with-border">
                 <h3 class="box-title">Basic Details</h3>
 
@@ -119,13 +134,7 @@ if(isset($_POST['edit_tax'])){
                 </div>
             </div>
         </div>
-
-
-        <button type="submit" name="edit_tax" class="btn btn-success btn-lg">Save  </button>
     </form>
-
-        <div class="form-group"></div>
-
 </section>
 
 <?php include_once('layouts/footer.php'); ?>

@@ -1,4 +1,6 @@
 <?php
+ob_start();
+
 $page_title = 'Customer Master';
 require_once('includes/load.php');
 page_require_level(1);
@@ -32,6 +34,24 @@ $all_customers = find_by_sql("call spSelectAllCustomers();")
 <section class="content">
     <!-- Your Page Content Here -->
     <div class="box box-default">
+        <div class="box-body">
+            <div class="row">
+                <div class="col-md-12 ">
+                    <div class="btn-group">
+                        <button type="button" name="add_category" onclick="window.location = 'add_customer.php'" class="btn btn-primary">&nbsp;&nbsp;New&nbsp;&nbsp;</button>
+                        <button type="button" class="btn btn-warning" onclick="window.location = 'home.php'">Cancel  </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <?php echo display_msg($msg); ?>
+        </div>
+    </div>
+
+    <div class="box box-default">
         <div class="box-header with-border">
             <h3 class="box-title">Customer Details</h3>
 
@@ -41,9 +61,6 @@ $all_customers = find_by_sql("call spSelectAllCustomers();")
                 </button>
             </div>
         </div>
-        <form method="get" action="add_customer.php">
-            <button type="submit" name="add_cus" class="btn btn-primary">Add Customer</button>
-        </form>
         <!-- /.box-header -->
         <div class="box-body">
             <div class="row">
