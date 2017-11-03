@@ -1,4 +1,5 @@
 <?php
+ob_start();
 $page_title = 'Department Master - New Department';
 require_once('includes/load.php');
 page_require_level(2);
@@ -25,12 +26,13 @@ if(isset($_POST['add_department'])){
             redirect('add_department.php',false);
         }
 
-        
+
         $query  = "call spInsertDepartment('{$p_DepartmentCode}','{$p_DepartmentDesc}','{$date}','{$user}');";
 
         if($db->query($query)){
             $session->msg('s',"Department added ");
             redirect('add_department.php', false);
+
         } else {
             $session->msg('d',' Sorry failed to added!');
             redirect('department.php', false);

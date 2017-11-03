@@ -89,10 +89,17 @@ function redirect($url, $permanent = false)
     {
       header('Location: ' . $url, true, ($permanent === true) ? 301 : 302);
     }
-
-
-    exit();
 }
+
+
+function preventGetAction($url)
+{
+    if (!isset($_SERVER['HTTP_REFERER']))
+    {
+      header('Location: ' . $url, true);
+    }
+}
+
 /*--------------------------------------------------------------*/
 /* Function for find out total saleing price, buying price and profit
 /*--------------------------------------------------------------*/

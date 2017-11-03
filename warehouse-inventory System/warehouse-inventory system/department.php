@@ -1,4 +1,5 @@
 <?php
+ob_start();
 $page_title = 'Department Master';
 require_once('includes/load.php');
 page_require_level(1);

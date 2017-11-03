@@ -46,7 +46,8 @@ public function query($sql)
    {
       if (trim($sql != "")) {
           $this->query_id = $this->con->query($sql);
-          $this->next_result();
+          do{} while(mysqli_more_results($this->con) && mysqli_next_result($this->con));
+          //$this->next_result();
       }
       if (!$this->query_id)
         // only for Develope mode
@@ -57,15 +58,20 @@ public function query($sql)
 
    }
 
-public function query1($sql)
-{
+//public function query($sql)
+//{
+//    if (trim($sql != "")) {
+//        $this->query_id = $this->con->query($sql);
+//        //do{} while(mysqli_more_results($this->con) && mysqli_next_result($this->con));
+//    }
+//    if (!$this->query_id)
+//        // only for Develope mode
+//        die("Error on this Query :<pre> " . $sql ." Error: ".$this->con->error."</pre>");
+//    // For production mode
+//    //  die("Error on Query");
+//    return $this->query_id;
 
-    if (trim($sql != "")) {
-        $query =  $this->con->query($sql);
-        mysqli_next_result($this->db->conn_id);
-    }
-
-}
+//}
 
 
 function callProcedure($pv_proc, $pt_args )
@@ -134,6 +140,8 @@ function rollback(){
 public function next_result()
 {
     mysqli_next_result($this->con);
+    //mysqli_more_results($this->con);
+
 }
 
 

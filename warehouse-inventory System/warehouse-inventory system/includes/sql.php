@@ -46,7 +46,6 @@ function find_by_sp($sql)
 	$db->db_connect();
 	if($sql){
 		$sql = $db->query($sql);
-		mysqli_next_result( $db->conn_id );
 		if($result = $db->fetch_assoc($sql))
 			return $result;
 		  else

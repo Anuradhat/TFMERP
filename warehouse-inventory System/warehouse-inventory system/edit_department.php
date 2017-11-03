@@ -1,7 +1,14 @@
 <?php
+ob_start();
 $page_title = 'Department Master - Edit Department';
 require_once('includes/load.php');
 page_require_level(2);
+
+preventGetAction('department.php');
+
+//if (!isset($_SERVER['HTTP_REFERER']))
+//    redirect('department.php');
+
 ?>
 
 
@@ -23,6 +30,7 @@ if(isset($_POST['department'])){
         }
     }
 }
+
 ?>
 
 <?php
@@ -53,6 +61,7 @@ if(isset($_POST['edit_department'])){
         redirect('edit_department.php',false);
     }
 }
+
 
 ?>
 

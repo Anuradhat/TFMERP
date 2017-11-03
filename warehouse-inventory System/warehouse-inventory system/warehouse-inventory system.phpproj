@@ -90,7 +90,6 @@
     <Compile Include="users.php" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include=".DS_Store" />
     <Content Include="includes\.DS_Store" />
     <Content Include="layouts\.DS_Store" />
     <Content Include="libs\.DS_Store" />
