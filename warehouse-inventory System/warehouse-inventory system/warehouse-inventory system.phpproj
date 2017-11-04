@@ -36,9 +36,9 @@
     <Compile Include="layouts\userlogin.php" />
     <Compile Include="product_BL.php" />
     <Compile Include="supplier.php" />
-    <Compile Include="SupplierDelete.php" />
-    <Compile Include="SupplierEdit.php" />
-    <Compile Include="SupplierAdd.php" />
+    <Compile Include="delete_supplier.php" />
+    <Compile Include="edit_supplier.php" />
+    <Compile Include="add_supplier.php" />
     <Compile Include="tax.php" />
     <Compile Include="edit_subcategory.php" />
     <Compile Include="subcategory.php" />
@@ -138,6 +138,7 @@
     <Content Include="libs\bower_components\bootstrap-colorpicker\src\js\colorpicker-plugin-wrapper.js" />
     <Content Include="libs\bower_components\bootstrap-colorpicker\src\less\colorpicker.less" />
     <Content Include="libs\bower_components\bootstrap-colorpicker\src\sass\_colorpicker.scss" />
+    <Content Include="libs\bower_components\bootstrap-confirmation\bootstrap-confirmation.min.js" />
     <Content Include="libs\bower_components\bootstrap-datepicker\.bower.json" />
     <Content Include="libs\bower_components\bootstrap-datepicker\.editorconfig" />
     <Content Include="libs\bower_components\bootstrap-datepicker\.github\ISSUE_TEMPLATE.md" />
@@ -7820,6 +7821,7 @@
     <Folder Include="libs\bower_components\morris.js\spec\support\" />
     <Folder Include="libs\bower_components\morris.js\spec\viz\" />
     <Folder Include="libs\bower_components\morris.js\spec\viz\exemplary\" />
+    <Folder Include="libs\bower_components\bootstrap-confirmation\" />
     <Folder Include="libs\bower_components\bootbox\" />
     <Folder Include="libs\bower_components\PACE\" />
     <Folder Include="libs\bower_components\PACE\themes\" />

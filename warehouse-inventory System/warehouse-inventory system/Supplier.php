@@ -1,19 +1,14 @@
-<!--<!DOCTYPE html>-->
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
 <?php
 ob_start();
-$page_title = 'Supplier';
+
+$page_title = 'Supplier Master';
 require_once('includes/load.php');
 page_require_level(1);
-$all_suppliers = find_by_sql("call spSelectAllSuppliers();")
+
+$all_suppliers = find_by_sql("call spSelectAllSuppliers();");
 ?>
-<?php
-include_once 'layouts/header.php';
-?>
+
+<?php include_once('layouts/header.php');?>
 <section class="content-header">
     <h1>
         Supplier Master
@@ -42,7 +37,7 @@ include_once 'layouts/header.php';
             <div class="row">
                 <div class="col-md-12 ">
                     <div class="btn-group">
-                        <button type="button" name="add_supplier" onclick="window.location = 'SupplierAdd.php'" class="btn btn-primary">&nbsp;&nbsp;New&nbsp;&nbsp;</button>
+                        <button type="button" name="add_supplier" onclick="window.location = 'add_supplier.php'" class="btn btn-primary">&nbsp;&nbsp;New&nbsp;&nbsp;</button>
                         <button type="button" class="btn btn-warning" onclick="window.location = 'home.php'">Cancel  </button>
                     </div>
                 </div>
@@ -75,28 +70,28 @@ include_once 'layouts/header.php';
                             <table class="table table-condensed table-hover table-striped">
                                 <thead>
                                     <tr>
-                                        <th></th>
+                                        <th>Action</th>
                                         <th>Code</th>
                                         <th>Name</th>
                                         <th>Tel</th>
                                         <th>Fax</th>
-                                        <th>email</th>
+                                        <th>Email</th>
                                         <th>Contact Person</th>
-                                        <th>Vat No</th>
-                                        <th>SVat No</th>
+                                        <th>VAT No</th>
+                                        <th>SVAT No</th>
                                         <th>Credit Period</th>
-                                        <th>currency</th>
+                                        <th>Currency</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php foreach ($all_suppliers as $sup): ?>
                                     <tr>
                                         <td>
-                                            <form method="post" action="SupplierEdit.php">
+                                            <form method="post" action="edit_supplier.php">
                                                 <button type="submit" name="supplier" class="btn  btn-warning btn-xs glyphicon glyphicon-edit" title="Edit Supplier"></button>
                                                 <input type="hidden" name="SupplierCode" value="<?php echo remove_junk($sup['SupplierCode']);?>" />
                                             </form>
-                                            <form method="post" action="SupplierDelete.php">
+                                            <form method="post" action="delete_supplier.php">
                                                 <button type="submit" name="supplier" class="btn btn-danger btn-xs glyphicon glyphicon-trash" title="Delete Supplier"></button>
                                                 <input type="hidden" name="SupplierCode" value="<?php echo remove_junk($sup['SupplierCode']);?>" />
                                             </form>
@@ -142,10 +137,6 @@ include_once 'layouts/header.php';
         </div>
     </div>
 </section>
-
-
-<?php
-include_once 'layouts/footer.php';
-?>
+<?php include_once('layouts/footer.php');?>
 
 

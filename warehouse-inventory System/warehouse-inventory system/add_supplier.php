@@ -7,7 +7,7 @@ $allCurrencyTypes = find_by_sql("call spSelectAllCurrency();")
 ?>
 
 <?php
-if(isset($_POST['SupplierAdd1'])){
+if(isset($_POST['add_supplier'])){
     $req_fields = array('SupplierCode','SupplierName','SupplierAddress2','SupplierAddress3','Telephone');
     validate_fields($req_fields);
 
@@ -32,8 +32,8 @@ if(isset($_POST['SupplierAdd1'])){
 
         if($SupplierCount)
         {
-            $session->msg('d','Supplire found');
-            redirect('SupplierAdd.php',false);
+            $session->msg('d','This supplier code exist in the system.');
+            redirect('add_supplier.php',false);
         }
 
         $query = "call spInsertSupplier('{$p_SupplierCode}','{$p_SupplierName}','{$p_SupplierAddress1}','{$p_SupplierAddress2}','{$p_SupplierAddress3}','{$p_Telephone}',
@@ -42,18 +42,18 @@ if(isset($_POST['SupplierAdd1'])){
         if($db->query($query))
         {
             $session->msg('s',"Supplier added ");
-            redirect('Supplier.php', false);
+            redirect('supplier.php', false);
         }
         else
         {
-            $session->msg('d',' Sorry failed to add!');
-            redirect('SupplierAdd.php', false);
+            $session->msg('d',' Sorry failed to added!');
+            redirect('add_supplier.php', false);
         }
     }
     else
     {
         $session->msg("d", $errors);
-        redirect('SupplierAdd.php',false);
+        redirect('add_supplier.php',false);
     }
 }
 
@@ -72,7 +72,7 @@ if(isset($_POST['SupplierAdd1'])){
                 <i class="fa fa-dashboard"></i>Master
             </a>
         </li>
-        <li class="active">Add Supplier</li>
+        <li class="active">Supplier</li>
     </ol>
     <style>
         form {
@@ -83,6 +83,26 @@ if(isset($_POST['SupplierAdd1'])){
 
 <section class="content">
     <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+
+         <div class="box box-default">
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-md-12 ">
+                        <div class="btn-group">
+                            <button type="submit" name="add_supplier" class="btn btn-primary">&nbsp;Save&nbsp;&nbsp;</button>
+                            <button type="reset" class="btn btn-success">&nbsp;Reset&nbsp;&nbsp;</button>
+                            <button type="button" class="btn btn-warning" onclick="window.location = 'supplier.php'">Cancel  </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <?php echo display_msg($msg); ?>
+            </div>
+        </div>
+
         <div class="box box-default">
             <div class="box-header with-border">
                 <h3 class="box-title">Basic Details</h3>
@@ -176,7 +196,7 @@ if(isset($_POST['SupplierAdd1'])){
                     </div>
                     <div class="col-md-3">
                         <lable>Currency</lable>
-                        <select class="form-control" name="CurrencyCode">
+                        <select class="form-control select2" name="CurrencyCode">
                             <option value="">Select Currency</option>
                             <?php foreach($allCurrencyTypes as $allcurrency): ?>
                             <option value=<?php echo remove_junk($allcurrency['CurrencyCode']); ?>><?php echo remove_junk($allcurrency['CurrencyDescription']); ?>
@@ -187,8 +207,6 @@ if(isset($_POST['SupplierAdd1'])){
                 </div>
             </div>
         </div>
-        <button type="submit" name="SupplierAdd1" class="btn btn-success">Save  </button>
-        <a class="btn btn-info" href="Supplier.php">Cancel</a>
     </form>
 </section>
 

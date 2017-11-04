@@ -6,9 +6,6 @@ page_require_level(2);
 
 preventGetAction('department.php');
 
-//if (!isset($_SERVER['HTTP_REFERER']))
-//    redirect('department.php');
-
 ?>
 
 

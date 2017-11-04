@@ -87,7 +87,7 @@ $all_departments = find_by_sql("call spSelectAllDepartments();")
                                                     <input type="hidden" name="DepartmentCode" value="<?php echo remove_junk($dep['DepartmentCode']);?>" />
                                                 </form>
                                                 <form method="post" action="delete_department.php">
-                                                    <button type="submit" name="department" class="btn btn-danger btn-xs glyphicon glyphicon-trash"></button>
+                                                    <button type="submit" data-toggle="confirmation" name="department" class="btn btn-danger btn-xs glyphicon glyphicon-trash"></button>
                                                     <input type="hidden" name="DepartmentCode" value="<?php echo remove_junk($dep['DepartmentCode']);?>" />
                                                 </form>
                                             </div>
@@ -112,5 +112,5 @@ $all_departments = find_by_sql("call spSelectAllDepartments();")
     </div>
 
 </section>
-
+<sc
 <?php include_once('layouts/footer.php'); ?>
