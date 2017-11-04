@@ -24,7 +24,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <link rel="stylesheet" href="libs/bower_components/select2/dist/css/select2.min.css">
     <!-- DataTables -->
     <link rel="stylesheet" href="libs/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
- 
+    <!-- Return To Top -->
+    <link rel="stylesheet" href="libs/bower_components/return-to-top/return-to-top.css">
 
     <!-- Theme style -->
     <!--<link rel="stylesheet" href="libs/dist/css/AdminLTE.min.css">-->

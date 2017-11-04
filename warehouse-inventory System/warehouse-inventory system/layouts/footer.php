@@ -96,11 +96,8 @@ immediately after the control sidebar -->
 <script src="libs/bower_components/bootstrap-slider/bootstrap-slider.js"></script>
 <!-- Select2 -->
 <script src="libs/bower_components/select2/dist/js/select2.full.min.js"></script>
-
-
 <!-- AdminLTE App -->
 <script src="libs/dist/js/adminlte.min.js"></script>
-
 
 <script>
     $(function () {
@@ -116,7 +113,11 @@ immediately after the control sidebar -->
   })
 </script>
 
+ <a href="javascript:" id="return-to-top"><i class="fa fa-chevron-up"></i></a>
 
 </body>
 </html>
+<!-- Return To Top -->
+<script src="libs/bower_components/return-to-top/return-to-top.js"></script>
+
 <?php if(isset($db)) { $db->db_disconnect(); } ?>

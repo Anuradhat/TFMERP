@@ -280,10 +280,10 @@ if(isset($_POST['edit_product'])){
                             <label>Whole Sale Price</label>
                             <input type="text" class="form-control" name="WholeSalePrice" placeholder="Whole Sale Price" value="<?php echo remove_junk($product['WholeSalePrice']);?>"/>
                         </div>
-
+          
                         <div class="form-group">
-                            <label>Discount Percentage</label>
-                            <input type="text" class="form-control" name="DiscountPer" placeholder="Discount Percentage (%)" value="<?php echo remove_junk($product['DiscountPer']);?>"/>
+                            <label>Discount Percentage (<output class="inline" for="fader" id="discrate"><?php echo remove_junk($product['DiscountPer']);?></output>%)</label>
+                            <input type="range" class="form-control" data-slider-id="blue" min="0" max="100" value="<?php echo remove_junk($product['DiscountPer']);?>" step="1" data-slider-tooltip="show" name="DiscountPer" placeholder="Discount Percentage (%)" oninput="outputDiscountRateUpdate(value)" />
                         </div>
                         
                         <div class="form-group">
@@ -309,8 +309,8 @@ if(isset($_POST['edit_product'])){
                         </div>
 
                         <div class="form-group">
-                            <label>Sales Commission</label>
-                            <input type="text" class="form-control" name="SalesComPer" placeholder="Sales Commission (%)" required="required" value="<?php echo remove_junk($product['SalesComPer']);?>"/>
+                            <label>Sales Commission (<output class="inline" for="fader" id="salesrate"><?php echo remove_junk($product['SalesComPer']);?></output>%)</label>
+                            <input type="range" class="form-control" data-slider-id="blue" min="0" max="100" value="<?php echo remove_junk($product['SalesComPer']);?>" step="1" data-slider-tooltip="show" name="SalesComPer" placeholder="Sales Commission (%)" oninput="outputSalesRateUpdate(value)" />
                         </div>
 
                     </div>
@@ -368,4 +368,14 @@ if(isset($_POST['edit_product'])){
                 }
             });
         });
+</script>
+
+<script>
+    function outputDiscountRateUpdate(vol) {
+        document.querySelector('#discrate').value = vol;
+    }
+
+    function outputSalesRateUpdate(vol) {
+        document.querySelector('#salesrate').value = vol;
+    }
 </script>

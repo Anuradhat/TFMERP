@@ -6718,6 +6718,8 @@
     <Content Include="libs\bower_components\raphael\raphael.no-deps.min.js" />
     <Content Include="libs\bower_components\raphael\webpack.config.js" />
     <Content Include="libs\bower_components\raphael\yarn.lock" />
+    <Content Include="libs\bower_components\return-to-top\return-to-top.css" />
+    <Content Include="libs\bower_components\return-to-top\return-to-top.js" />
     <Content Include="libs\bower_components\select2\.bower.json" />
     <Content Include="libs\bower_components\select2\.editorconfig" />
     <Content Include="libs\bower_components\select2\.gitignore" />
@@ -7832,6 +7834,7 @@
     <Folder Include="libs\bower_components\raphael\dev\test\" />
     <Folder Include="libs\bower_components\raphael\dev\test\svg\" />
     <Folder Include="libs\bower_components\raphael\dev\test\vml\" />
+    <Folder Include="libs\bower_components\return-to-top\" />
     <Folder Include="libs\bower_components\select2\" />
     <Folder Include="libs\bower_components\select2\dist\" />
     <Folder Include="libs\bower_components\select2\dist\css\" />

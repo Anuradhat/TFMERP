@@ -269,8 +269,8 @@ if(isset($_POST['add_product'])){
                         </div>
 
                         <div class="form-group">
-                            <label>Discount Percentage</label>
-                            <input type="text" class="form-control" name="DiscountPer" placeholder="Discount Percentage (%)" />
+                            <label>Discount Percentage (<output class="inline" for="fader" id="discrate">0</output>%)</label>
+                            <input type="range" class="form-control" data-slider-id="blue" min="0" max="100" value="0" step="1" data-slider-tooltip="show" name="DiscountPer" placeholder="Discount Percentage (%)" oninput="outputDiscountRateUpdate(value)" />
                         </div>
 
                         <div class="form-group">
@@ -295,8 +295,8 @@ if(isset($_POST['add_product'])){
                         </div>
 
                         <div class="form-group">
-                            <label>Sales Commission</label>
-                            <input type="text" class="form-control" name="SalesComPer" placeholder="Sales Commission (%)" required="required"/>
+                            <label>Sales Commission (<output class="inline" for="fader" id="salesrate">0</output>%)</label>
+                            <input type="range" class="form-control" data-slider-id="blue" min="0" max="100" value="0" step="1" data-slider-tooltip="show" name="SalesComPer" placeholder="Sales Commission (%)" oninput="outputSalesRateUpdate(value)" />
                         </div>
 
                     </div>
@@ -356,4 +356,15 @@ if(isset($_POST['add_product'])){
                 }
             });
         });
+</script>
+
+
+<script>
+    function outputDiscountRateUpdate(vol) {
+        document.querySelector('#discrate').value = vol;
+    }
+
+    function outputSalesRateUpdate(vol) {
+        document.querySelector('#salesrate').value = vol;
+    }
 </script>
