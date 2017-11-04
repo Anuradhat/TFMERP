@@ -27,7 +27,8 @@
 	<!-- Google Font -->
 	<link rel="stylesheet"
 		href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic" />
-	<script src="../libs/dist/iCheck/icheck.min.js"></script>
+
+	<script src="/libs/dist/iCheck/icheck.min.js"></script>
 
 	<title>Log In - TFM ERP</title>
 </head>

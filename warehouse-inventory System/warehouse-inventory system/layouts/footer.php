@@ -119,5 +119,6 @@ immediately after the control sidebar -->
 </html>
 <!-- Return To Top -->
 <script src="libs/bower_components/return-to-top/return-to-top.js"></script>
+<script src="libs/bower_components/bootbox/bootbox.min.js"></script>
 
 <?php if(isset($db)) { $db->db_disconnect(); } ?>

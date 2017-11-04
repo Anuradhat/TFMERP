@@ -5,6 +5,7 @@ To change this template file, choose Tools | Templates
 and open the template in the editor.
 -->
 <?php
+ob_start();
 $page_title = 'Supplier';
 require_once('includes/load.php');
 page_require_level(1);
@@ -41,7 +42,7 @@ include_once 'layouts/header.php';
             <div class="row">
                 <div class="col-md-12 ">
                     <div class="btn-group">
-                        <button type="button" name="add_supplier" onclick="window.location = 'add_supplier.php'" class="btn btn-primary">&nbsp;&nbsp;New&nbsp;&nbsp;</button>
+                        <button type="button" name="add_supplier" onclick="window.location = 'SupplierAdd.php'" class="btn btn-primary">&nbsp;&nbsp;New&nbsp;&nbsp;</button>
                         <button type="button" class="btn btn-warning" onclick="window.location = 'home.php'">Cancel  </button>
                     </div>
                 </div>
@@ -50,7 +51,8 @@ include_once 'layouts/header.php';
     </div>
 
     <div class="row">
-        <div class="col-md-12"><?php echo display_msg($msg); ?>
+        <div class="col-md-12">
+            <?php echo display_msg($msg); ?>
         </div>
     </div>
 
@@ -88,28 +90,48 @@ include_once 'layouts/header.php';
                                 </thead>
                                 <tbody>
                                     <?php foreach ($all_suppliers as $sup): ?>
-                                        <tr>
-                                            <td>
-                                                <form method="post" action="supplieredit.php">
-                                                    <button type="submit" name="editsupplier" class="btn  btn-warning btn-xs glyphicon glyphicon-edit"></button>
-                                                    <input type="hidden" name="SupplierCode" value="<?php echo remove_junk($cus['SupplierCode']);?>" />
-                                                </form>
-                                                <form method="post" action="supplierdelete.php">
-                                                    <button type="submit" name="deletesupplier" class="btn btn-danger btn-xs glyphicon glyphicon-trash"></button>
-                                                    <input type="hidden" name="SupplierCode" value="<?php echo remove_junk($cus['SupplierCode']);?>" />
-                                                </form>
-                                            </td>
-                                            <td><?php echo remove_junk($sup['SupplierCode']); ?></td>
-                                            <td><?php echo remove_junk($sup['SupplierName']); ?></td>
-                                            <td><?php echo remove_junk($sup['SupplierTel']); ?></td>
-                                            <td><?php echo remove_junk($sup['SupplierFax']); ?></td>
-                                            <td><?php echo remove_junk($sup['SupplierEmail']); ?></td>
-                                            <td><?php echo remove_junk($sup['SupplierContactPerson']); ?></td>
-                                            <td><?php echo remove_junk($sup['SupplierVatNo']); ?></td>
-                                            <td><?php echo remove_junk($sup['SupplierSVatNo']); ?></td>
-                                            <td><?php echo remove_junk($sup['SupplierCreditPeriod']); ?></td>
-                                            <td><?php echo remove_junk($sup['CurrencyDescription']); ?></td>
-                                        </tr>
+                                    <tr>
+                                        <td>
+                                            <form method="post" action="SupplierEdit.php">
+                                                <button type="submit" name="supplier" class="btn  btn-warning btn-xs glyphicon glyphicon-edit" title="Edit Supplier"></button>
+                                                <input type="hidden" name="SupplierCode" value="<?php echo remove_junk($sup['SupplierCode']);?>" />
+                                            </form>
+                                            <form method="post" action="SupplierDelete.php">
+                                                <button type="submit" name="supplier" class="btn btn-danger btn-xs glyphicon glyphicon-trash" title="Delete Supplier"></button>
+                                                <input type="hidden" name="SupplierCode" value="<?php echo remove_junk($sup['SupplierCode']);?>" />
+                                            </form>
+                                        </td>
+                                        <td>
+                                            <?php echo remove_junk($sup['SupplierCode']); ?>
+                                        </td>
+                                        <td>
+                                            <?php echo remove_junk($sup['SupplierName']); ?>
+                                        </td>
+                                        <td>
+                                            <?php echo remove_junk($sup['SupplierTel']); ?>
+                                        </td>
+                                        <td>
+                                            <?php echo remove_junk($sup['SupplierFax']); ?>
+                                        </td>
+                                        <td>
+                                            <?php echo remove_junk($sup['SupplierEmail']); ?>
+                                        </td>
+                                        <td>
+                                            <?php echo remove_junk($sup['SupplierContactPerson']); ?>
+                                        </td>
+                                        <td>
+                                            <?php echo remove_junk($sup['SupplierVatNo']); ?>
+                                        </td>
+                                        <td>
+                                            <?php echo remove_junk($sup['SupplierSVatNo']); ?>
+                                        </td>
+                                        <td>
+                                            <?php echo remove_junk($sup['SupplierCreditPeriod']); ?>
+                                        </td>
+                                        <td>
+                                            <?php echo remove_junk($sup['CurrencyDescription']); ?>
+                                        </td>
+                                    </tr>
                                     <?php endforeach; ?>
                                 </tbody>
                             </table>
@@ -120,7 +142,10 @@ include_once 'layouts/header.php';
         </div>
     </div>
 </section>
+
+
 <?php
 include_once 'layouts/footer.php';
+?>
 
 

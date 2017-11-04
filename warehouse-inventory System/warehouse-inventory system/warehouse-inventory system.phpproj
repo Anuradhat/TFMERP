@@ -36,6 +36,8 @@
     <Compile Include="layouts\userlogin.php" />
     <Compile Include="product_BL.php" />
     <Compile Include="supplier.php" />
+    <Compile Include="SupplierDelete.php" />
+    <Compile Include="SupplierEdit.php" />
     <Compile Include="SupplierAdd.php" />
     <Compile Include="tax.php" />
     <Compile Include="edit_subcategory.php" />
@@ -93,6 +95,7 @@
     <Content Include="includes\.DS_Store" />
     <Content Include="layouts\.DS_Store" />
     <Content Include="libs\.DS_Store" />
+    <Content Include="libs\bower_components\bootbox\bootbox.min.js" />
     <Content Include="libs\bower_components\bootstrap-colorpicker\.bower.json" />
     <Content Include="libs\bower_components\bootstrap-colorpicker\bower.json" />
     <Content Include="libs\bower_components\bootstrap-colorpicker\CONTRIBUTING.md" />
@@ -7817,6 +7820,7 @@
     <Folder Include="libs\bower_components\morris.js\spec\support\" />
     <Folder Include="libs\bower_components\morris.js\spec\viz\" />
     <Folder Include="libs\bower_components\morris.js\spec\viz\exemplary\" />
+    <Folder Include="libs\bower_components\bootbox\" />
     <Folder Include="libs\bower_components\PACE\" />
     <Folder Include="libs\bower_components\PACE\themes\" />
     <Folder Include="libs\bower_components\PACE\themes\black\" />
