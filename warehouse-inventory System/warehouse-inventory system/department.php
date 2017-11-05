@@ -86,8 +86,8 @@ $all_departments = find_by_sql("call spSelectAllDepartments();")
                                                     <button type="submit" name="department" class="btn  btn-warning btn-xs glyphicon glyphicon-edit"></button>
                                                     <input type="hidden" name="DepartmentCode" value="<?php echo remove_junk($dep['DepartmentCode']);?>" />
                                                 </form>
-                                                <form method="post" action="delete_department.php">
-                                                    <button type="submit" data-toggle="confirmation" name="department" class="btn btn-danger btn-xs glyphicon glyphicon-trash"></button>
+                                                <form method="post" id="deleteform" action="delete_department.php">
+                                                    <button type="submit"  onclick="deleteConfirmation(this, event);" name="department" class="btn btn-danger btn-xs glyphicon glyphicon-trash"></button>
                                                     <input type="hidden" name="DepartmentCode" value="<?php echo remove_junk($dep['DepartmentCode']);?>" />
                                                 </form>
                                             </div>
@@ -112,5 +112,28 @@ $all_departments = find_by_sql("call spSelectAllDepartments();")
     </div>
 
 </section>
-<sc
+
 <?php include_once('layouts/footer.php'); ?>
+
+<script>
+    function deleteConfirmation(ctl, event) {
+        event.preventDefault();
+        bootbox.confirm({
+            title: "Delete Confirmation",
+            message: "Do you want to delete selected department?<br>This cannot be undone.",
+            buttons: {
+                cancel: {
+                    label: '<i class="fa fa-times"></i> Cancel'
+                },
+                confirm: {
+                    label: '<i class="fa fa-check"></i> Confirm'
+                }
+            },
+            callback: function (result) {
+                if (result === true) {
+                    $("#deleteform").submit();
+                }
+            }
+        });
+    }
+</script>
