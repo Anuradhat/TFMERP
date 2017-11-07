@@ -181,7 +181,7 @@ if(isset($_POST['add_customer'])){
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Telephone</label>
-                            <input type="tel" class="form-control" name="Tel" placeholder="Customer Telephone" required="required" />
+                            <input type="tel" class="form-control integer" name="Tel" placeholder="Customer Telephone" required="required" />
                         </div>
 
                         <div class="form-group">
@@ -193,7 +193,7 @@ if(isset($_POST['add_customer'])){
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Fax</label>
-                            <input type="tel" class="form-control" name="Fax" placeholder="Customer Fax" />
+                            <input type="tel" class="form-control integer" name="Fax" placeholder="Customer Fax" />
                         </div>
 
                         <div class="form-group">
@@ -255,7 +255,7 @@ if(isset($_POST['add_customer'])){
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Credit Period</label>
-                            <input type="text" class="form-control" name="CreditPeriod" placeholder="Credit Period (days)" />
+                            <input type="text" class="form-control integer" name="CreditPeriod" placeholder="Credit Period (days)" />
                         </div>
 
                         <div class="form-group">
@@ -287,3 +287,21 @@ if(isset($_POST['add_customer'])){
 </section>
 
 <?php include_once('layouts/footer.php'); ?>
+
+
+<script>
+    //Textbox integer accept
+    $(".integer").keypress(function (e) {
+        if ((e.which < 48 || e.which > 57)  && e.which != 8) {
+            return (false);  // stop processing
+        }
+    });
+
+    //Textbox decimal accept
+    $(".decimal").keypress(function (e) {
+       var ex = /^[0-9]+\.?[0-9]*$/;
+       if(ex.test(e.value)==false){
+           e.value = e.value.substring(0,e.value.length - 1);
+       }
+    });
+</script>

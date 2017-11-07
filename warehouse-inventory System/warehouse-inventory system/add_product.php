@@ -260,12 +260,12 @@ if(isset($_POST['add_product'])){
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Cost Price</label>
-                            <input type="text" class="form-control" name="CostPrice" placeholder="Cost Price" required="required" />
+                            <input type="text" class="form-control" name="CostPrice" pattern="([0-9]+\.)?[0-9]+" placeholder="Cost Price" required="required" />
                         </div>
 
                         <div class="form-group">
                             <label>Whole Sale Price</label>
-                            <input type="text" class="form-control" name="WholeSalePrice" placeholder="Whole Sale Price" />
+                            <input type="text" class="form-control" name="WholeSalePrice" pattern="([0-9]+\.)?[0-9]+" placeholder="Whole Sale Price" />
                         </div>
 
                         <div class="form-group">
@@ -286,12 +286,12 @@ if(isset($_POST['add_product'])){
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Sale Price</label>
-                            <input type="text" class="form-control" name="SalePrice" placeholder="Sale Price" required="required"/>
+                            <input type="text" class="form-control" name="SalePrice" pattern="([0-9]+\.)?[0-9]+" placeholder="Sale Price" required="required"/>
                         </div>
 
                         <div class="form-group">
                             <label>Discount Amount</label>
-                            <input type="text" class="form-control" name="DiscountAmount" placeholder="Discount Amount" />
+                            <input type="text" class="form-control" name="DiscountAmount" pattern="([0-9]+\.)?[0-9]+" placeholder="Discount Amount" />
                         </div>
 
                         <div class="form-group">

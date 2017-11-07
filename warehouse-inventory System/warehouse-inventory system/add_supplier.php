@@ -149,11 +149,11 @@ if(isset($_POST['add_supplier'])){
                 <div class="row form-group">
                     <div class="col-md-3">
                         <lable>Telephone:</lable>
-                        <input type="text" class="form-control" name="Telephone" placeholder="Contact Number" required="required" />
+                        <input type="text" class="form-control integer" name="Telephone" placeholder="Contact Number" required="required" />
                     </div>
                     <div class="col-md-3">
                         <lable>Fax:</lable>
-                        <input type="text" class="form-control" name="Fax" placeholder="Fax" />
+                        <input type="text" class="form-control integer" name="Fax" placeholder="Fax" />
                     </div>
                     <div class="col-md-3">
                         <lable>Email:</lable>
@@ -192,7 +192,7 @@ if(isset($_POST['add_supplier'])){
                 
                     <div class="col-md-3">
                         <lable>Credit Period</lable>
-                        <input type="text" class="form-control" name="CreditPeriod" placeholder="Credit Period" />
+                        <input type="text" class="form-control integer" name="CreditPeriod" placeholder="Credit Period" />
                     </div>
                     <div class="col-md-3">
                         <lable>Currency</lable>
@@ -211,3 +211,20 @@ if(isset($_POST['add_supplier'])){
 </section>
 
 <?php include_once('layouts/footer.php'); ?>
+
+<script>
+    //Textbox integer accept
+    $(".integer").keypress(function (e) {
+        if ((e.which < 48 || e.which > 57)  && e.which != 8) {
+            return (false);  // stop processing
+        }
+    });
+
+    //Textbox decimal accept
+    $(".decimal").keypress(function (e) {
+       var ex = /^[0-9]+\.?[0-9]*$/;
+       if(ex.test(e.value)==false){
+           e.value = e.value.substring(0,e.value.length - 1);
+       }
+    });
+</script>

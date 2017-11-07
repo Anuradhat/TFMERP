@@ -273,12 +273,12 @@ if(isset($_POST['edit_product'])){
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Cost Price</label>
-                            <input type="text" class="form-control" name="CostPrice" placeholder="Cost Price" required="required" value="<?php echo remove_junk($product['CostPrice']);?>"/>
+                            <input type="text" class="form-control" name="CostPrice" placeholder="Cost Price" pattern="([0-9]+\.)?[0-9]+" required="required" value="<?php echo remove_junk($product['CostPrice']);?>"/>
                         </div>
 
                         <div class="form-group">
                             <label>Whole Sale Price</label>
-                            <input type="text" class="form-control" name="WholeSalePrice" placeholder="Whole Sale Price" value="<?php echo remove_junk($product['WholeSalePrice']);?>"/>
+                            <input type="text" class="form-control" name="WholeSalePrice" placeholder="Whole Sale Price" pattern="([0-9]+\.)?[0-9]+" value="<?php echo remove_junk($product['WholeSalePrice']);?>"/>
                         </div>
           
                         <div class="form-group">
@@ -300,12 +300,12 @@ if(isset($_POST['edit_product'])){
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Sale Price</label>
-                            <input type="text" class="form-control" name="SalePrice" placeholder="Sale Price" required="required" value="<?php echo remove_junk($product['SalePrice']);?>"/>
+                            <input type="text" class="form-control" name="SalePrice" placeholder="Sale Price" pattern="([0-9]+\.)?[0-9]+"  required="required" value="<?php echo remove_junk($product['SalePrice']);?>"/>
                         </div>
 
                         <div class="form-group">
                             <label>Discount Amount</label>
-                            <input type="text" class="form-control" name="DiscountAmount" placeholder="Discount Amount" value="<?php echo remove_junk($product['DiscountAmount']);?>"/>
+                            <input type="text" class="form-control" name="DiscountAmount" placeholder="Discount Amount" pattern="([0-9]+\.)?[0-9]+" value="<?php echo remove_junk($product['DiscountAmount']);?>"/>
                         </div>
 
                         <div class="form-group">

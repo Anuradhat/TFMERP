@@ -6,6 +6,7 @@
  page_require_level(2);
 
  preventGetAction('department.php');
+
 ?>
 
 

@@ -86,13 +86,13 @@ $all_departments = find_by_sql("call spSelectAllDepartments();")
                                                     <button type="submit" name="department" class="btn  btn-warning btn-xs glyphicon glyphicon-edit"></button>
                                                     <input type="hidden" name="DepartmentCode" value="<?php echo remove_junk($dep['DepartmentCode']);?>" />
                                                 </form>
-                                                <form method="post" id="deleteform" action="delete_department.php">
-                                                    <button type="submit"  onclick="deleteConfirmation(this, event);" name="department" class="btn btn-danger btn-xs glyphicon glyphicon-trash"></button>
+                                                
+                                                    <button type="button" name="department" class="DeleteBtn btn btn-danger btn-xs glyphicon glyphicon-trash"></button>
                                                     <input type="hidden" name="DepartmentCode" value="<?php echo remove_junk($dep['DepartmentCode']);?>" />
-                                                </form>
+                                                
                                             </div>
                                         </td>
-                                        <td>
+                                        <td class="clsRowId">
                                             <?php echo remove_junk($dep['DepartmentCode']); ?>
                                         </td>
                                         <td>
@@ -115,12 +115,16 @@ $all_departments = find_by_sql("call spSelectAllDepartments();")
 
 <?php include_once('layouts/footer.php'); ?>
 
+
 <script>
-    function deleteConfirmation(ctl, event) {
-        event.preventDefault();
+   $(document).ready(function () {
+      $(".DeleteBtn").click(function () {
+          var $row = $(this).closest("tr");
+          var RowNo = $row.find(".clsRowId").text();
+
         bootbox.confirm({
             title: "Delete Confirmation",
-            message: "Do you want to delete selected department?<br>This cannot be undone.",
+            message: "Do you want to delete selected department?This cannot be undone.",
             buttons: {
                 cancel: {
                     label: '<i class="fa fa-times"></i> Cancel'
@@ -131,9 +135,17 @@ $all_departments = find_by_sql("call spSelectAllDepartments();")
             },
             callback: function (result) {
                 if (result === true) {
-                    $("#deleteform").submit();
+                    $.ajax({
+                    url: 'delete_department.php',
+                    type: "POST",
+                    data: { department: 'OK', DepartmentCode : RowNo },
+                    success: function (result) {
+
+                    }
+                });
                 }
             }
         });
-    }
+    });
+  });
 </script>

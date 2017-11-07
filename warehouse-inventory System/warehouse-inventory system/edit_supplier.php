@@ -155,11 +155,11 @@ if(isset($_POST['edit_supplier'])){
                 <div class="row form-group">
                     <div class="col-md-3">
                         <lable>Telephone:</lable>
-                        <input type="text" class="form-control" name="Telephone" placeholder="Contact Number" required="required" value="<?php echo remove_junk($SupplierCount['SupplierTel']) ?>" />
+                        <input type="text" class="form-control integer" name="Telephone" placeholder="Contact Number" required="required" value="<?php echo remove_junk($SupplierCount['SupplierTel']) ?>" />
                     </div>
                     <div class="col-md-3">
                         <lable>Fax:</lable>
-                        <input type="text" class="form-control" name="Fax" placeholder="Fax" value="<?php echo remove_junk($SupplierCount['SupplierFax']) ?>" />
+                        <input type="text" class="form-control integer" name="Fax" placeholder="Fax" value="<?php echo remove_junk($SupplierCount['SupplierFax']) ?>" />
                     </div>
                     <div class="col-md-3">
                         <lable>Email:</lable>
@@ -198,7 +198,7 @@ if(isset($_POST['edit_supplier'])){
 
                     <div class="col-md-3">
                         <lable>Credit Period</lable>
-                        <input type="text" class="form-control" name="CreditPeriod" placeholder="Credit Period" value="<?php echo remove_junk($SupplierCount['SupplierCreditPeriod']) ?>" />
+                        <input type="text" class="form-control integer" name="CreditPeriod" placeholder="Credit Period" value="<?php echo remove_junk($SupplierCount['SupplierCreditPeriod']) ?>" />
                     </div>
                     <div class="col-md-3">
                         <lable>Currency</lable>

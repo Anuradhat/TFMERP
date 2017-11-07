@@ -186,7 +186,7 @@ if(isset($_POST['edit_customer'])){
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Telephone</label>
-                            <input type="tel" class="form-control" name="Tel" placeholder="Customer Telephone" required="required" value="<?php echo remove_junk($customer['Tel']); ?>"/>
+                            <input type="tel" class="form-control integer" name="Tel" placeholder="Customer Telephone" required="required" value="<?php echo remove_junk($customer['Tel']); ?>"/>
                         </div>
 
                         <div class="form-group">
@@ -198,7 +198,7 @@ if(isset($_POST['edit_customer'])){
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Fax</label>
-                            <input type="tel" class="form-control" name="Fax" placeholder="Customer Fax" value="<?php echo remove_junk($customer['Fax']); ?>"/>
+                            <input type="tel" class="form-control integer" name="Fax" placeholder="Customer Fax" value="<?php echo remove_junk($customer['Fax']); ?>"/>
                         </div>
 
                         <div class="form-group">
@@ -260,7 +260,7 @@ if(isset($_POST['edit_customer'])){
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Credit Period</label>
-                            <input type="number" class="form-control" name="CreditPeriod" placeholder="Credit Period (days)" value="<?php echo remove_junk($customer['CreditPeriod']); ?>"/>
+                            <input type="number" class="form-control integer" name="CreditPeriod" placeholder="Credit Period (days)" value="<?php echo remove_junk($customer['CreditPeriod']); ?>"/>
                         </div>
 
                         <div class="form-group">
