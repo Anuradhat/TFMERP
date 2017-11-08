@@ -38,6 +38,31 @@ function find_by_id($table,$id)
 }
 
 /*--------------------------------------------------------------*/
+/*  Function for auto generate number for master and transaction table
+/*--------------------------------------------------------------*/
+function autoGenerateNumber($table,$mode)
+{
+   $query = "SELECT TrnsactionTableName,Prefix,SerialNo,SerialLength,Mode FROM emsAutoIncrementU WHERE TrnsactionTableName ='{$table}' AND Mode = {$mode}"; 
+   if($result = $db->query($query))
+    {
+        $row = mysql_fetch_assoc($result);
+
+        $prefix = $row['Prefix'];
+        $serialNo = $row['SerialNo'];
+        $serialLength = $row['SerialLength'];
+
+        $serialNo = $serialNo + 1;
+
+        $query = "UPDATE emsAutoIncrementU SET SerialNo = {$serialNo} WHERE TrnsactionTableName='{$table}'";
+
+        return  str_pad($serialNo, 4, "0", STR_PAD_LEFT);
+    }
+
+    return 0;
+
+}
+
+/*--------------------------------------------------------------*/
 /*  Function for Find data from stored procedure
 /*--------------------------------------------------------------*/
 function find_by_sp($sql)

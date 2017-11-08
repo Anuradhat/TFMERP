@@ -10,12 +10,12 @@ page_require_level(2);
 
 <?php
 if(isset($_POST['add_customer'])){
-    $req_fields = array('CustomerCode','CustomerName','CustomerAddress2','CustomerAddress3','ContactPerson', 'Tel');
+    $req_fields = array('CustomerName','CustomerAddress2','CustomerAddress3','ContactPerson', 'Tel');
     
     validate_fields($req_fields);
     
     if(empty($errors)){
-        $p_CustomerCode  = remove_junk($db->escape($_POST['CustomerCode']));
+        $p_CustomerCode  = autoGenerateNumber('tfmCustomerM',1);
         $p_CustomerName  = remove_junk($db->escape($_POST['CustomerName']));
         $p_NIC  = remove_junk($db->escape($_POST['NIC']));
         $p_CustomerAddress1 = remove_junk($db->escape($_POST['CustomerAddress1']));
@@ -139,7 +139,7 @@ if(isset($_POST['add_customer'])){
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Customer Code</label>
-                            <input type="text" class="form-control" name="CustomerCode" placeholder="Customer Code" required="required" />
+                            <input type="text" class="form-control" name="CustomerCode" placeholder="Code will generate after save" readonly="readonly" disabled="disabled"/>
                         </div>
 
                         <div class="form-group">
