@@ -208,6 +208,7 @@ desired effect
                             </span>
                         </a>
                         <ul class="treeview-menu">
+                            <li><a href="location.php"><i class="fa fa-th-large"></i>Location</a></li>
                             <li><a href="department.php"><i class="fa fa-th-list"></i>Department</a></li>
                             <li><a href="category.php"><i class="fa fa-list"></i>Category</a></li>
                             <li><a href="subcategory.php"><i class="fa fa-th-large"></i>Sub Category</a></li>
