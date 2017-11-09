@@ -17,7 +17,7 @@ $all_Taxs = find_by_sql("call spSelectAllTaxRates();");
 
 <?php
 if(isset($_POST['add_product'])){
-    $req_fields = array('ProductCode','ProductDesc','DepartmentCode','CategoryCode','SubcategoryCode','SupplierCode','CostPrice','SalePrice','SalesComPer','ReorderLevel');
+    $req_fields = array('ProductCode','ProductDesc','DepartmentCode','CategoryCode','SubcategoryCode','CostPrice','SalePrice','SalesComPer','ReorderLevel');
 
     validate_fields($req_fields);
 
@@ -154,51 +154,7 @@ if(isset($_POST['add_product'])){
             <div class="col-md-12"><?php echo display_msg($msg); ?>
             </div>
         </div>
-        <div class="box box-default">
-            <div class="box-header with-border">
-                <h3 class="box-title">Basic Details</h3>
-
-                <div class="box-tools pull-right">
-                    <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                        <i class="fa fa-minus"></i>
-                    </button>
-                </div>
-            </div>
-            <!-- /.box-header -->
-            <div class="box-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>Product Code</label>
-                            <input type="text" class="form-control" name="ProductCode" placeholder="Product Code" required="required" />
-                        </div>
-
-                        <div class="form-group">
-                            <label>Other Description</label>
-                            <input type="text" class="form-control" name="OtherDesc" placeholder="Other Description" />
-                        </div>
-                    </div>
-
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>Product Description</label>
-                            <input type="text" class="form-control" name="ProductDesc" placeholder="Product Description" required="required" />
-                        </div>
-
-                        <div class="form-group">
-                            <label>Supplier</label>
-                            <select class="form-control select2" style="width: 100%;" name="SupplierCode"required="required" >
-                                <option value="">Select Supplier</option>
-                                 <?php  foreach ($all_Supplier as $supp): ?>
-                                <option value="<?php echo $supp['SupplierCode'] ?>"><?php echo $supp['SupplierName'] ?>
-                                </option><?php endforeach; ?>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
+ 
         <div class="box box-default">
             <div class="box-header with-border">
                 <h3 class="box-title">Product Level Details</h3>
@@ -243,6 +199,52 @@ if(isset($_POST['add_product'])){
                 </div>
             </div>
         </div>
+
+        <div class="box box-default">
+            <div class="box-header with-border">
+                <h3 class="box-title">Product Infromation</h3>
+
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                        <i class="fa fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Product Code</label>
+                            <input type="text" class="form-control" name="ProductCode" placeholder="Product Code" required="required" />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Other Description</label>
+                            <input type="text" class="form-control" name="OtherDesc" placeholder="Other Description" />
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Product Description</label>
+                            <input type="text" class="form-control" name="ProductDesc" placeholder="Product Description" required="required" />
+                        </div>
+
+                        <!--<div class="form-group">
+                            <label>Supplier</label>
+                            <select class="form-control select2" style="width: 100%;" name="SupplierCode" required="required">
+                                <option value="">Select Supplier</option><?php  foreach ($all_Supplier as $supp): ?>
+                                <option value="<?php echo $supp['SupplierCode'] ?>"><?php echo $supp['SupplierName'] ?>
+                                </option><?php endforeach; ?>
+                            </select>
+                        </div>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
 
         <div class="box box-default">
             <div class="box-header with-border">

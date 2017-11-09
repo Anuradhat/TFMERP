@@ -15,7 +15,7 @@ if(isset($_POST['add_customer'])){
     validate_fields($req_fields);
     
     if(empty($errors)){
-        $p_CustomerCode  = autoGenerateNumber('tfmCustomerM',1);
+
         $p_CustomerName  = remove_junk($db->escape($_POST['CustomerName']));
         $p_NIC  = remove_junk($db->escape($_POST['NIC']));
         $p_CustomerAddress1 = remove_junk($db->escape($_POST['CustomerAddress1']));
@@ -32,7 +32,7 @@ if(isset($_POST['add_customer'])){
         $p_DeliveryAddress2 = remove_junk($db->escape($_POST['DeliveryAddress2']));
         $p_DeliveryAddress3 = remove_junk($db->escape($_POST['DeliveryAddress3']));
         $p_DeliveryTo = remove_junk($db->escape($_POST['DeliveryTo']));
-       
+        
         $p_CreditPeriod  = remove_junk(string2Value($db->escape($_POST['CreditPeriod'])));
         $p_VATNo  = remove_junk($db->escape($_POST['VATNo']));
         $p_SVATNo = remove_junk($db->escape($_POST['SVATNo']));
@@ -41,36 +41,45 @@ if(isset($_POST['add_customer'])){
         $date    = make_date();
         $user = "anush";
 
-        //$query  = "INSERT INTO tfmCustomerM (";
-        //$query .=" CustomerCode,CustomerName,DeliveryAddress1,DeliveryAddress2,DeliveryAddress3,Tel,Fax,Email,ContactPerson,VATNo,SVATNo,CreditPeriod,SalesPersonCode";
-        //$query .=") VALUES (";
-        //$query .=" '{$p_CustomerCode}', '{$p_CustomerName}', '{$p_DeliveryAddress1}', '{$p_DeliveryAddress2}', '{$p_DeliveryAddress3}', '{$p_Tel}', '{$p_Fax}',";
-        //$query .=" '{$p_Email}','{$p_ContactPerson}', '{$p_VATNo}', '{$p_SVATNo}',{$p_CreditPeriod},'{$p_SalesPersonCode}'";
-        //$query .=");";
 
-        $cus_count = find_by_sp("call spSelectCustomerFromCode('{$p_CustomerCode}');");
-
-        if($cus_count)
+        try
         {
-            $session->msg("d", "This customer code exist in the system.");
-            redirect('add_customer.php',false);
-        }
+            $db->begin();
 
+            $p_CustomerCode  = autoGenerateNumber('tfmCustomerM',1);
 
-        $query  = "call spInsertCustomer('{$p_CustomerCode}','{$p_CustomerName}','{$p_NIC}','{$p_CustomerAddress1}','{$p_CustomerAddress2}',
+            $cus_count = find_by_sp("call spSelectCustomerFromCode('{$p_CustomerCode}');");
+
+            if($cus_count)
+            {
+                $session->msg("d", "This customer code exist in the system.");
+                redirect('add_customer.php',false);
+            }
+
+            $query  = "call spInsertCustomer('{$p_CustomerCode}','{$p_CustomerName}','{$p_NIC}','{$p_CustomerAddress1}','{$p_CustomerAddress2}',
                    '{$p_CustomerAddress3}','{$p_DeliveryAddress1}','{$p_DeliveryAddress2}','{$p_DeliveryAddress3}','{$p_DeliveryTo}','{$p_Tel}',
                    '{$p_Fax}','{$p_Email}','{$p_ContactPerson}','{$p_VATNo}','{$p_SVATNo}',{$p_CreditPeriod},'{$p_SalesPersonCode}',
                    '{$date}','{$user}');";
 
-        if($db->query($query)){
-            $session->msg('s',"Customer added ");
-            redirect('add_customer.php', false);
-        } else {
-            $session->msg('d',' Sorry failed to added!');
-            redirect('customer.php', false);
+            if($db->query($query)){
+                $db->commit();
+                $session->msg('s',"Customer added ");
+                redirect('add_customer.php', false);
+            } else {
+                $db->rollback();
+                $session->msg('d',' Sorry failed to added!');
+                redirect('customer.php', false);
+            }
         }
+        catch(Exception $ex)
+        {
+            $db->rollback();
 
-    } else{
+            $session->msg('d',' Sorry failed to added!');
+            redirect('supplier.php', false);
+        } 
+    } 
+    else{
         $session->msg("d", $errors);
         redirect('add_customer.php',false);
     }

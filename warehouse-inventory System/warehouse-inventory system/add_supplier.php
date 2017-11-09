@@ -8,11 +8,10 @@ $allCurrencyTypes = find_by_sql("call spSelectAllCurrency();")
 
 <?php
 if(isset($_POST['add_supplier'])){
-    $req_fields = array('SupplierCode','SupplierName','SupplierAddress2','SupplierAddress3','Telephone');
+    $req_fields = array('SupplierName','SupplierAddress2','SupplierAddress3','Telephone');
     validate_fields($req_fields);
 
     if(empty($errors)){
-        $p_SupplierCode = remove_junk($db->escape($_POST['SupplierCode']));
         $p_SupplierName = remove_junk($db->escape($_POST['SupplierName']));
         $p_SupplierAddress1 = remove_junk($db->escape($_POST['SupplierAddress1']));
         $p_SupplierAddress2 = remove_junk($db->escape($_POST['SupplierAddress2']));
@@ -28,26 +27,44 @@ if(isset($_POST['add_supplier'])){
         $p_date = make_date();
         $p_user = current_user();
 
-        $SupplierCount = find_by_sp("call spSelectSupplierByCode('{$p_SupplierCode}');");
-
-        if($SupplierCount)
+        try
         {
-            $session->msg('d','This supplier code exist in the system.');
-            redirect('add_supplier.php',false);
+            $db->begin();
+
+            //Supplier code
+            $p_SupplierCode = autoGenerateNumber('tfmSupplierM',1);
+
+            $SupplierCount = find_by_sp("call spSelectSupplierByCode('{$p_SupplierCode}');");
+
+            if($SupplierCount)
+            {
+                $db->rollback();
+                $session->msg('d','This supplier code exist in the system.');
+                redirect('add_supplier.php',false);
+            }
+
+            $query = "call spInsertSupplier('{$p_SupplierCode}','{$p_SupplierName}','{$p_SupplierAddress1}','{$p_SupplierAddress2}','{$p_SupplierAddress3}','{$p_Telephone}',
+           '{$p_Fax}','{$p_Email}','{$p_ContactPerson}','{$p_VatNo}','{$p_SVatNo}','{$p_CreditPeriod}','{$p_CurrencyCode}','{$p_user["username"]}');";
+
+            if($db->query($query))
+            {
+                $db->commit();
+                $session->msg('s',"Supplier added ");
+                redirect('supplier.php', false);
+            }
+            else
+            {
+                $db->rollback();
+                $session->msg('d',' Sorry failed to added!');
+                redirect('add_supplier.php', false);
+            }
         }
-
-        $query = "call spInsertSupplier('{$p_SupplierCode}','{$p_SupplierName}','{$p_SupplierAddress1}','{$p_SupplierAddress2}','{$p_SupplierAddress3}','{$p_Telephone}',
-'{$p_Fax}','{$p_Email}','{$p_ContactPerson}','{$p_VatNo}','{$p_SVatNo}','{$p_CreditPeriod}','{$p_CurrencyCode}','{$p_user["username"]}');";
-
-        if($db->query($query))
+        catch(Exception $ex)
         {
-            $session->msg('s',"Supplier added ");
-            redirect('supplier.php', false);
-        }
-        else
-        {
+            $db->rollback();
+
             $session->msg('d',' Sorry failed to added!');
-            redirect('add_supplier.php', false);
+            redirect('supplier.php', false);
         }
     }
     else
@@ -114,12 +131,10 @@ if(isset($_POST['add_supplier'])){
                 </div>
             </div>
             <div class="box-body">
-                <div class="col-md-12"><?php echo display_msg($msg); ?>
-                </div>
                 <div class="row form-group">
                     <div class="col-md-4">
                         <lable>Supplier Code</lable>
-                        <input type="text" class="form-control" name="SupplierCode" placeholder="Supplier Code" required="required" />
+                        <input type="text" class="form-control" name="SupplierCode" placeholder="Code will generate after save"  readonly="readonly" disabled="disabled"/>
                     </div>
                     <div class="col-md-4">
                         <lable>Supplier Name</lable>

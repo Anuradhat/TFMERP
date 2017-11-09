@@ -42,10 +42,11 @@ function find_by_id($table,$id)
 /*--------------------------------------------------------------*/
 function autoGenerateNumber($table,$mode)
 {
-   $query = "SELECT TrnsactionTableName,Prefix,SerialNo,SerialLength,Mode FROM emsAutoIncrementU WHERE TrnsactionTableName ='{$table}' AND Mode = {$mode}"; 
+    global $db;;
+    $query = "SELECT TrnsactionTableName,Prefix,SerialNo,SerialLength,Mode FROM tfmAutoIncerementU WHERE TrnsactionTableName ='{$table}' AND Mode = {$mode};";
    if($result = $db->query($query))
     {
-        $row = mysql_fetch_assoc($result);
+        $row = $db->fetch_assoc($result);
 
         $prefix = $row['Prefix'];
         $serialNo = $row['SerialNo'];
@@ -53,9 +54,10 @@ function autoGenerateNumber($table,$mode)
 
         $serialNo = $serialNo + 1;
 
-        $query = "UPDATE emsAutoIncrementU SET SerialNo = {$serialNo} WHERE TrnsactionTableName='{$table}'";
+        $query = "UPDATE tfmAutoIncerementU SET SerialNo = {$serialNo} WHERE TrnsactionTableName='{$table}';";
+        $db->query($query);
 
-        return  str_pad($serialNo, 4, "0", STR_PAD_LEFT);
+        return  $prefix.str_pad($serialNo, $serialLength, "0", STR_PAD_LEFT);
     }
 
     return 0;

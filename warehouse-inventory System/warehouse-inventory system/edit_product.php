@@ -45,7 +45,7 @@ if(isset($_POST['product'])){
 
 <?php
 if(isset($_POST['edit_product'])){
-    $req_fields = array('hProductCode','ProductDesc','SupplierCode','CostPrice','SalePrice','SalesComPer','ReorderLevel');
+    $req_fields = array('hProductCode','ProductDesc','CostPrice','SalePrice','SalesComPer','ReorderLevel');
 
     validate_fields($req_fields);
 
@@ -163,9 +163,57 @@ if(isset($_POST['edit_product'])){
             <div class="col-md-12"><?php echo display_msg($msg); ?>
             </div>
         </div>
+
         <div class="box box-default">
             <div class="box-header with-border">
-                <h3 class="box-title">Basic Details</h3>
+                <h3 class="box-title">Product Level Details</h3>
+
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                        <i class="fa fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Department</label>
+                            <select class="form-control select2" style="width: 100%;" name="DepartmentCode" required="required" readonly="readonly" disabled="disabled">
+                                <option value="">Select Department</option><?php  foreach ($all_departments as $dep): ?>
+                                <option value="<?php echo $dep['DepartmentCode'] ?>" <?php if($dep['DepartmentCode'] === $product['DepartmentCode']): echo "selected"; endif; ?>><?php echo $dep['DepartmentDesc'] ?>
+                                </option><?php endforeach; ?>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Sub Category</label>
+                            <select class="form-control select2" style="width: 100%;" name="SubcategoryCode" required="required" id="ddlSubCategory" readonly="readonly" disabled="disabled">
+                                <option value="">Select Sub Category</option><?php  foreach ($all_Subcategory as $scat): ?>
+                                <option value="<?php echo $scat['SubcategoryCode'] ?>" <?php if($scat['SubcategoryCode'] === $product['SubcategoryCode']): echo "selected"; endif; ?>><?php echo $scat['SubcategoryDesc'] ?>
+                                </option><?php endforeach; ?>
+                            </select>
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6">
+                        <label>Category</label>
+                        <select class="form-control select2" style="width: 100%;" name="CategoryCode" required="required" id="ddlCategory" readonly="readonly" disabled="disabled">
+                            <option value="">Select Category</option><?php  foreach ($all_Category as $cat): ?>
+                            <option value="<?php echo $cat['CategoryCode'] ?>" <?php if($cat['CategoryCode'] === $product['CategoryCode']): echo "selected"; endif; ?>><?php echo $cat['CategoryDesc'] ?>
+                            </option><?php endforeach; ?>
+                        </select>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="box box-default">
+            <div class="box-header with-border">
+                <h3 class="box-title">Product Infromation</h3>
 
                 <div class="box-tools pull-right">
                     <button type="button" class="btn btn-box-tool" data-widget="collapse">
@@ -195,7 +243,7 @@ if(isset($_POST['edit_product'])){
                             <input type="text" class="form-control" name="ProductDesc" placeholder="Product Description" required="required" value="<?php echo remove_junk($product['ProductDesc']);?>"/>
                         </div>
 
-                        <div class="form-group">
+                        <!--<div class="form-group">
                             <label>Supplier</label>
                             <select class="form-control select2" style="width: 100%;" name="SupplierCode"required="required" >
                                 <option value="">Select Supplier</option>
@@ -203,56 +251,8 @@ if(isset($_POST['edit_product'])){
                                 <option value="<?php echo $supp['SupplierCode'] ?>" <?php if($supp['SupplierCode'] === $product['SupplierCode']): echo "selected"; endif; ?>  ><?php echo $supp['SupplierName'] ?>
                                 </option><?php endforeach; ?>
                             </select>
-                        </div>
+                        </div>-->
                     </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="box box-default">
-            <div class="box-header with-border">
-                <h3 class="box-title">Product Level Details</h3>
-
-                <div class="box-tools pull-right">
-                    <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                        <i class="fa fa-minus"></i>
-                    </button>
-                </div>
-            </div>
-            <!-- /.box-header -->
-            <div class="box-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>Department</label>
-                            <select class="form-control select2" style="width: 100%;" name="DepartmentCode" required="required" readonly="readonly" disabled="disabled">
-                                <option value="">Select Department</option><?php  foreach ($all_departments as $dep): ?>
-                                <option value="<?php echo $dep['DepartmentCode'] ?>"  <?php if($dep['DepartmentCode'] === $product['DepartmentCode']): echo "selected"; endif; ?>    ><?php echo $dep['DepartmentDesc'] ?>
-                                </option><?php endforeach; ?>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Sub Category</label>
-                            <select class="form-control select2" style="width: 100%;" name="SubcategoryCode" required="required" id="ddlSubCategory" readonly="readonly" disabled="disabled">
-                                <option value="">Select Sub Category</option>
-                                <?php  foreach ($all_Subcategory as $scat): ?>
-                                <option value="<?php echo $scat['SubcategoryCode'] ?>"  <?php if($scat['SubcategoryCode'] === $product['SubcategoryCode']): echo "selected"; endif; ?>    ><?php echo $scat['SubcategoryDesc'] ?>
-                                </option><?php endforeach; ?>
-                            </select>
-                        </div>
-
-                    </div>
-
-                    <div class="col-md-6">
-                        <label>Category</label>
-                        <select class="form-control select2" style="width: 100%;" name="CategoryCode" required="required" id="ddlCategory" readonly="readonly" disabled="disabled">
-                            <option value="">Select Category</option><?php  foreach ($all_Category as $cat): ?>
-                            <option value="<?php echo $cat['CategoryCode'] ?>"  <?php if($cat['CategoryCode'] === $product['CategoryCode']): echo "selected"; endif; ?> ><?php echo $cat['CategoryDesc'] ?>
-                            </option><?php endforeach; ?>
-                        </select>
-                    </div>
-
                 </div>
             </div>
         </div>
