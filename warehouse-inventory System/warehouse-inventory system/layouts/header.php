@@ -36,13 +36,35 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <link rel="stylesheet" href="/libs/dist/css/skins/skin-blue.min.css">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
+
+
     <!-- Google Font -->
     <link rel="stylesheet"
-          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic"> 
+    
+    <!-- REQUIRED JS SCRIPTS -->
+    <!-- jQuery 3 -->
+    <script src="libs/bower_components/jquery/dist/jquery.min.js"></script>
+    <!-- Bootstrap 3.3.7 -->
+    <script src="libs/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- Typehead -->
+    <script src="libs/bower_components/typeahead/bootstrap3-typeahead.min.js"></script>
+    <!-- DataTables -->
+    <script src="libs/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="libs/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+    <!-- FastClick -->
+    <script src="libs/bower_components/fastclick/lib/fastclick.js"></script>
+    <!-- Bootstrap slider -->
+    <script src="libs/bower_components/bootstrap-slider/bootstrap-slider.js"></script>
+    <!-- Select2 -->
+    <script src="libs/bower_components/select2/dist/js/select2.full.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="libs/dist/js/adminlte.min.js"></script> 
 </head>
 <!--
 BODY TAG OPTIONS:
@@ -208,12 +230,66 @@ desired effect
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            <li><a href="location.php"><i class="fa fa-th-large"></i>Location</a></li>
+                            <li><a href="location.php"><i class="fa fa-map-marker "></i>Location</a></li>
                             <li><a href="department.php"><i class="fa fa-th-list"></i>Department</a></li>
                             <li><a href="category.php"><i class="fa fa-list"></i>Category</a></li>
                             <li><a href="subcategory.php"><i class="fa fa-th-large"></i>Sub Category</a></li>
-                            <li><a href="tax.php"><i class="fa fa-money"></i>Tax</a></li>
                             <li><a href="product.php"><i class="fa fa-th"></i>Product</a></li>
+                            <li><a href="tax.php"><i class="fa fa-money"></i>Tax</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="treeview">
+                        <a href="#">
+
+                            <i class="fa fa-folder"></i> <span>Transaction</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                       
+                            <!--Purchase Requisition Menu-->
+                            <li class="treeview">
+                                <a href="#">
+                                    <i class="fa fa-shopping-cart"></i> <span>Purchase Requisition</span>
+                                    <span class="pull-right-container">
+                                        <i class="fa fa-angle-left pull-right"></i>
+                                    </span>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <li><a href="create_pr.php"><i class="fa fa-plus-square-o"></i>Create</a></li>
+                                    <li><a href="edit_pr.php"><i class="fa fa-pencil-square-o "></i>Update</a></li>
+                                </ul>
+                            </li>
+                            <!--End Purchase Requisition Menu-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                            
                         </ul>
                     </li>
                 </ul>

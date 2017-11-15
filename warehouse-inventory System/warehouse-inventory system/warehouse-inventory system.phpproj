@@ -18,6 +18,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="add_location.php" />
+    <Compile Include="autocomplete.php" />
+    <Compile Include="edit_pr.php" />
     <Compile Include="delete_location.php" />
     <Compile Include="delete_tax.php" />
     <Compile Include="edit_location.php" />
@@ -37,6 +39,7 @@
     <Compile Include="auth_v2.php" />
     <Compile Include="delete_subcategory.php" />
     <Compile Include="layouts\userlogin.php" />
+    <Compile Include="create_pr.php" />
     <Compile Include="location.php" />
     <Compile Include="product_BL.php" />
     <Compile Include="supplier.php" />
@@ -94,6 +97,7 @@
     <Compile Include="sales_report.php" />
     <Compile Include="sale_report_process.php" />
     <Compile Include="users.php" />
+    <Compile Include="_partial_pritems.php" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="includes\.DS_Store" />
@@ -7199,6 +7203,7 @@
     <Content Include="libs\bower_components\select2\tests\vendor\qunit-1.23.1.css" />
     <Content Include="libs\bower_components\select2\tests\vendor\qunit-1.23.1.js" />
     <Content Include="libs\bower_components\select2\vendor\jquery-2.1.0.js" />
+    <Content Include="libs\bower_components\typeahead\bootstrap3-typeahead.min.js" />
     <Content Include="libs\css\main.css" />
     <Content Include="libs\dist\css\AdminLTE.css" />
     <Content Include="libs\dist\css\adminlte.css.map" />
@@ -7827,6 +7832,7 @@
     <Folder Include="libs\bower_components\morris.js\spec\viz\exemplary\" />
     <Folder Include="libs\bower_components\bootstrap-confirmation\" />
     <Folder Include="libs\bower_components\bootbox\" />
+    <Folder Include="libs\bower_components\typeahead\" />
     <Folder Include="libs\bower_components\PACE\" />
     <Folder Include="libs\bower_components\PACE\themes\" />
     <Folder Include="libs\bower_components\PACE\themes\black\" />

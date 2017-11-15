@@ -42,11 +42,11 @@ if(isset($_POST['add_customer'])){
         $user = "anush";
 
 
+        $p_CustomerCode  = autoGenerateNumber('tfmCustomerM',1);
+
         try
         {
             $db->begin();
-
-            $p_CustomerCode  = autoGenerateNumber('tfmCustomerM',1);
 
             $cus_count = find_by_sp("call spSelectCustomerFromCode('{$p_CustomerCode}');");
 

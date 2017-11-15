@@ -29,10 +29,12 @@ if(isset($_POST['add_supplier'])){
 
         try
         {
-            $db->begin();
 
             //Supplier code
             $p_SupplierCode = autoGenerateNumber('tfmSupplierM',1);
+
+
+            $db->begin();
 
             $SupplierCount = find_by_sp("call spSelectSupplierByCode('{$p_SupplierCode}');");
 

@@ -9,7 +9,7 @@ page_require_level(2);
 $all_departments = find_by_sql("call spSelectAllDepartments();");
 $all_Category = find_by_sql("call spSelectAllCategory();");
 $all_Subcategory = find_by_sql("call spSelectAllSubcategory();");
-$all_Supplier = find_by_sql("call spSelectAllSuppliers();");
+//$all_Supplier = find_by_sql("call spSelectAllSuppliers();");
 $all_Taxs = find_by_sql("call spSelectAllTaxRates();");
 
 ?>

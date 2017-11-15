@@ -54,7 +54,7 @@ function autoGenerateNumber($table,$mode)
 
         $serialNo = $serialNo + 1;
 
-        $query = "UPDATE tfmAutoIncerementU SET SerialNo = {$serialNo} WHERE TrnsactionTableName='{$table}';";
+        $query = "call spAutoIncrement({$serialNo},'{$table}');";
         $db->query($query);
 
         return  $prefix.str_pad($serialNo, $serialLength, "0", STR_PAD_LEFT);

@@ -1,6 +1,10 @@
 <?php
   $page_title = 'Home Page';
   require_once('includes/load.php');
+
+  unset($_SESSION['header']);
+  unset($_SESSION['details']);
+
   if (!$session->isUserLoggedIn(true)) { redirect('index.php', false);}
 ?>
 <?php include_once('layouts/header.php'); ?>

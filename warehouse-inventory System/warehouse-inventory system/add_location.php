@@ -20,11 +20,11 @@ if(isset($_POST['add_location'])){
         $user = "anush";
 
 
+        $p_LocationCode  = autoGenerateNumber('tfmLocationM',1);
+
         try
         {
             $db->begin();
-
-            $p_LocationCode  = autoGenerateNumber('tfmLocationM',1);
 
             $loc_count = find_by_sp("call spSelectLocationFromCode('{$p_LocationCode}');");
 
@@ -53,7 +53,7 @@ if(isset($_POST['add_location'])){
             $session->msg('d',' Sorry failed to added!');
             redirect('location.php', false);
         }
-    } 
+    }
     else{
         $session->msg("d", $errors);
         redirect('add_location.php',false);
