@@ -17,8 +17,16 @@
     <IncludeDebugInformation>false</IncludeDebugInformation>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="add_employee_designation.php" />
+    <Compile Include="add_employee_department.php" />
     <Compile Include="add_location.php" />
     <Compile Include="autocomplete.php" />
+    <Compile Include="delete_employee_designation.php" />
+    <Compile Include="delete_employee_department.php" />
+    <Compile Include="edit_employee_designation.php" />
+    <Compile Include="edit_employee_department.php" />
+    <Compile Include="employee_designation.php" />
+    <Compile Include="employee_department.php" />
     <Compile Include="edit_pr.php" />
     <Compile Include="delete_location.php" />
     <Compile Include="delete_tax.php" />

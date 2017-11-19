@@ -211,14 +211,40 @@ desired effect
                     <li class="treeview">
                         <a href="#">
 
+                            <i class="fa fa-suitcase"></i> <span>Administration</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="add_user.php"><i class="fa fa-user-circle-o"></i> User</a></li>
+                            <li><a href="add_group.php"><i class="fa fa-user-circle"></i> User Level</a></li>
+                        </ul>
+                    </li>
+                    <li class="treeview">
+                        <a href="#">
+
+                            <i class="fa fa-users"></i> <span>Employee</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="employee_department.php"><i class="fa fa-sitemap"></i> Employee Department</a></li>
+                            <li><a href="employee_designation.php"><i class="fa fa-graduation-cap"></i> Employee Designation</a></li>
+                        </ul>
+                    </li>
+                    <li class="treeview">
+                        <a href="#">
+
                             <i class="fa fa-address-book-o"></i> <span>Customer / Supplier</span>
                             <span class="pull-right-container">
                                 <i class="fa fa-angle-left pull-right"></i>
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            <li><a href="customer.php"><i class="fa fa-user-circle-o"></i> Customer</a></li>
-                            <li><a href="supplier.php"><i class="fa fa-user-circle"></i>Supplier</a></li>
+                            <li><a href="customer.php"><i class="fa fa-handshake-o"></i> Customer</a></li>
+                            <li><a href="supplier.php"><i class="fa fa-truck"></i> Supplier</a></li>
                         </ul>
                     </li>
                     <li class="treeview">
