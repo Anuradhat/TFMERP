@@ -15,13 +15,6 @@ $arr_item = array();
 $arr_header = array();
 
 
-//if (!isset($_SERVER['HTTP_REFERER']))
-//{
-//    $_SESSION['header']  = null;
-//    $_SESSION['details'] = null;
-//}
-
-
 if($_SESSION['header'] != null) $arr_header = $_SESSION['header'];
 if($_SESSION['details'] != null) $arr_item = $_SESSION['details'];
 ?>
@@ -169,7 +162,7 @@ if(isset($_POST['edit_pr'])){
 if (isset($_POST['_prodcode'])) {
     $prodcode = remove_junk($db->escape($_POST['_prodcode']));
     $arr_item = $_SESSION['details'];
-    $arr_item = RemoveValueFromListOfArray( $arr_item,$prodcode);
+    $arr_item = RemoveValueFromListOfArray($arr_item,$prodcode);
     $_SESSION['details'] = $arr_item;
 
     return include('_partial_pritems.php');  
@@ -441,7 +434,7 @@ if (isset($_POST['_PRNo'])) {
 
                 $("#hPRNo").val(map[item].id);
                 $("#PrDate").val(map[item].PrDate);
-                $("#SupplierCode").val(map[item].SupplierCode);
+                $("#SupplierCode").select2().val(map[item].SupplierCode).trigger('change.select2');
                 $("#Remarks").val(map[item].Remarks);
 
                 //$("#SupplierCode option[value=" + map[item].SupplierCode + "]").attr("selected", "selected");

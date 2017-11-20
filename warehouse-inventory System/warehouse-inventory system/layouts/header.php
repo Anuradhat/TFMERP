@@ -54,17 +54,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <script src="libs/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
     <!-- Typehead -->
     <script src="libs/bower_components/typeahead/bootstrap3-typeahead.min.js"></script>
-    <!-- DataTables -->
-    <script src="libs/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
-    <script src="libs/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
-    <!-- FastClick -->
-    <script src="libs/bower_components/fastclick/lib/fastclick.js"></script>
-    <!-- Bootstrap slider -->
-    <script src="libs/bower_components/bootstrap-slider/bootstrap-slider.js"></script>
-    <!-- Select2 -->
-    <script src="libs/bower_components/select2/dist/js/select2.full.min.js"></script>
-    <!-- AdminLTE App -->
-    <script src="libs/dist/js/adminlte.min.js"></script> 
 </head>
 <!--
 BODY TAG OPTIONS:
@@ -278,7 +267,7 @@ desired effect
                             <!--Purchase Requisition Menu-->
                             <li class="treeview">
                                 <a href="#">
-                                    <i class="fa fa-shopping-cart"></i> <span>Purchase Requisition</span>
+                                    <i class="fa fa-list-ol"></i> <span>Purchase Requisition</span>
                                     <span class="pull-right-container">
                                         <i class="fa fa-angle-left pull-right"></i>
                                     </span>
@@ -291,7 +280,20 @@ desired effect
                             <!--End Purchase Requisition Menu-->
 
 
-
+                            <!--Purchase Order Menu-->
+                            <li class="treeview">
+                                <a href="#">
+                                    <i class="fa fa-shopping-cart"></i> <span>Purchase Order</span>
+                                    <span class="pull-right-container">
+                                        <i class="fa fa-angle-left pull-right"></i>
+                                    </span>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <li><a href="create_po.php"><i class="fa fa-plus-square-o"></i>Create</a></li>
+                                    <li><a href="#"><i class="fa fa-pencil-square-o "></i>Update</a></li>
+                                </ul>
+                            </li>
+                            <!--End Purchase Requisition Menu-->
 
 
 

@@ -36,6 +36,46 @@ function RemoveValueFromListOfArray($array,$search) {
 }
 
 
+function ChangValueFromListOfArray($array,$search,$changeIndex,$NewValue) {
+    $count = 0;
+    foreach($array as $row => $value){
+        if(array_search($search, $value) !== false)
+        {
+            $value[$changeIndex] = $NewValue;
+            $array[$count] = $value;
+
+        }
+        $count++;
+    }
+    return $array;
+}
+
+
+function ExistInArray($array,$search) {
+    $count = 0;
+    foreach($array as $row => $value){
+        if(array_search($search, $value) !== false)
+        {
+            return true;
+        }
+        $count++;
+    }
+    return false;
+}
+
+
+function ArraySearch($array,$search) {
+    $count = 0;
+    foreach($array as $row => $value){
+        if(array_search($search, $value) !== false)
+        {
+            return $value;
+        }
+        $count++;
+    }
+    return null;
+}
+
 /*--------------------------------------------------------------*/
 /* Validate value
 /*--------------------------------------------------------------*/

@@ -17,12 +17,12 @@ $all_Taxs = find_by_sql("call spSelectAllTaxRates();");
 
 <?php
 if(isset($_POST['add_product'])){
-    $req_fields = array('ProductCode','ProductDesc','DepartmentCode','CategoryCode','SubcategoryCode','CostPrice','SalePrice','SalesComPer','ReorderLevel');
+    $req_fields = array('ProductDesc','DepartmentCode','CategoryCode','SubcategoryCode','CostPrice','SalePrice','SalesComPer','ReorderLevel');
 
     validate_fields($req_fields);
 
     if(empty($errors)){
-        $p_ProductCode = remove_junk($db->escape($_POST['ProductCode']));
+        //$p_ProductCode = remove_junk($db->escape($_POST['ProductCode']));
         $p_ProductDesc  = remove_junk($db->escape($_POST['ProductDesc']));
         $p_OtherDesc  = remove_junk($db->escape($_POST['OtherDesc']));
         $p_DepartmentCode  = remove_junk($db->escape($_POST['DepartmentCode']));
@@ -43,6 +43,8 @@ if(isset($_POST['add_product'])){
         $Tax_Selected = string2Boolean(count($p_Tax) > 0);
         $date    = make_date();
         $user = "anush";
+
+        $p_ProductCode  = autoGenerateNumber('tfmProductM',1);
 
         $prod_code = $p_SubcategoryCode.$p_ProductCode;
 
@@ -216,7 +218,7 @@ if(isset($_POST['add_product'])){
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Product Code</label>
-                            <input type="text" class="form-control" name="ProductCode" placeholder="Product Code" required="required" />
+                            <input type="text" class="form-control" name="ProductCode" placeholder="Code will generate after save" required="required" readonly="readonly" disabled="disabled"/>
                         </div>
 
                         <div class="form-group">

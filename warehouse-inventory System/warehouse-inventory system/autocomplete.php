@@ -5,7 +5,7 @@ require_once('includes/load.php');
 page_require_level(2);
 
 
-
+//Product code auto generate
 if (isset($_POST['productcode'])) {
     $query = $_POST['productcode'];
     $result = $db->query ("call spProductAutoComplete('{$query}')");
@@ -21,7 +21,7 @@ if (isset($_POST['productcode'])) {
     echo json_encode ($array);
 }
 
-
+//Purchase requisition auto generate for PR edit form
 if (isset($_POST['PRNo'])) {
     $query = $_POST['PRNo'];
     $result = $db->query ("call spPurchaseRequisitionAutoComplete({$query})");
@@ -40,5 +40,21 @@ if (isset($_POST['PRNo'])) {
     echo json_encode ($array);
 }
 
+ //Purchase requisition auto generate for PO creation form
+if (isset($_POST['PRNoForPO'])) {
+    $query = $_POST['PRNoForPO'];
+    $result = $db->query ("call spPurchaseRequisitionAutoCompleteForPO({$query})");
+    $array = array();
+    while ($row = $db->fetch_assoc($result)) {
+        $array[] = array (
+            'text' => $row['PRNo'],
+            'value' => $row['PRNo'],
+            'SupplierCode' => $row['SupplierCode'],
+            'Remarks' => $row['Remarks']
+        );
+    }
+    //RETURN JSON ARRAY
+    echo json_encode ($array);
+}
 
 ?>

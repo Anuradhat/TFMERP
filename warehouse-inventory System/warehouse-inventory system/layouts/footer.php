@@ -80,7 +80,26 @@ immediately after the control sidebar -->
 <div class="control-sidebar-bg"></div>
 </div>
 <!-- ./wrapper -->
- 
+     <!-- DataTables -->
+<script src="libs/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="libs/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<!-- FastClick -->
+<script src="libs/bower_components/fastclick/lib/fastclick.js"></script>
+<!-- Bootstrap slider -->
+<script src="libs/bower_components/bootstrap-slider/bootstrap-slider.js"></script>
+<!-- Select2 -->
+<script src="libs/bower_components/select2/dist/js/select2.full.min.js"></script>
+<!-- AdminLTE App -->
+<script src="libs/dist/js/adminlte.min.js"></script> 
+
+<div id="modal-container" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+        </div>
+    </div>
+</div>
+
 <script>
     $(function () {
         $('.table').DataTable();

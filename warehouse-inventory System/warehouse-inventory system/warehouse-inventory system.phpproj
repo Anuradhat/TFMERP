@@ -21,6 +21,7 @@
     <Compile Include="add_employee_department.php" />
     <Compile Include="add_location.php" />
     <Compile Include="autocomplete.php" />
+    <Compile Include="create_po.php" />
     <Compile Include="delete_employee_designation.php" />
     <Compile Include="delete_employee_department.php" />
     <Compile Include="edit_employee_designation.php" />
@@ -105,6 +106,8 @@
     <Compile Include="sales_report.php" />
     <Compile Include="sale_report_process.php" />
     <Compile Include="users.php" />
+    <Compile Include="_partial_podetails.php" />
+    <Compile Include="_partial_poitem.php" />
     <Compile Include="_partial_pritems.php" />
   </ItemGroup>
   <ItemGroup>
