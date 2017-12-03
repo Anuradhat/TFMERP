@@ -256,6 +256,7 @@ desired effect
                         <ul class="treeview-menu">
                             <li><a href="employee_department.php"><i class="fa fa-sitemap"></i> Employee Department</a></li>
                             <li><a href="employee_designation.php"><i class="fa fa-graduation-cap"></i> Employee Designation</a></li>
+                            <li><a href="employee.php"><i class="fa fa-handshake-o"></i> Employee</a></li>
                         </ul>
                     </li>
                     <li class="treeview">
