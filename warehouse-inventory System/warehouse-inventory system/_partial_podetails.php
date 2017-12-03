@@ -26,13 +26,13 @@
                 <?php echo $value[1] ?>
             </td>
             <td>
-                <?php echo number_format($value[2],2) ?>
+                <?php echo number_format(($value[2] == null ? 0 : $value[2]),2) ?>
             </td>
             <td>
                 <?php echo $value[3] ?>
             </td>
             <td>
-                <?php echo number_format($value[2] * $value[3],2) ?>
+                <?php echo number_format(($value[2] == null ? 0 :$value[2] * $value[3]),2) ?>
             </td>
         </tr><?php  } ?>
     </tbody>

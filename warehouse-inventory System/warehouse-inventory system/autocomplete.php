@@ -57,4 +57,28 @@ if (isset($_POST['PRNoForPO'])) {
     echo json_encode ($array);
 }
 
+
+
+
+//Get po headrer some details
+if (isset($_POST['_PONoForHeader'])) {
+    $PONo = remove_junk($db->escape($_POST['_PONoForHeader']));
+    $result = $db->query("call spSelectAllPOHeaderDetailsFromPONo('{$PONo}');");
+    $array = array();
+    while ($row = $db->fetch_assoc($result)) {
+        $array = array (
+            'PRNo' => $row['PRNo'],
+            'PoDate' => $row['PoDate'],
+            'WorkFlowCode' => $row['WorkFlowCode'],
+            'Remarks' => $row['Remarks']
+        );
+    }
+    //RETURN JSON ARRAY
+    echo json_encode($array);
+}
+
+
+
+
+
 ?>

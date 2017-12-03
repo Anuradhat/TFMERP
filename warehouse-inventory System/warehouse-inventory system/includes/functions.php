@@ -76,6 +76,18 @@ function ArraySearch($array,$search) {
     return null;
 }
 
+function ArraySearchWithCoulmn($array,$search,$coulmn) {
+    $count = 0;
+    foreach($array as $row => $value){
+        if($value[$coulmn] == $search)
+        {
+            return $value;
+        }
+        $count++;
+    }
+    return null;
+}
+
 /*--------------------------------------------------------------*/
 /* Validate value
 /*--------------------------------------------------------------*/

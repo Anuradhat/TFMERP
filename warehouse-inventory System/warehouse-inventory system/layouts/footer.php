@@ -112,8 +112,45 @@ immediately after the control sidebar -->
     //Initialize Select2 Elements
       $('.select2').select2();
   })
+
+  setInterval(function () {
+      $('#tasksmenu').load('_partial_pendingtask.php');
+  }, 60000);
 </script>
 
+<script>
+    //Textbox integer accept
+    $(".integer").keypress(function (evt) {
+        evt = (evt) ? evt : window.event;
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return false;
+        }
+        return true;
+    });
+
+    //Textbox decimal accept
+    $(".decimal").keypress(function (e) {
+        var keyCode = (e.which) ? e.which : e.keyCode;
+        if ((keyCode >= 48 && keyCode <= 57) || (keyCode == 8))
+            return true;
+        else if (keyCode == 46) {
+            var curVal = document.activeElement.value;
+            if (curVal != null && curVal.trim().indexOf('.') == -1)
+                return true;
+            else
+                return false;
+        }
+        else
+            return false;
+    });
+
+
+
+  $(window).on('load', function () {
+        $('.loader').fadeOut();
+  });
+</script>
  <a href="javascript:" id="return-to-top"><i class="fa fa-chevron-up"></i></a>
 
 </body>

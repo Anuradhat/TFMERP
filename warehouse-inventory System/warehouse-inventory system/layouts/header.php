@@ -1,4 +1,13 @@
-<?php $user = current_user(); ?>
+<?php 
+ob_start();
+
+session_set_cookie_params(0);
+session_start();
+
+require_once('includes/load.php');
+
+$user = current_user(); 
+?>
 
 <!DOCTYPE html>
 <!--
@@ -36,6 +45,22 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <link rel="stylesheet" href="/libs/dist/css/skins/skin-blue.min.css">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+
+
+    <style>
+        .loader {
+            position: fixed;
+            left: 0px;
+            top: 0px;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+            border-style: solid;
+            border-color: black;
+            background: url(../libs/images/pageload.gif) center no-repeat rgba(4, 4, 4, 0.41);
+        }
+    </style>
+
 
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -76,6 +101,7 @@ desired effect
 |---------------------------------------------------------|
 -->
 <body class="hold-transition skin-blue sidebar-mini">
+    <div class="loader"></div>
     <div class="wrapper">
         <?php  if ($session->isUserLoggedIn(true)): ?>
         <!-- Main Header -->
@@ -97,34 +123,42 @@ desired effect
                 <div class="navbar-custom-menu">
                     <ul class="nav navbar-nav">
                         <!-- Messages: style can be found in dropdown.less-->
-                    
-                        <!-- /.messages-menu -->
-                        <!-- Notifications Menu -->
-                        <li class="dropdown notifications-menu">
-                            <!-- Menu toggle button -->
+                        <li class="dropdown messages-menu">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <i class="fa fa-bell-o"></i>
-                                <span class="label label-warning">10</span>
+                                <i class="fa fa-envelope-o"></i>
+                                <span class="label label-success">1</span>
                             </a>
                             <ul class="dropdown-menu">
-                                <li class="header">You have 10 pending jobs</li>
+                                <li class="header">You have 1 message(s)</li>
                                 <li>
-                                    <!-- Inner Menu: contains the notifications -->
+                                    <!-- inner menu: contains the actual data -->
                                     <ul class="menu">
                                         <li>
-                                            <!-- start notification -->
+                                            <!-- start message -->
                                             <a href="#">
-                                                <i class="fa fa-users text-aqua"></i> 5 Jobs
+                                                <div class="pull-left">
+                                                    <img src="../libs/images/user.png" class="img-circle" alt="User Image">
+                                                </div>
+                                                <h4>
+                                                    Support Team
+                                                    <small><i class="fa fa-clock-o"></i> 5 mins</small>
+                                                </h4>
+                                                <p>This event under construction</p>
                                             </a>
                                         </li>
-                                        <!-- end notification -->
+                                        <!-- end message -->
+ 
                                     </ul>
                                 </li>
-                                <li class="footer"><a href="#">View all</a></li>
+                                <li class="footer"><a href="#">See All Messages</a></li>
                             </ul>
                         </li>
+
                         <!-- Tasks Menu -->
-                 
+                        <!-- Tasks: style can be found in dropdown.less -->
+                        <li class="dropdown tasks-menu" id="tasksmenu">
+                            <?php  include('_partial_pendingtask.php');  ?>
+                        </li>
                         <!-- User Account Menu -->
                         <li class="dropdown user user-menu">
                             <!-- Menu Toggle Button -->
@@ -208,6 +242,7 @@ desired effect
                         <ul class="treeview-menu">
                             <li><a href="add_user.php"><i class="fa fa-user-circle-o"></i> User</a></li>
                             <li><a href="add_group.php"><i class="fa fa-user-circle"></i> User Level</a></li>
+                            <li><a href="workflow.php"><i class="fa fa-check-circle"></i> Work-Flow </a></li>
                         </ul>
                     </li>
                     <li class="treeview">
@@ -253,6 +288,7 @@ desired effect
                             <li><a href="tax.php"><i class="fa fa-money"></i>Tax</a></li>
                         </ul>
                     </li>
+                    <li class="header">Transaction</li>
 
                     <li class="treeview">
                         <a href="#">
@@ -290,7 +326,7 @@ desired effect
                                 </a>
                                 <ul class="treeview-menu">
                                     <li><a href="create_po.php"><i class="fa fa-plus-square-o"></i>Create</a></li>
-                                    <li><a href="#"><i class="fa fa-pencil-square-o "></i>Update</a></li>
+                                    <li><a href="edit_po.php"><i class="fa fa-pencil-square-o "></i>Update</a></li>
                                 </ul>
                             </li>
                             <!--End Purchase Requisition Menu-->

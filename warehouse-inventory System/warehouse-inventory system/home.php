@@ -5,6 +5,7 @@
   unset($_SESSION['header']);
   unset($_SESSION['details']);
   unset($_SESSION['PrnNos']);
+  unset($_SESSION['PONos']);
 
   if (!$session->isUserLoggedIn(true)) { redirect('index.php', false);}
 ?>

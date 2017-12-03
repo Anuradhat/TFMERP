@@ -21,59 +21,61 @@ if($_SESSION['details'] != null) $arr_item = $_SESSION['details'];
 
 <?php
 
-if(isset($_POST['edit_pr'])){
-    if($_POST['edit_pr'] == "item")
-    {
-        $req_fields = array('ProductCode','hProductDesc','LastPurchasePrice','Qty');   
+if(isset($_POST["ProductCode"]))
+{
+    $req_fields = array('ProductCode','hProductDesc','LastPurchasePrice','Qty');   
 
-        validate_fields($req_fields);
+    validate_fields($req_fields);
 
-        if(empty($errors)){
-            $p_ProductCode  = remove_junk($db->escape($_POST['ProductCode']));
-            $p_ProductDesc  = remove_junk($db->escape($_POST['hProductDesc']));
-            $p_LastPurchasePrice  = remove_junk($db->escape($_POST['LastPurchasePrice']));
-            $p_Qty = remove_junk($db->escape($_POST['Qty']));
+    if(empty($errors)){
+        $p_ProductCode  = remove_junk($db->escape($_POST['ProductCode']));
+        $p_ProductDesc  = remove_junk($db->escape($_POST['hProductDesc']));
+        $p_LastPurchasePrice  = remove_junk($db->escape($_POST['LastPurchasePrice']));
+        $p_Qty = remove_junk($db->escape($_POST['Qty']));
 
-            $prod_count = find_by_sp("call spSelectProductFromCode('{$p_ProductCode}');");
-
-
-            if(!$prod_count)
-            {
-                $session->msg("d", "This product code not exist in the system.");
-                redirect('edit_pr.php',false);
-            }
+        $prod_count = find_by_sp("call spSelectProductFromCode('{$p_ProductCode}');");
 
 
-            if ($_SESSION['details'] == null)
-            {
-                $arr_item[]  = array($p_ProductCode,$p_ProductDesc,$p_LastPurchasePrice,$p_Qty);
-                $_SESSION['details'] = $arr_item; 
-            }
-            else
-            {
-                $arr_item= $_SESSION['details'];
+        if(!$prod_count)
+        {
+            $session->msg("d", "This product code not exist in the system.");
+            return include('_partial_pritems.php');
+        }
 
-                if(!in_array($p_ProductCode,$arr_item[0]))
-                {
-                    $arr_item[] = array($p_ProductCode,$p_ProductDesc,$p_LastPurchasePrice,$p_Qty);
-                    $_SESSION['details'] = $arr_item;
-                }
-                else
-                {
-                    $session->msg("w", "This product exist in the table.");
-                    redirect('edit_pr.php',false);
-                }
 
-            }
+        if ($_SESSION['details'] == null)
+        {
+            $arr_item[]  = array($p_ProductCode,$p_ProductDesc,$p_LastPurchasePrice,$p_Qty);
+            $_SESSION['details'] = $arr_item; 
 
+            return include('_partial_pritems.php');
         }
         else
         {
-            $session->msg("d", $errors);
-            redirect('edit_pr.php',false);
+            $arr_item= $_SESSION['details'];
+
+            if(!ExistInArray($arr_item,$p_ProductCode))
+            {
+                $arr_item[] = array($p_ProductCode,$p_ProductDesc,$p_LastPurchasePrice,$p_Qty);
+                $_SESSION['details'] = $arr_item;
+
+                return include('_partial_pritems.php');
+            }
+            else
+            {
+                $session->msg("w", "This product exist in the table.");
+                return include('_partial_pritems.php');
+            }
+
         }
+
     }
-    else if($_POST['edit_pr'] == "save")
+}
+
+
+if(isset($_POST['edit_pr'])){
+
+    if($_POST['edit_pr'] == "save")
     {
         $req_fields = array('hPRNo','SupplierCode');
 
@@ -230,8 +232,7 @@ if (isset($_POST['_PRNo'])) {
         </div>
 
         <div class="row">
-            <div class="col-md-12"><?php echo display_msg($msg); ?>
-            </div>
+            <div id="message" class="col-md-12"><?php include('_partial_message.php'); ?> </div>
         </div>
 
         <div class="box box-default" id="header">
@@ -316,18 +317,18 @@ if (isset($_POST['_PRNo'])) {
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label>Last Purchase Price</label>
-                                <input type="text" class="form-control" name="LastPurchasePrice" id="LastPurchasePrice" pattern="([0-9]+\.)?[0-9]+" placeholder="Last Purchase Price" required="required" <?php   if(remove_junk($arr_header[4]) == "1") echo "disabled" ?>/>
+                                <input type="text" class="form-control decimal" name="LastPurchasePrice" id="LastPurchasePrice" pattern="([0-9]+\.)?[0-9]+" placeholder="Last Purchase Price" required="required" <?php   if(remove_junk($arr_header[4]) == "1") echo "disabled" ?>/>
                             </div>
                         </div>
 
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label>Qty</label>
-                                <input type="number" class="form-control integer" name="Qty"  placeholder="Qty"  required="required" <?php   if(remove_junk($arr_header[4]) == "1") echo "disabled" ?>/>
+                                <input type="number" class="form-control integer" name="Qty" id="Qty" placeholder="Qty"  required="required" <?php   if(remove_junk($arr_header[4]) == "1") echo "disabled" ?>/>
                             </div>
                             <div class="form-group pull-right">
                                 <label>&nbsp;</label><br>
-                                <button type="submit" class="btn btn-info" name="edit_pr" value="item" <?php   if(remove_junk($arr_header[4]) == "1") echo "disabled" ?>>&nbsp;&nbsp;&nbsp;Add&nbsp;&nbsp;&nbsp;</button>
+                                <button type="submit" class="btn btn-info" name="edit_pr" onclick="AddItem(this, event);" value="item" <?php   if(remove_junk($arr_header[4]) == "1") echo "disabled" ?>>&nbsp;&nbsp;&nbsp;Add&nbsp;&nbsp;&nbsp;</button>
                                 <button type="reset" class="btn btn-success" <?php   if(remove_junk($arr_header[4]) == "1") echo "disabled" ?>>&nbsp;Reset&nbsp;</button>
                             </div>
                         </div>
@@ -358,6 +359,43 @@ if (isset($_POST['_PRNo'])) {
             </div>
 
 </section>
+
+
+<script type="text/javascript">
+    function AddItem(ctrl, event) {
+        event.preventDefault();
+
+        if ($('#ProductCode').val() == "")
+        {
+            $("#ProductCode").focus();
+            bootbox.alert('Please select a product code.');
+        }
+        else if ($('#ProductDesc').val() == "") {
+            $("#ProductCode").focus();
+            bootbox.alert('Please select a product code.');
+        }
+        else if ($('#LastPurchasePrice').val() <= 0) {
+            $("#LastPurchasePrice").focus();
+            bootbox.alert('Please enter valid purchase price.');
+        }
+        else if ($('#Qty').val() <= 0) {
+            $("#Qty").focus();
+            bootbox.alert('Please enter valid purchase qty.');
+        }
+        else
+        {
+            $.ajax({
+                url: 'edit_pr.php',
+                type: "POST",
+                data: $("form").serialize(),
+                success: function (result) {
+                    $("#table").html(result);
+                    $('#message').load('_partial_message.php');
+                }
+            });
+        }
+    }
+</script>
 
 
 <script type="text/javascript">
@@ -470,19 +508,6 @@ if (isset($_POST['_PRNo'])) {
             }
         });
     });
-
-
-
-
-
-    //Textbox integer accept
-    $(".integer").keypress(function (e) {
-        if (e.which < 48 || e.which > 57) {
-            return (false);  // stop processing
-        }
-    });
-
-
 </script>
 
 <?php include_once('layouts/footer.php'); ?>

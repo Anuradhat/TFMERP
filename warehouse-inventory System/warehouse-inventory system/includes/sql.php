@@ -64,6 +64,23 @@ function autoGenerateNumber($table,$mode)
 
 }
 
+
+
+function ReadSystemConfig($key)
+{
+    global $db;;
+    $query = "call spReadSystemConfig('{$key}');";
+    if($result = $db->query($query))
+    {
+        $row = $db->fetch_assoc($result);
+
+        $Value = $row['Value'];
+
+        return  $Value;
+    }
+    return null;
+}
+
 /*--------------------------------------------------------------*/
 /*  Function for Find data from stored procedure
 /*--------------------------------------------------------------*/
@@ -280,6 +297,37 @@ function tableExists($table){
 		endif;
 
 	 }
+
+/*--------------------------------------------------------------*/
+/* Function for Finding all approvals'
+/*--------------------------------------------------------------*/
+   function check_pending_approvels($transaction_code = "")
+   {
+       global $db;
+       $current_user = current_user();
+
+       if(isset($current_user))
+       {
+           if($current_user["EmployeeCode"] != "")
+           {
+               $EmployeeCode = $current_user["EmployeeCode"];
+
+               if($transaction_code == "")
+               {
+                   $sql  = "call spViewPendingApprovelsFromEmployeeCode('{$EmployeeCode}');";
+               }
+               else
+               {
+                   $sql  =  "call spViewPendingApprovelsFromEmployeeTransactionCode('{$EmployeeCode}','{$transaction_code}');";
+               }
+
+               return find_by_sql($sql);
+               //return $db->fetch_assoc($result);
+           }
+       }
+       return "";
+   }
+
    /*--------------------------------------------------------------*/
    /* Function for Finding all product name
    /* JOIN with categorie  and media database table

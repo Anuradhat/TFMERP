@@ -19,8 +19,16 @@
   <ItemGroup>
     <Compile Include="add_employee_designation.php" />
     <Compile Include="add_employee_department.php" />
+    <Compile Include="approval_task.php" />
+    <Compile Include="delete_workflow.php" />
+    <Compile Include="edit_workflow.php" />
+    <Compile Include="add_workflow.php" />
     <Compile Include="add_location.php" />
     <Compile Include="autocomplete.php" />
+    <Compile Include="_partial_message.php" />
+    <Compile Include="_partial_pendingtask.php" />
+    <Compile Include="workflow.php" />
+    <Compile Include="edit_po.php" />
     <Compile Include="create_po.php" />
     <Compile Include="delete_employee_designation.php" />
     <Compile Include="delete_employee_department.php" />
@@ -7290,7 +7298,10 @@
     <Content Include="libs\dist\js\demo.js" />
     <Content Include="libs\dist\js\pages\dashboard.js" />
     <Content Include="libs\dist\js\pages\dashboard2.js" />
-    <Content Include="libs\images\.DS_Store" />
+    <Content Include="libs\images\fade-spinner.gif" />
+    <Content Include="libs\images\loader.gif" />
+    <Content Include="libs\images\pageload.gif" />
+    <Content Include="libs\images\user.png" />
     <Content Include="libs\js\functions.js" />
   </ItemGroup>
   <ItemGroup>
