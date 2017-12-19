@@ -263,9 +263,12 @@ if(isset($_POST['edit_customer'])){
                             <input type="number" class="form-control integer" name="CreditPeriod" placeholder="Credit Period (days)" value="<?php echo remove_junk($customer['CreditPeriod']); ?>"/>
                         </div>
 
-                        <div class="form-group">
-                            <label>SVAT No</label>
-                            <input type="text" class="form-control" name="SVATNo" placeholder="SVAT Number" value="<?php echo remove_junk($customer['SVATNo']); ?>"/>
+                        <div class="form-group checkbox">
+                            <label class="form-check-label">
+                                <input type="checkbox" id="chkSVATNo" name="chkSVATNo" class="form-check-input" <?php if($customer['SVATNo'] != null) echo "checked";  ?> />
+                                SVAT No
+                            </label>
+                            <input type="text" class="form-control" id="SVATNo" name="SVATNo" placeholder="SVAT Number" value="<?php echo remove_junk($customer['SVATNo']); ?>"   <?php if($customer['SVATNo'] == null) echo "disabled=disabled";  ?>   required="required" />
                         </div>
                     </div>
 
@@ -291,3 +294,10 @@ if(isset($_POST['edit_customer'])){
 </section>
 
 <?php include_once('layouts/footer.php'); ?>
+
+
+<script>
+    $('#chkSVATNo').change(function () {
+        $("#SVATNo").prop("disabled", !$(this).is(':checked'));
+    });
+</script>

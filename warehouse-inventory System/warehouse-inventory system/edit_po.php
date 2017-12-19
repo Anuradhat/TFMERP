@@ -22,60 +22,58 @@ if($_SESSION['PONos'] != null) $arr_PONo = $_SESSION['PONos'];
 ?>
 
 <?php
+if(isset($_POST["ProductCode"]))
+{
+    $req_fields = array('ProductCode','hProductDesc','CostPrice','Qty');   
 
-if(isset($_POST['edit_po'])){
-    if($_POST['edit_po'] == "item")
-    {
-        $req_fields = array('ProductCode','hProductDesc','CostPrice','Qty');   
+    validate_fields($req_fields);
 
-        validate_fields($req_fields);
+    if(empty($errors)){
+        $p_ProductCode  = remove_junk($db->escape($_POST['ProductCode']));
+        $p_ProductDesc  = remove_junk($db->escape($_POST['hProductDesc']));
+        $p_CostPrice  = remove_junk($db->escape($_POST['CostPrice']));
+        $p_Qty = remove_junk($db->escape($_POST['Qty']));
 
-        if(empty($errors)){
-            $p_ProductCode  = remove_junk($db->escape($_POST['ProductCode']));
-            $p_ProductDesc  = remove_junk($db->escape($_POST['hProductDesc']));
-            $p_CostPrice  = remove_junk($db->escape($_POST['CostPrice']));
-            $p_Qty = remove_junk($db->escape($_POST['Qty']));
-
-            $prod_count = find_by_sp("call spSelectProductFromCode('{$p_ProductCode}');");
+        $prod_count = find_by_sp("call spSelectProductFromCode('{$p_ProductCode}');");
 
 
-            if(!$prod_count)
-            {
-                $session->msg("d", "This product code not exist in the system.");
-                redirect('edit_po.php',false);
-            }
+        if(!$prod_count)
+        {
+            $session->msg("d", "This product code not exist in the system.");
+            return include('_partial_podetails.php');  
+        }
 
 
-            if ($_SESSION['details'] == null)
-            {
-                $arr_item[]  = array($p_ProductCode,$p_ProductDesc,$p_CostPrice,$p_Qty);
-                $_SESSION['details'] = $arr_item; 
-            }
-            else
-            {
-                $arr_item= $_SESSION['details'];
-
-                if(!ExistInArray($arr_item,$p_ProductCode))
-                {
-                    $arr_item[] = array($p_ProductCode,$p_ProductDesc,$p_CostPrice,$p_Qty);
-                    $_SESSION['details'] = $arr_item;
-                }
-                else
-                {
-                    $session->msg("w", "This product exist in the table.");
-                    redirect('edit_po.php',false);
-                }
-
-            }
-
+        if ($_SESSION['details'] == null)
+        {
+            $arr_item[]  = array($p_ProductCode,$p_ProductDesc,$p_CostPrice,$p_Qty);
+            $_SESSION['details'] = $arr_item; 
+            return include('_partial_podetails.php'); 
         }
         else
         {
-            $session->msg("d", $errors);
-            redirect('edit_po.php',false);
+            $arr_item= $_SESSION['details'];
+
+            if(!ExistInArray($arr_item,$p_ProductCode))
+            {
+                $arr_item[] = array($p_ProductCode,$p_ProductDesc,$p_CostPrice,$p_Qty);
+                $_SESSION['details'] = $arr_item;
+                return include('_partial_podetails.php'); 
+            }
+            else
+            {
+                $session->msg("w", "This product exist in the table.");
+                return include('_partial_podetails.php');  
+            }
+
         }
+
     }
-    else if($_POST['edit_po'] == "save")
+}
+
+
+if(isset($_POST['edit_po'])){
+    if($_POST['edit_po'] == "save")
     {
         $req_fields = array('PONo','SupplierCode','WorkFlowCode');
 
@@ -278,8 +276,7 @@ if (isset($_POST['Supplier'])) {
         </div>
 
         <div class="row">
-            <div class="col-md-12"><?php echo display_msg($msg); ?>
-            </div>
+            <div id="message" class="col-md-12"><?php include('_partial_message.php'); ?> </div>
         </div>
 
         <div class="box box-default">
@@ -378,19 +375,19 @@ if (isset($_POST['Supplier'])) {
                     <div class="col-md-3">
                         <div class="form-group">
                             <label>Cost Price</label>
-                            <input type="text" class="form-control" name="CostPrice" id="CostPrice" pattern="([0-9]+\.)?[0-9]+" placeholder="Cost Price" required="required" />
+                            <input type="text" class="form-control decimal" name="CostPrice" id="CostPrice" pattern="([0-9]+\.)?[0-9]+" placeholder="Cost Price" required="required" />
                         </div>
                     </div>
 
                     <div class="col-md-3">
                         <div class="form-group">
                             <label>Qty</label>
-                            <input type="number" class="form-control integer" name="Qty" placeholder="Qty" required="required" />
+                            <input type="number" class="form-control integer" name="Qty" id ="Qty" placeholder="Qty" required="required" />
                         </div>
 
                         <div class="form-group pull-right">
                             <label>&nbsp;</label><br>
-                            <button type="submit" class="btn btn-info" name="edit_po" value="item">&nbsp;&nbsp;&nbsp;Add&nbsp;&nbsp;&nbsp;</button>
+                            <button type="submit" class="btn btn-info" name="edit_po" onclick="AddItem(this, event);" value="item">&nbsp;&nbsp;&nbsp;Add&nbsp;&nbsp;&nbsp;</button>
                             <button type="reset" class="btn btn-success">&nbsp;Reset&nbsp;</button>
                         </div>
                     </div>
@@ -429,60 +426,37 @@ if (isset($_POST['Supplier'])) {
 
 <script type="text/javascript">
 
-    //$(document).ready(function () {
-    //    $('#PRNo').typeahead({
-    //        hint: true,
-    //        highlight: true,
-    //        minLength: 1,
-    //        source: function (request, response) {
-    //            $.ajax({
-    //                url: "autocomplete.php",
-    //                data: 'PRNoForPO=' + request,
-    //                dataType: "json",
-    //                type: "POST",
-    //                success: function (data) {
-    //                    items = [];
-    //                    map = {};
-    //                    $.each(data, function (i, item) {
-    //                        var id = item.value;
-    //                        var name = item.text;
-    //                        var Processed = item.ProcessedFlg;
-    //                        var PrDate = item.PrDate;
-    //                        var SupplierCode = item.SupplierCode;
-    //                        var Remarks = item.Remarks;
+    function AddItem(ctrl, event) {
+        event.preventDefault();
 
-    //                        map[name] = {
-    //                            id: id, name: name, Processed: Processed, PrDate: PrDate,
-    //                            SupplierCode: SupplierCode, Remarks: Remarks
-    //                        };
-    //                        items.push(name);
-    //                    });
-    //                    response(items);
-    //                    $(".dropdown-menu").css("height", "auto");
-    //                }
-    //            });
-    //        },
-    //        updater: function (item) {
-
-    //            $("#hPRNo").val(map[item].id);
-    //            $("#PoDate").val(map[item].PrDate);
-    //            $("#SupplierCode").select2().val(map[item].SupplierCode).trigger('change.select2');
-    //            $("#Remarks").val(map[item].Remarks);
-
-    //            $.ajax({
-    //                type: "POST",
-    //                url: "edit_po.php", // Name of the php files
-    //                data: { "_PRNo": map[item].id },
-    //                success: function (result) {
-    //                    $("#table").html(result);
-    //                }
-    //            });
-
-    //            return map[item].id;
-    //        }
-    //    });
-    //});
-
+        if ($('#ProductCode').val() == "") {
+            $("#ProductCode").focus();
+            bootbox.alert('Please select a product code.');
+        }
+        else if ($('#ProductDesc').val() == "") {
+            $("#ProductCode").focus();
+            bootbox.alert('Please select a product code.');
+        }
+        else if ($('#CostPrice').val() <= 0) {
+            $("#CostPrice").focus();
+            bootbox.alert('Please enter valid cost price.');
+        }
+        else if ($('#Qty').val() <= 0) {
+            $("#Qty").focus();
+            bootbox.alert('Please enter valid purchase qty.');
+        }
+        else {
+            $.ajax({
+                url: 'edit_po.php',
+                type: "POST",
+                data: $("form").serialize(),
+                success: function (result) {
+                    $("#table").html(result);
+                    $('#message').load('_partial_message.php');
+                }
+            });
+        }
+    }
 
     $(document).ready(function () {
         $('#ProductCode').typeahead({
@@ -518,14 +492,6 @@ if (isset($_POST['Supplier'])) {
                 return map[item].id;
             }
         });
-    });
-
-
-    //Textbox integer accept
-    $(".integer").keypress(function (e) {
-        if (e.which < 48 || e.which > 57) {
-            return (false);  // stop processing
-        }
     });
 
 

@@ -54,7 +54,7 @@ function autoGenerateNumber($table,$mode)
 
         $serialNo = $serialNo + 1;
 
-        $query = "call spAutoIncrement({$serialNo},'{$table}');";
+        $query = "call spAutoIncrement('{$prefix}',{$serialNo},'{$table}');";
         $db->query($query);
 
         return  $prefix.str_pad($serialNo, $serialLength, "0", STR_PAD_LEFT);
@@ -65,10 +65,46 @@ function autoGenerateNumber($table,$mode)
 }
 
 
+/*--------------------------------------------------------------*/
+/*  Function for auto generate serial number for grn serial table
+/*--------------------------------------------------------------*/
+function autoGenerateSerialNumber()
+{
+    global $db;;
+    $query = "SELECT TrnsactionTableName,Prefix,SerialNo,SerialLength,Mode FROM tfmAutoIncerementU WHERE TrnsactionTableName ='tfmGrnSerialT';";
+    if($result = $db->query($query))
+    {
+        $row = $db->fetch_assoc($result);
+
+        $prefix = $row['Prefix'];
+        $serialNo = $row['SerialNo'];
+        $serialLength = $row['SerialLength'];
+
+        if($serialNo == "999999")
+        {
+           $prefix++;
+           $serialNo = 1;
+        }
+        else
+           $serialNo = $serialNo + 1;
+
+        $query = "call spAutoIncrement('{$prefix}',{$serialNo},'tfmGrnSerialT');";
+        $db->query($query);
+
+        return  $prefix.str_pad($serialNo, $serialLength, "0", STR_PAD_LEFT);
+    }
+
+    return 0;
+
+}
+
+/*--------------------------------------------------------------*/
+/*  Function for read system configuration settings from stored procedure
+/*--------------------------------------------------------------*/
 
 function ReadSystemConfig($key)
 {
-    global $db;;
+    global $db;
     $query = "call spReadSystemConfig('{$key}');";
     if($result = $db->query($query))
     {
@@ -80,6 +116,83 @@ function ReadSystemConfig($key)
     }
     return null;
 }
+
+
+/*--------------------------------------------------------------*/
+/*  Function for read po last process date-time from stored procedure
+/*--------------------------------------------------------------*/
+
+function getLastPoProcessDateTime($PurchaseOrderNo)
+{
+    global $db;
+    $query = "call spSelectAllPOHeaderDetailsFromPONo('{$PurchaseOrderNo}');";
+    if($result = $db->query($query))
+    {
+        $row = $db->fetch_assoc($result);
+
+        $Value = $row['ProcessDate'];
+
+        return  $Value;
+    }
+    return null;
+}
+
+
+/*--------------------------------------------------------------*/
+/*  Function for read default bin in location from stored procedure
+/*--------------------------------------------------------------*/
+function DefaultBinFromLocation($LocationCode)
+{
+    global $db;
+    $query = "call spSelectDefaultBinFromLocationCode('{$LocationCode}');";
+    if($result = $db->query($query))
+    {
+        $row = $db->fetch_assoc($result);
+
+        $Value = $row['BinCode'];
+
+        return  $Value;
+    }
+    return null;
+}
+
+function ReadProductDatails($ProductCode)
+{
+    global $db;
+    $query = "call spSelectProductFromCode('{$ProductCode}');";
+    if($result = $db->query($query))
+    {
+        $row = $db->fetch_assoc($result);
+
+        return array('ProductCode' => $row["ProductCode"],'CostPrice' => $row["CostPrice"],'StockNo' => $row["StockCode"],'ExpireDate' => $row["ExpireDate"]);
+    }
+    return null;
+}
+
+
+function CalculateAverageCost($ProductCode,$PurchaseQty,$PurchaseCostPrice)
+{
+    global $db;
+    $query = "call spSelectStockForAvgCostPrice('{$ProductCode}');";
+    if($result = $db->query($query))
+    {
+        $row = $db->fetch_assoc($result);
+        $CurrentAvgCostPrice =$row["AvgCostPrice"];
+        $CurrentSIH  = $row["SIH"];
+        if($CurrentAvgCostPrice == 0)
+            return $PurchaseCostPrice;
+        else
+        {
+           $AvgCost =  (($CurrentAvgCostPrice * $CurrentSIH) + ($PurchaseCostPrice * $PurchaseQty))/ ($CurrentSIH + $PurchaseQty);
+
+           return round($AvgCost);
+        }
+
+    }
+    return 0;
+}
+
+
 
 /*--------------------------------------------------------------*/
 /*  Function for Find data from stored procedure

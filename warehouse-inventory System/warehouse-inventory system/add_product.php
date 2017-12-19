@@ -6,7 +6,7 @@ require_once('includes/load.php');
 // Checkin What level user has permission to view this page
 page_require_level(2);
 
-$all_departments = find_by_sql("call spSelectAllDepartments();");
+//$all_departments = find_by_sql("call spSelectAllDepartments();");
 $all_Category = find_by_sql("call spSelectAllCategory();");
 $all_Subcategory = find_by_sql("call spSelectAllSubcategory();");
 //$all_Supplier = find_by_sql("call spSelectAllSuppliers();");
@@ -17,7 +17,7 @@ $all_Taxs = find_by_sql("call spSelectAllTaxRates();");
 
 <?php
 if(isset($_POST['add_product'])){
-    $req_fields = array('ProductDesc','DepartmentCode','CategoryCode','SubcategoryCode','CostPrice','SalePrice','SalesComPer','ReorderLevel');
+    $req_fields = array('ProductDesc','CategoryCode','SubcategoryCode','CostPrice','SalePrice','SalesComPer','ReorderLevel');
 
     validate_fields($req_fields);
 
@@ -25,7 +25,7 @@ if(isset($_POST['add_product'])){
         //$p_ProductCode = remove_junk($db->escape($_POST['ProductCode']));
         $p_ProductDesc  = remove_junk($db->escape($_POST['ProductDesc']));
         $p_OtherDesc  = remove_junk($db->escape($_POST['OtherDesc']));
-        $p_DepartmentCode  = remove_junk($db->escape($_POST['DepartmentCode']));
+        $p_DepartmentCode  = "GEN";//remove_junk($db->escape($_POST['DepartmentCode']));
         $p_CategoryCode  = remove_junk($db->escape($_POST['CategoryCode']));
         $p_SubcategoryCode  = remove_junk($db->escape($_POST['SubcategoryCode']));
         $p_SupplierCode  = remove_junk($db->escape($_POST['SupplierCode']));
@@ -171,14 +171,25 @@ if(isset($_POST['add_product'])){
             <div class="box-body">
                 <div class="row">
                     <div class="col-md-6">
-                        <div class="form-group">
+                        <!--<div class="form-group">
                             <label>Department</label>
                             <select class="form-control select2" style="width: 100%;" name="DepartmentCode" required="required">
-                                <option value="">Select Department</option><?php  foreach ($all_departments as $dep): ?>
-                                <option value="<?php echo $dep['DepartmentCode'] ?>"><?php echo $dep['DepartmentDesc'] ?>
+                                <option value="">Select Department</option><?php  //foreach ($all_departments as $dep): ?>
+                                <option value="<?php //echo $dep['DepartmentCode'] ?>"><?php //echo $dep['DepartmentDesc'] ?>
+                                </option><?php //endforeach; ?>
+                            </select>
+                        </div>-->
+                        <div class="form-group">
+                            <label>Category</label>
+                            <select class="form-control select2" style="width: 100%;" name="CategoryCode" required="required" id="ddlCategory">
+                                <option value="">Select Category</option><?php  foreach ($all_Category as $cat): ?>
+                                <option value="<?php echo $cat['CategoryCode'] ?>"><?php echo $cat['CategoryDesc'] ?>
                                 </option><?php endforeach; ?>
                             </select>
                         </div>
+                    </div>
+
+                    <div class="col-md-6">
 
                         <div class="form-group">
                             <label>Sub Category</label>
@@ -186,18 +197,7 @@ if(isset($_POST['add_product'])){
                                 <option value="">Select Sub Category</option>
                             </select>
                         </div>
-
                     </div>
-
-                    <div class="col-md-6">
-                        <label>Category</label>
-                        <select class="form-control select2" style="width: 100%;" name="CategoryCode" required="required" id="ddlCategory">
-                            <option value="">Select Category</option><?php  foreach ($all_Category as $cat): ?>
-                            <option value="<?php echo $cat['CategoryCode'] ?>"><?php echo $cat['CategoryDesc'] ?>
-                            </option><?php endforeach; ?>
-                        </select>
-                    </div>
-
                 </div>
             </div>
         </div>
@@ -236,9 +236,9 @@ if(isset($_POST['add_product'])){
                         <!--<div class="form-group">
                             <label>Supplier</label>
                             <select class="form-control select2" style="width: 100%;" name="SupplierCode" required="required">
-                                <option value="">Select Supplier</option><?php  foreach ($all_Supplier as $supp): ?>
-                                <option value="<?php echo $supp['SupplierCode'] ?>"><?php echo $supp['SupplierName'] ?>
-                                </option><?php endforeach; ?>
+                                <option value="">Select Supplier</option><?php  //foreach ($all_Supplier as $supp): ?>
+                                <option value="<?php //echo $supp['SupplierCode'] ?>"><?php //echo $supp['SupplierName'] ?>
+                                </option><?php //endforeach; ?>
                             </select>
                         </div>-->
                     </div>

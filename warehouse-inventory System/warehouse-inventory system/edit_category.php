@@ -7,7 +7,7 @@ page_require_level(2);
 
 preventGetAction('category.php');
 
-$all_departments = find_by_sql("call spSelectAllDepartments();")
+//$all_departments = find_by_sql("call spSelectAllDepartments();")
 ?>
 
 
@@ -115,15 +115,15 @@ if(isset($_POST['edit_category'])){
             <div class="box-body">
                 <div class="row">
                     <div class="col-md-6">
-                        <div class="form-group">
+                       <!--<div class="form-group">
                             <label>Department</label>
                             <select class="form-control select2" name="Department" placeholder="Select Department" required="required" readonly="readonly" disabled="disabled">
-                                <!-- <option value="">Select Department</option>
-                                <?php  foreach ($all_departments as $dep): ?>-->
-                                <option value="<?php echo $dep['DepartmentCode'] ?>"  <?php if($dep['DepartmentCode'] === $category['DepartmentCode']): echo "selected"; endif; ?> ><?php echo $dep['DepartmentDesc'] ?>
-                                </option><?php endforeach; ?>
+                               <option value="">Select Department</option>
+                                <?php  foreach ($all_departments as $dep): ?>
+                                <option value="<?php //echo $dep['DepartmentCode'] ?>"  <?php //if($dep['DepartmentCode'] === $category['DepartmentCode']): echo "selected"; endif; ?> ><?php //echo $dep['DepartmentDesc'] ?>
+                                </option><?php //endforeach; ?>
                             </select>
-                        </div>
+                        </div>-->
 
                         <div class="form-group">
                             <label>Category Description</label>

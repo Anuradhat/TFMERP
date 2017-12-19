@@ -282,7 +282,7 @@ desired effect
                         </a>
                         <ul class="treeview-menu">
                             <li><a href="location.php"><i class="fa fa-map-marker "></i>Location</a></li>
-                            <li><a href="department.php"><i class="fa fa-th-list"></i>Department</a></li>
+                            <!--<li><a href="department.php"><i class="fa fa-th-list"></i>Department</a></li>-->
                             <li><a href="category.php"><i class="fa fa-list"></i>Category</a></li>
                             <li><a href="subcategory.php"><i class="fa fa-th-large"></i>Sub Category</a></li>
                             <li><a href="product.php"><i class="fa fa-th"></i>Product</a></li>
@@ -332,7 +332,19 @@ desired effect
                             </li>
                             <!--End Purchase Requisition Menu-->
 
-
+                            <!--Good Received Note Menu-->
+                            <li class="treeview">
+                                <a href="#">
+                                    <i class="fa fa-shopping-cart"></i> <span>Goods Received Note</span>
+                                    <span class="pull-right-container">
+                                        <i class="fa fa-angle-left pull-right"></i>
+                                    </span>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <li><a href="create_grn.php"><i class="fa fa-plus-square-o"></i>Create</a></li>
+                                </ul>
+                            </li>
+                            <!--End Good Received Note Menu-->
 
 
 

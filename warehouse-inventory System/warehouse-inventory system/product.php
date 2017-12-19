@@ -74,10 +74,10 @@ $all_products = find_by_sql("call spSelectAllProducts();")
                                         <th>Action</th>
                                         <th>Product Code</th>
                                         <th>Product Desc.</th>
-                                        <th>Department</th>
+                                        <!--<th>Department</th>-->
                                         <th>Category</th>
                                         <th>Subcategory</th>
-                                        <th>Supplier</th>
+                                        <!--<th>Supplier</th>-->
                                         <th>Cost Price</th>
                                         <th>Sales Price</th>
                                     </tr>
@@ -103,18 +103,18 @@ $all_products = find_by_sql("call spSelectAllProducts();")
                                         <td>
                                             <?php echo remove_junk(ucfirst($prod['ProductDesc'])); ?>
                                         </td>
-                                        <td>
-                                            <?php echo remove_junk($prod['DepartmentDesc']); ?>
-                                        </td>
+                                        <!--<td>
+                                            <?php //echo remove_junk($prod['DepartmentDesc']); ?>
+                                        </td>-->
                                         <td>
                                             <?php echo remove_junk($prod['CategoryDesc']); ?>
                                         </td>
                                         <td>
                                             <?php echo remove_junk($prod['SubcategoryDesc']); ?>
                                         </td>
-                                        <td>
-                                            <?php echo remove_junk($prod['SupplierName']); ?>
-                                        </td>
+                                        <!--<td>
+                                            <?php //echo remove_junk($prod['SupplierName']); ?>
+                                        </td>-->
                                         <td>
                                             <?php echo remove_junk(ucfirst($prod['CostPrice'])); ?>
                                         </td>

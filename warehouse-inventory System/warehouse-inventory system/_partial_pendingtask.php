@@ -4,16 +4,18 @@
 
 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
     <i class="fa fa-flag-o"></i>
+    <?php $pendingJobs = check_pending_approvels(); if(count($pendingJobs) > 0){ ?>
     <span class="label label-danger">
         <?php
-        $pendingJobs = check_pending_approvels();
         echo count($pendingJobs);
         ?>
     </span>
+<?php } ?>
 </a>
 <ul class="dropdown-menu">
     <li class="header">
-        You have <?php   echo count($pendingJobs); ?> task(s)
+        You have <?php   echo count($pendingJobs); ?>
+ task(s)
     </li>
     <li>
         <!-- inner menu: contains the actual data -->
@@ -38,6 +40,8 @@
         </ul>
     </li>
     <li class="footer">
+        <?php if(count($pendingJobs) > 0){ ?>
         <a href="approval_task.php?TransactionCode=all">View all tasks</a>
+        <?php } ?>
     </li>
 </ul>

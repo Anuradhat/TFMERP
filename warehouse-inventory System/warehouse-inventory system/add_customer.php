@@ -267,16 +267,21 @@ if(isset($_POST['add_customer'])){
                             <input type="text" class="form-control integer" name="CreditPeriod" placeholder="Credit Period (days)" />
                         </div>
 
-                        <div class="form-group">
-                            <label>SVAT No</label>
-                            <input type="text" class="form-control" name="SVATNo" placeholder="SVAT Number" />
+
+
+                        <div class="form-group checkbox">
+                            <label class="form-check-label">
+                                <input type="checkbox" id="chkSVATNo" name="chkSVATNo" class="form-check-input" />
+                                SVAT No
+                            </label>
+                            <input type="text" class="form-control" id="SVATNo" name="SVATNo" placeholder="SVAT Number" disabled="disabled" required="required" />
                         </div>
                     </div>
 
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>VAT No</label>
-                            <input type="text" class="form-control" name="VATNo" placeholder="VAT Number" />
+                            <input type="text" class="form-control" name="VATNo" placeholder="VAT Number"/>
                         </div>
 
                         <div class="form-group">
@@ -299,18 +304,7 @@ if(isset($_POST['add_customer'])){
 
 
 <script>
-    //Textbox integer accept
-    $(".integer").keypress(function (e) {
-        if ((e.which < 48 || e.which > 57)  && e.which != 8) {
-            return (false);  // stop processing
-        }
-    });
-
-    //Textbox decimal accept
-    $(".decimal").keypress(function (e) {
-       var ex = /^[0-9]+\.?[0-9]*$/;
-       if(ex.test(e.value)==false){
-           e.value = e.value.substring(0,e.value.length - 1);
-       }
+    $('#chkSVATNo').change(function () {
+        $("#SVATNo").prop("disabled", !$(this).is(':checked'));
     });
 </script>

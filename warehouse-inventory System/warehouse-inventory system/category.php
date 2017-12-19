@@ -76,7 +76,7 @@ $all_Category = find_by_sql("call spSelectAllCategory();")
                                 <thead>
                                     <tr>
                                         <th>Action</th>
-                                        <th>Department</th>
+                                        <!--<th>Department</th>-->
                                         <th>Category Code</th>
                                         <th>Category Description</th>
                                     </tr>
@@ -96,9 +96,9 @@ $all_Category = find_by_sql("call spSelectAllCategory();")
                                                 </form>
                                             </div>
                                         </td>
-                                        <td>
-                                            <?php echo remove_junk(ucfirst($cat['DepartmentDesc'])); ?>
-                                        </td>
+                                        <!--<td>
+                                            <?php //echo remove_junk(ucfirst($cat['DepartmentDesc'])); ?>
+                                        </td>-->
                                         <td>
                                             <?php echo remove_junk($cat['CategoryCode']); ?>
                                         </td>

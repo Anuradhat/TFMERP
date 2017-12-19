@@ -18,7 +18,7 @@
 
                                         <div class="form-group">
                                             <label>Qty</label>
-                                            <input type="number" class="integer form-control integer" name="Qty" id="Qty" placeholder="Qty" required="required" value="<?php echo $serchitem[3]; ?>" />
+                                            <input type="number" class="integer form-control integer" name="Qty" id="pQty" placeholder="Qty" required="required" value="<?php echo $serchitem[3]; ?>" />
                                         </div>
                                     </div>
 
@@ -50,12 +50,13 @@
     function EditItem(ctrl, event) {
         event.preventDefault();
 
-        var Qty = parseInt($("#Qty").val());
+        var Qty = parseInt($("#pQty").val());
         var ProductCode = $("#hProductCode").val();
 
-        if (Qty <= 0) {
-            $("#Qty").focus();
-            //bootbox.alert('You entered qty is invalid.');
+        if (Qty <= 0) 
+        {
+            $("#pQty").focus();
+            bootbox.alert('You enter qty is invalid.');
         }
         else {
             $.ajax({
@@ -72,9 +73,12 @@
 
 
     //Textbox integer accept
-    $(".integer").keypress(function (e) {
-        if (e.which < 48 || e.which > 57) {
-            return (false);  // stop processing
+    $(".integer").keypress(function (evt) {
+        evt = (evt) ? evt : window.event;
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return false;
         }
+        return true;
     });
 </script>

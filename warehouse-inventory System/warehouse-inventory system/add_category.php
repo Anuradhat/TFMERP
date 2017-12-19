@@ -5,18 +5,18 @@ $page_title = 'Category Master - New Category';
 require_once('includes/load.php');
 page_require_level(2);
 
-$all_departments = find_by_sql("call spSelectAllDepartments();")
+//$all_departments = find_by_sql("call spSelectAllDepartments();")
 
 ?>
 
 <?php
 if(isset($_POST['add_category'])){
-    $req_fields = array('Department','CategoryCode','CategoryDesc');
+    $req_fields = array('CategoryCode','CategoryDesc');
 
     validate_fields($req_fields);
 
     if(empty($errors)){
-        $p_DepartmentCode  = remove_junk($db->escape($_POST['Department']));
+        $p_DepartmentCode  = "GEN";//remove_junk($db->escape($_POST['Department']));
         $p_CategoryCode  = remove_junk($db->escape($_POST['CategoryCode']));
         $p_CategoryDesc  = remove_junk($db->escape($_POST['CategoryDesc']));
 
@@ -109,27 +109,25 @@ if(isset($_POST['add_category'])){
             <div class="box-body">
                 <div class="row">
                     <div class="col-md-6">
-                        <div class="form-group">
+                        <!--<div class="form-group">
                             <label>Department</label>
                             <select class="form-control select2" name="Department" placeholder="Select Department" required="required">
                                 <option value="">Select Department</option>
-                                <?php  foreach ($all_departments as $dep): ?>
-                                <option value="<?php echo $dep['DepartmentCode'] ?>"><?php echo $dep['DepartmentDesc'] ?>
-                                </option><?php endforeach; ?>
+                                <?php  //foreach ($all_departments as $dep): ?>
+                                <option value="<?php// echo $dep['DepartmentCode'] ?>"><?php //echo $dep['DepartmentDesc'] ?>
+                                </option><?php //endforeach; ?>
                             </select>
-                        </div>
-
+                        </div>-->
                         <div class="form-group">
-                            <label>Category Description</label>
-                            <input type="text" class="form-control" name="CategoryDesc" placeholder="Category Description" required="required" />
+                            <label>Category Code</label>
+                            <input type="text" class="form-control" name="CategoryCode" placeholder="Category Code" required="required" />
                         </div>
                     </div>
 
                     <div class="col-md-6">
-
                         <div class="form-group">
-                            <label>Category Code</label>
-                            <input type="text" class="form-control" name="CategoryCode" placeholder="Category Code" required="required" />
+                            <label>Category Description</label>
+                            <input type="text" class="form-control" name="CategoryDesc" placeholder="Category Description" required="required" />
                         </div>
                     </div>
                 </div>

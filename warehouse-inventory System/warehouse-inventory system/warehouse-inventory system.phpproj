@@ -21,6 +21,7 @@
     <Compile Include="add_employee_designation.php" />
     <Compile Include="add_employee_department.php" />
     <Compile Include="approval_task.php" />
+    <Compile Include="create_grn.php" />
     <Compile Include="delete_employee.php" />
     <Compile Include="delete_workflow.php" />
     <Compile Include="edit_employee.php" />
@@ -118,14 +119,15 @@
     <Compile Include="sales_report.php" />
     <Compile Include="sale_report_process.php" />
     <Compile Include="users.php" />
+    <Compile Include="_partial_grndetails.php" />
     <Compile Include="_partial_podetails.php" />
+    <Compile Include="_partial_grnitem.php" />
     <Compile Include="_partial_poitem.php" />
     <Compile Include="_partial_pritems.php" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="includes\.DS_Store" />
     <Content Include="layouts\.DS_Store" />
-    <Content Include="libs\.DS_Store" />
     <Content Include="libs\bower_components\bootbox\bootbox.min.js" />
     <Content Include="libs\bower_components\bootstrap-colorpicker\.bower.json" />
     <Content Include="libs\bower_components\bootstrap-colorpicker\bower.json" />
@@ -7228,6 +7230,7 @@
     <Content Include="libs\bower_components\select2\vendor\jquery-2.1.0.js" />
     <Content Include="libs\bower_components\typeahead\bootstrap3-typeahead.min.js" />
     <Content Include="libs\css\main.css" />
+    <Content Include="libs\css\video.css" />
     <Content Include="libs\dist\css\AdminLTE.css" />
     <Content Include="libs\dist\css\adminlte.css.map" />
     <Content Include="libs\dist\css\AdminLTE.min.css" />
@@ -7307,6 +7310,7 @@
     <Content Include="libs\images\pageload.gif" />
     <Content Include="libs\images\user.png" />
     <Content Include="libs\js\functions.js" />
+    <Content Include="libs\video\intro.mp4" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="includes\" />
@@ -7943,5 +7947,6 @@
     <Folder Include="libs\dist\iCheck\" />
     <Folder Include="libs\images\" />
     <Folder Include="libs\js\" />
+    <Folder Include="libs\video\" />
   </ItemGroup>
 </Project>

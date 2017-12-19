@@ -39,7 +39,7 @@ function RemoveValueFromListOfArray($array,$search) {
 function ChangValueFromListOfArray($array,$search,$changeIndex,$NewValue) {
     $count = 0;
     foreach($array as $row => $value){
-        if(array_search($search, $value) !== false)
+        if(array_search($search, $value,true) !== false)
         {
             $value[$changeIndex] = $NewValue;
             $array[$count] = $value;
@@ -67,7 +67,7 @@ function ExistInArray($array,$search) {
 function ArraySearch($array,$search) {
     $count = 0;
     foreach($array as $row => $value){
-        if(array_search($search, $value) !== false)
+        if(array_search($search, $value,true) !== false)
         {
             return $value;
         }
@@ -197,6 +197,15 @@ function read_date($str){
 function make_date(){
     return strftime("%Y-%m-%d", time());
 }
+
+/*--------------------------------------------------------------*/
+/* Function for covert Readable Make date 
+/*--------------------------------------------------------------*/
+function convert_date($date){
+    $time = strtotime($date);
+    return strftime("%Y-%m-%d", $time);
+}
+
 
 /*--------------------------------------------------------------*/
 /* Function for  Readable Make date time
