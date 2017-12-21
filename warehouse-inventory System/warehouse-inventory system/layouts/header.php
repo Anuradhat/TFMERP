@@ -335,7 +335,7 @@ desired effect
                             <!--Good Received Note Menu-->
                             <li class="treeview">
                                 <a href="#">
-                                    <i class="fa fa-shopping-cart"></i> <span>Goods Received Note</span>
+                                    <i class="fa fa-list"></i> <span>Goods Received Note</span>
                                     <span class="pull-right-container">
                                         <i class="fa fa-angle-left pull-right"></i>
                                     </span>

@@ -103,10 +103,10 @@ if(isset($_POST['create_grn'])){
             if($po_select < $po_process)
             {
 
-                $session->msg("d", "This transaction cannot proces.");
+                $session->msg("d", "This transaction cannot process.");
                 unset($_SESSION['details']);
                 redirect('create_grn.php',false);
-                return;
+                exit;
             }
 
 
@@ -140,6 +140,19 @@ if(isset($_POST['create_grn'])){
                         redirect('create_grn.php',false);
                     }
 
+                    $IsQtyExist = false;
+
+                    foreach($arr_item as $row => $value)
+                        if ($value[5] > 0)
+                            $IsQtyExist = true;
+
+                    if(!$IsQtyExist)
+                    {
+                        $session->msg("d", "Good received item(s) details not found.");
+                        unset($_SESSION['details']);
+                        redirect('create_grn.php',false);
+                        exit;
+                    }
 
                     //Insert good received note header details
                     $query  = "call spInsertGoodReceivedH('{$p_GRNCode}','{$p_LocationCode}','{$p_PurchaseOrderNo}','{$p_SupplierCode}','{$date}','{$p_Remarks}','{$datetime}','{$date}','{$user}');";
@@ -258,6 +271,11 @@ if(isset($_POST['create_grn'])){
                             
                         }
                     }
+
+                    //Change Po status
+                    $query  = "call spUpdatePOToProcessStatus('{$p_PurchaseOrderNo}');";
+                    $db->query($query);
+
 
                     $db->commit();
                     
