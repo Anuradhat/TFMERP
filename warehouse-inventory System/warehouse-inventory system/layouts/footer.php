@@ -94,10 +94,37 @@ immediately after the control sidebar -->
 <!-- AdminLTE App -->
 <script src="libs/dist/js/adminlte.min.js"></script> 
 
-<div id="modal-container" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+<!--<div id="modal-container" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
 
+        </div>
+    </div>
+</div>-->
+
+<div class="modal fade bd-example-modal-lg" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content"></div>
+    </div>
+    <div class="modal-dialog">
+        <div class="modal-content"></div>
+    </div>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true" class="">x </span>
+                    <span class="sr-only">Close</span>
+
+                </button>
+                <h4 class="modal-title" id="myModalLabel">Loading...</h4>
+
+            </div>
+            <div class="modal-body"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="EditItem(this, event);">Save changes</button>
+            </div>
         </div>
     </div>
 </div>
@@ -119,6 +146,10 @@ immediately after the control sidebar -->
   setInterval(function () {
       $('#tasksmenu').load('_partial_pendingtask.php');
   }, 60000);
+
+  //setInterval(function () {
+  //    $('#message').load('_partial_message.php');
+  //}, 1000);
 </script>
 
 <script>

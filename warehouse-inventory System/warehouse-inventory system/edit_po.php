@@ -13,18 +13,14 @@ $all_Supplier = find_by_sql("call spSelectAllSuppliers();");
 $all_workflows = find_by_sql("call spSelectAllWorkFlow();");
 
 $arr_item = array();
-$arr_header = array();
-$arr_PONo = array();
 
 if($_SESSION['details'] != null) $arr_item = $_SESSION['details'];
-if($_SESSION['header'] != null) $arr_header = $_SESSION['header'];
-if($_SESSION['PONos'] != null) $arr_PONo = $_SESSION['PONos'];
 ?>
 
 <?php
 if(isset($_POST["ProductCode"]))
 {
-    $req_fields = array('ProductCode','hProductDesc','CostPrice','Qty');   
+    $req_fields = array('ProductCode','hProductDesc','CostPrice','pQty');   
 
     validate_fields($req_fields);
 
@@ -32,7 +28,7 @@ if(isset($_POST["ProductCode"]))
         $p_ProductCode  = remove_junk($db->escape($_POST['ProductCode']));
         $p_ProductDesc  = remove_junk($db->escape($_POST['hProductDesc']));
         $p_CostPrice  = remove_junk($db->escape($_POST['CostPrice']));
-        $p_Qty = remove_junk($db->escape($_POST['Qty']));
+        $p_Qty = remove_junk($db->escape($_POST['pQty']));
 
         $prod_count = find_by_sp("call spSelectProductFromCode('{$p_ProductCode}');");
 
@@ -127,9 +123,7 @@ if(isset($_POST['edit_po'])){
 
                     $db->commit();
                     
-                    unset($_SESSION['header']);
                     unset($_SESSION['details']);
-                    unset($_SESSION['PrnNos']);
 
                     $session->msg('s',"Purchase order has been successfully updated");
                     redirect('edit_po.php', false);
@@ -182,16 +176,14 @@ if (isset($_POST['Edit'])) {
 
 
 if (isset($_POST['_PONo'])) {
-    $_SESSION['header']  = null; 
     $_SESSION['details'] = null;
 
     $PONo = remove_junk($db->escape($_POST['_PONo']));
-    $arr_header = $_SESSION['header'];
-    $all_PRHeader = find_by_sql("call spSelectAllPOHeaderDetailsFromPONo('{$PONo}');");
-    $arr_header = array('PoNo' => $all_PRHeader[0]["PoNo"],'PRNo' => $all_PRHeader[0]["PRNo"],'PoDate' => $all_PRHeader[0]["PoDate"],'SupplierCode' => $all_PRHeader[0]["SupplierCode"],'WorkFlowCode' => $all_PRHeader[0]["WorkFlowCode"],'Remarks' => $all_PRHeader[0]["Remarks"],'ProcessedFlg' => $all_PRHeader[0]["ProcessedFlg"]);
-    $_SESSION['header'] = $arr_header; 
+    //$all_PRHeader = find_by_sql("call spSelectAllPOHeaderDetailsFromPONo('{$PONo}');");
+
 
     $all_PODetsils = find_by_sql("call spSelectAllPODetailsFromPONo('{$PONo}');");
+
     if($_SESSION['details'] == null) $arr_item = $_SESSION['details']; else $arr_item[] = $_SESSION['details'];
 
     foreach($all_PODetsils as $row => $value){
@@ -212,24 +204,18 @@ if (isset($_POST['_RowNo'])) {
 
 
 if (isset($_POST['Supplier'])) {
-    $_SESSION['header']  = null; 
-    $_SESSION['PONos']  = null;
     $_SESSION['details']  = null;
 
     $SupplierCode = remove_junk($db->escape($_POST['Supplier']));
     $Remarks = remove_junk($db->escape($_POST['Remarks']));
 
     $all_PO = find_by_sql("call spSelectAllPurchaseOrderFromSupplierCode('{$SupplierCode}');");
-    $arr_header = array('PONo' => '0','SupplierCode' => $SupplierCode,'Remarks' => $Remarks);
-    $_SESSION['header'] = $arr_header; 
-
+  
     echo "<option>Select Purchase Order</option>";
     foreach($all_PO as &$value){
         $arr_PONo[]  = array('PoNo' =>$value["PoNo"]);
         echo "<option value ={$value["PoNo"]}>{$value["PoNo"]}</option>";
     }
-    $_SESSION['PONos'] = $arr_PONo;
-
     return;
 }
 
@@ -297,14 +283,14 @@ if (isset($_POST['Supplier'])) {
                             <label>Supplier</label>
                             <select class="form-control select2" style="width: 100%;" name="SupplierCode" id="SupplierCode" required="required" onchange="FillPO();">
                                 <option value="">Select Supplier</option><?php  foreach ($all_Supplier as $supp): ?>
-                                <option value="<?php echo $supp['SupplierCode'] ?>" <?php if($supp['SupplierCode'] === $arr_header['SupplierCode']): echo "selected"; endif; ?>><?php echo $supp['SupplierName'] ?>
+                                <option value="<?php echo $supp['SupplierCode'] ?>"><?php echo $supp['SupplierName'] ?>
                                 </option><?php endforeach; ?>
                             </select>
                         </div>
 
                         <div class="form-group">
                             <label>Purchase Requisition</label>
-                            <input type="text" class="form-control" name="PRNo" id="PRNo" placeholder="Purchase Requisition No" readonly="readonly" disabled="disabled" value="<?php echo $arr_header['PRNo'] ?>" />
+                            <input type="text" class="form-control" name="PRNo" id="PRNo" placeholder="Purchase Requisition No" readonly="readonly" disabled="disabled" />
                         </div>
                     </div>
 
@@ -313,7 +299,7 @@ if (isset($_POST['Supplier'])) {
                             <label>Purchase Order</label>
                             <select class="form-control select2" style="width: 100%;" name="PONo" id="PONo" onchange="FillDetails();" required="required">
                                 <option value="">Select Purchase Order</option><?php  foreach ($arr_PONo as $PO): ?>
-                                <option value="<?php echo $PO['PoNo'] ?>" <?php if($PO['PoNo'] === $arr_header['PoNo']): echo "selected"; endif; ?>><?php echo $PO['PoNo'] ?>
+                                <option value="<?php echo $PO['PoNo'] ?>"><?php echo $PO['PoNo'] ?>
                                 </option><?php endforeach; ?>
                             </select>
                         </div>
@@ -334,14 +320,14 @@ if (isset($_POST['Supplier'])) {
                         <div class="form-group">
                             <div class="form-group">
                                 <label>Date</label>
-                                <input type="text" class="form-control" name="PoDate" id="PoDate" placeholder="Date" readonly="readonly" disabled="disabled" value="<?php echo remove_junk($arr_header['PoDate']) ?>" />
+                                <input type="text" class="form-control" name="PoDate" id="PoDate" placeholder="Date" readonly="readonly" disabled="disabled" />
                             </div>
                         </div>
 
                         <div class="form-group">
                             <div class="form-group">
                                 <label>Remarks</label>
-                                <textarea name="Remarks" id="Remarks" class="form-control" placeholder="Enter remarks here.."><?php echo remove_junk($arr_header['Remarks']) ?></textarea>
+                                <textarea name="Remarks" id="Remarks" class="form-control" placeholder="Enter remarks here.."></textarea>
                             </div>
                         </div>
                     </div>
@@ -382,7 +368,7 @@ if (isset($_POST['Supplier'])) {
                     <div class="col-md-3">
                         <div class="form-group">
                             <label>Qty</label>
-                            <input type="number" class="form-control integer" name="Qty" id ="Qty" placeholder="Qty" required="required" />
+                            <input type="number" class="form-control integer" name="pQty" id ="Qty" placeholder="Qty" required="required" />
                         </div>
 
                         <div class="form-group pull-right">

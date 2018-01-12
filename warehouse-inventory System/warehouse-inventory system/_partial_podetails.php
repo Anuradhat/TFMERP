@@ -15,8 +15,10 @@
         <tr>
             <td>
                 <div>
-                    <button type="button" class="EditBtn btn btn-warning btn-xs glyphicon glyphicon-edit" data-toggle="modal" data-target="#modal-container"></button>
+                    <button type="button" class="EditBtn btn btn-warning btn-xs glyphicon glyphicon-edit" data-toggle="modal" data-target="#myModal" contenteditable="false"></button>
+                     
                     <button type="button" class="btn btn-danger btn-xs glyphicon glyphicon-trash DeleteBtn" id="btnDelete" <?php   if(remove_junk($arr_header[4]) == "1") echo "disabled" ?>></button>
+                
                 </div>
             </td>
             <td id="RowId" class="clsRowId">
@@ -37,6 +39,7 @@
         </tr><?php  } ?>
     </tbody>
 </table>
+
 
 <script>
 //Item Delete
@@ -69,12 +72,16 @@
                 type: "POST",
                 data: '_RowNo=' + RowNo.trim(),
                 success: function (result) {
-                    $('#modal-container').html(result);
+                    var modalBody = $('<div id="modalContent"></div>');
+                    modalBody.append(result);
+                    $("#myModalLabel").text('Purchase Order Item');
+                    $('.modal-body').html(modalBody);
                 }
             });
 
 
         });
     });
+
 
 </script>

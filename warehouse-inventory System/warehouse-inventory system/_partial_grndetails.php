@@ -37,7 +37,7 @@
         <tr>
             <td>
                 <div>
-                    <button type="button" class="EditBtn btn btn-warning btn-xs glyphicon glyphicon-edit" data-toggle="modal" data-target="#modal-container" <?php if($value[4] <= 0) echo "disabled" ?>></button>
+                    <button type="button" class="EditBtn btn btn-warning btn-xs glyphicon glyphicon-edit" data-toggle="modal" data-target="#myModal" <?php if($value[4] <= 0) echo "disabled" ?>></button>
                 </div>
             </td>
             <td id="RowId" class="clsRowId">
@@ -82,7 +82,11 @@
                 type: "POST",
                 data: '_RowNo=' + RowNo.trim(),
                 success: function (result) {
-                    $('#modal-container').html(result);
+                    //$('#modal-container').html(result);
+                    var modalBody = $('<div id="modalContent"></div>');
+                    modalBody.append(result);
+                    $("#myModalLabel").text('Good Received Item');
+                    $('.modal-body').html(modalBody);
                 }
             });
 

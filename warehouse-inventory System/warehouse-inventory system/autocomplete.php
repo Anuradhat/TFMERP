@@ -77,7 +77,20 @@ if (isset($_POST['_PONoForHeader'])) {
     echo json_encode($array);
 }
 
+//Get serail details
+if (isset($_POST['StockCode']) && isset($_POST['SerialNo'])) {
+    $StockCode = remove_junk($db->escape($_POST['StockCode']));
+    $SerialNo = remove_junk($db->escape($_POST['SerialNo']));
 
+    $result = $db->query("call spValidateSerail('{$StockCode}','{$SerialNo}');");
+    $array = array();
+    $row = $db->fetch_assoc($result);
+
+    if($row['SetailStatus'] == "OK")
+        echo 'true';
+    else
+         echo 'false';
+}
 
 
 

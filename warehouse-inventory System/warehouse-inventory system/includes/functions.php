@@ -25,9 +25,10 @@ function remove_junk($str){
 function RemoveValueFromListOfArray($array,$search) {
     $count = 0;
     foreach($array as $row => $value){
-        if(array_search($search, $value) !== false)
+        if(array_search($search, $value,true) !== false)
         {
             unset($array[$count]);
+            $array = array_values($array);
             return $array;
         }
         $count++;
@@ -199,7 +200,7 @@ function make_date(){
 }
 
 /*--------------------------------------------------------------*/
-/* Function for covert Readable Make date 
+/* Function for covert Readable Make date
 /*--------------------------------------------------------------*/
 function convert_date($date){
     $time = strtotime($date);

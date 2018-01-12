@@ -1,72 +1,57 @@
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Purchase Order Item Detail</h4>
+
+<form method="post" action="create_grn.php">
+    <!-- /.box-header -->
+    <input type="hidden" name="Edit" value="Edit" />
+
+    <div class="box-body">
+        <div class="col-xs-4">
+            <div class="form-group">
+                <label>Stock Code</label>
+                <input type="text" class="form-control" id="StockCode" name="StockCode" placeholder="Stock Code" required="required" autocomplete="off" value="<?php echo $serchitem[0]; ?>" readonly="readonly" disabled="disabled" />
+                <input type="hidden" name="hStockCode" id="hStockCode" value="<?php echo $serchitem[0]; ?>" />
             </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-xs-8">
-                        <div class="box">
-                            <form method="post" action="create_grn.php">
-                                <!-- /.box-header -->
-                                <input type="hidden" name="Edit" value="Edit" />
 
-                                <div class="box-body">
-                                    <div class="col-xs-4">
-                                        <div class="form-group">
-                                            <label>Stock Code</label>
-                                            <input type="text" class="form-control" id="StockCode" name="StockCode" placeholder="Stock Code" required="required" autocomplete="off" value="<?php echo $serchitem[0]; ?>" readonly="readonly" disabled="disabled" />
-                                            <input type="hidden" name="hStockCode" id="hStockCode" value="<?php echo $serchitem[0]; ?>" />
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label>Qty</label>
-                                            <input type="text" class="integer form-control integer" name="Qty" id="pQty" placeholder="Qty" disabled="disabled" readonly="readonly"   required="required" value="<?php echo $serchitem[4]; ?>" />
-                                        </div>               
-                                    </div>
-
-                                    <div class="col-xs-4">
-                                        <div class="form-group">
-                                            <label>Product Code</label>
-                                            <input type="text" class="form-control" id="ProductCode" name="StockCode" placeholder="Product Code" required="required" autocomplete="off" value="<?php echo $serchitem[1]; ?>" readonly="readonly" disabled="disabled" />
-                                            <input type="hidden" name="hProductCode" id="hProductCode" value="<?php echo $serchitem[1]; ?>" />
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label>Expire Date</label>
-                                            <input type="text" class="form-control pull-right" autocomplete="off" name="ExpireDate" id="datepicker" placeholder="Expire Date"/>
-                                        </div>
-
-
-                                    </div>
-
-                                    <div class="col-xs-4">
-                                        <div class="form-group">
-                                            <label>Product Description</label>
-                                            <input type="text" class="form-control" name="ProductDesc" id="ProductDesc" placeholder="Product Description" required="required" readonly="readonly" disabled="disabled" value="<?php echo $serchitem[2]; ?>" />
-                                        </div>
-
-
-                                        <div class="form-group">
-                                            <label>Grn Qty</label>
-                                            <input type="number" class="integer form-control integer" name="GrnQty" id="pGrnQty" placeholder="Grn Qty" required="required" value="<?php echo $serchitem[4]; ?>" />
-                                        </div>
-
-                                        <div class="form-group pull-right">
-                                            <label>&nbsp;</label>
-                                            <button type="submit" class="btn btn-info" onclick="EditItem(this, event);">Submit</button>
-                                        </div>
-                                    </div>
-                                    <!-- /.box-body -->
-                                </div>
-                            </form>
-                            <!-- /.box -->
-                        </div>
-                    </div>
-                </div>
+            <div class="form-group">
+                <label>Balance Qty</label>
+                <input type="text" class="integer form-control integer" name="Qty" id="pQty" placeholder="Qty" disabled="disabled" readonly="readonly" required="required" value="<?php echo $serchitem[4]; ?>" />
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default modal-close-btn" data-dismiss="modal">Close</button>
+        </div>
+
+        <div class="col-xs-4">
+            <div class="form-group">
+                <label>Product Code</label>
+                <input type="text" class="form-control" id="ProductCode" name="StockCode" placeholder="Product Code" required="required" autocomplete="off" value="<?php echo $serchitem[1]; ?>" readonly="readonly" disabled="disabled" />
+                <input type="hidden" name="hProductCode" id="hProductCode" value="<?php echo $serchitem[1]; ?>" />
             </div>
+
+            <div class="form-group">
+                <label>Expire Date</label>
+                <input type="text" class="form-control pull-right" autocomplete="off" name="ExpireDate" id="datepicker" placeholder="Expire Date" />
+            </div>
+
+
+        </div>
+
+        <div class="col-xs-4">
+            <div class="form-group">
+                <label>Product Description</label>
+                <input type="text" class="form-control" name="ProductDesc" id="ProductDesc" placeholder="Product Description" required="required" readonly="readonly" disabled="disabled" value="<?php echo $serchitem[2]; ?>" />
+            </div>
+
+
+            <div class="form-group">
+                <label>Grn Qty</label>
+                <input type="number" class="integer form-control integer" name="GrnQty" id="pGrnQty" placeholder="Grn Qty" required="required" value="<?php echo $serchitem[4]; ?>" />
+            </div>
+
+       
+        </div>
+        <!-- /.box-body -->
+    </div>
+</form>
+<!-- /.box -->
+
+
 
 
 <script type="text/javascript">
@@ -76,14 +61,12 @@
         var Qty = parseInt($("#pQty").val());
         var GrnQty = $("#pGrnQty").val();
         var ProductCode = $("#hProductCode").val();
-        
-        if (GrnQty <= 0 )
-        {
+
+        if (GrnQty <= 0) {
             $("#pGrnQty").focus();
             bootbox.alert('GRN qty is invalid.');
         }
-        else if (Qty < GrnQty)
-        {
+        else if (Qty < GrnQty) {
             $("#pGrnQty").focus();
             bootbox.alert('You cannot exceed original PO qty.');
         }
@@ -94,7 +77,8 @@
                 data: $("form").serialize(),
                 success: function (result) {
                     $("#table").html(result);
-                    $('#modal-container').modal('hide');
+                    $('#myModal').modal('toggle');
+                    //$('#modal-container').modal('hide');
                 }
             });
         }

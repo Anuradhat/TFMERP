@@ -12,12 +12,11 @@ page_require_level(2);
 $all_Supplier = find_by_sql("call spSelectAllSuppliers();");
 
 $arr_item = array();
-$arr_header = array();
+
 
 
 
 if($_SESSION['details'] != null) $arr_item = $_SESSION['details'];
-if($_SESSION['header'] != null) $arr_header = $_SESSION['header'];
 
 ?>
 
@@ -92,10 +91,7 @@ if(isset($_POST['create_pr'])){
             $user = "anush";
 
             //Get all sessions values
-            $arr_header = array("Supplier"=>$p_SupplierCode, "Remarks"=> $p_Remarks);
             $arr_item= $_SESSION['details'];
-
-            $_SESSION['header'] = $arr_header;
 
             //check details values
             if(count($arr_item)>0)
@@ -128,8 +124,7 @@ if(isset($_POST['create_pr'])){
                     }
 
                     $db->commit();
-                    
-                    unset($_SESSION['header']);
+                   
                     unset($_SESSION['details']);
 
                     $session->msg('s',"Purchase requisition has been saved successfully,\n   Your Purchase Requisition No: ".$p_PRCode);
@@ -239,7 +234,7 @@ if (isset($_POST['_prodcode'])) {
                         <div class="form-group">
                             <div class="form-group">
                                 <label>Remarks</label>
-                                <textarea name="Remarks" class="form-control" placeholder="Enter remarks here.." ><?php echo remove_junk($arr_header['Remarks']) ?></textarea>
+                                <textarea name="Remarks" class="form-control" placeholder="Enter remarks here.." ></textarea>
                             </div>
                         </div>
 
@@ -260,7 +255,7 @@ if (isset($_POST['_prodcode'])) {
                             <label>Supplier</label>
                             <select class="form-control select2" style="width: 100%;" name="SupplierCode" required="required">
                                 <option value="">Select Supplier</option><?php  foreach ($all_Supplier as $supp): ?>
-                                <option value="<?php echo $supp['SupplierCode'] ?>" <?php if($supp['SupplierCode'] === $arr_header['SupplierCode']): echo "selected"; endif; ?>><?php echo $supp['SupplierName'] ?>
+                                <option value="<?php echo $supp['SupplierCode'] ?>"><?php echo $supp['SupplierName'] ?>
                                 </option><?php endforeach; ?>
                             </select>
                         </div>

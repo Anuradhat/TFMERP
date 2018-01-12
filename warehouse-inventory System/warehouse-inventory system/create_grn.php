@@ -12,67 +12,17 @@ page_require_level(2);
 $all_Supplier = find_by_sql("call spSelectAllSuppliers();");
 $all_locations = find_by_sql("call spSelectAllLocations();");
 
-$default_flow = ReadSystemConfig('DefaultPOWorkFlow');
-$default_location = ReadSystemConfig('DefaultGRNLocation');
+//$default_flow = ReadSystemConfig('DefaultPOWorkFlow');
+  $default_location = ReadSystemConfig('DefaultGRNLocation');
 
 $arr_item = array();
-$arr_header = array();
+
 
 
 if($_SESSION['details'] != null) $arr_item = $_SESSION['details'];
-if($_SESSION['header'] != null) $arr_header = $_SESSION['header'];
 ?>
 
 <?php
-
-//if(isset($_POST["ProductCode"]))
-//{
-//    $req_fields = array('ProductCode','hProductDesc','CostPrice','Qty');   
-
-//    validate_fields($req_fields);
-
-//    if(empty($errors)){
-//        $p_ProductCode  = remove_junk($db->escape($_POST['ProductCode']));
-//        $p_ProductDesc  = remove_junk($db->escape($_POST['hProductDesc']));
-//        $p_CostPrice  = remove_junk($db->escape($_POST['CostPrice']));
-//        $p_Qty = remove_junk($db->escape($_POST['Qty']));
-
-//        $prod_count = find_by_sp("call spSelectProductFromCode('{$p_ProductCode}');");
-
-
-//        if(!$prod_count)
-//        {
-//            $session->msg("d", "This product code not exist in the system.");
-//            return include('_partial_podetails.php');  
-//        }
-
-
-//        if ($_SESSION['details'] == null)
-//        {
-//            $arr_item[]  = array($p_ProductCode,$p_ProductDesc,$p_CostPrice,$p_Qty);
-//            $_SESSION['details'] = $arr_item; 
-//            return include('_partial_podetails.php'); 
-//        }
-//        else
-//        {
-//            $arr_item= $_SESSION['details'];
-
-//            if(!ExistInArray($arr_item,$p_ProductCode))
-//            {
-//                $arr_item[] = array($p_ProductCode,$p_ProductDesc,$p_CostPrice,$p_Qty);
-//                $_SESSION['details'] = $arr_item;
-//                return include('_partial_podetails.php'); 
-//            }
-//            else
-//            {
-//                $session->msg("w", "This product exist in the table.");
-//                return include('_partial_podetails.php');  
-//            }
-
-//        }
-
-//    }
-//}
 
 
 if(isset($_POST['create_grn'])){
@@ -134,10 +84,22 @@ if(isset($_POST['create_grn'])){
 
                     $Grn_count = find_by_sp("call spSelectGRNFromCode('{$p_GRNCode}');");
 
+
+                    if($default_stock_bin == null)
+                    {
+                        $session->msg("d", "Default stock bin not found for this selected location.");
+                        unset($_SESSION['details']);
+                        redirect('create_grn.php',false);
+                        exit;
+                    }
+
+
                     if($Grn_count)
                     {
                         $session->msg("d", "This grn number exist in the system.");
+                        unset($_SESSION['details']);
                         redirect('create_grn.php',false);
+                        exit;
                     }
 
                     $IsQtyExist = false;
@@ -414,7 +376,7 @@ if (isset($_POST['_RowNo'])) {
 
 
 if (isset($_POST['Supplier'])) {
-    $_SESSION['header']  = null; 
+    unset($_SESSION['details']); 
     
     $SupplierCode = remove_junk($db->escape($_POST['Supplier']));
 
