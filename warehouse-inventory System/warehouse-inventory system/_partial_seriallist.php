@@ -1,3 +1,12 @@
+<?php
+$arr_serial = array();
+$arr_item = array();
+$StockCode = $_SESSION['StockCode'];
+
+if($_SESSION['details'] != null) $arr_item = $_SESSION['details'];
+$arr_serial =  ArraySearch($arr_item,$StockCode)[7];
+
+?>
 
 <form method="post" action="_partial_seriallist.php">
     <!-- /.box-header -->
@@ -15,10 +24,16 @@
                 <?php for($count = 1;$count <= $_SESSION['TrnQty'];$count++) { ?>
                 <tr>
                     <td class="clsStockCode">
-                        <input type="text" class="form-control col-xs-3 input-sm" name="StockCode" value="<?php echo$_SESSION['StockCode'] ?>" required="required" readonly="readonly" disabled />
+                        <input type="text" class="form-control col-xs-3 input-sm" name="StockCode" value="<?php echo $_SESSION['StockCode'] ?>" required="required" readonly="readonly" disabled />
                     </td>
                     <td class="clsSerialId">
-                        <input type="text" class="form-control col-xs-3 input-sm" name="SerialCode" placeholder="Serial Code" required="required" autocomplete="off" onkeyup="TextBoxKeyUp(this);" />
+                        <input type="text" class="form-control col-xs-3 input-sm" name="SerialCode" value="<?php if($arr_serial[$count-1] != null)  echo $arr_serial[$count-1] ?>" placeholder="Serial Code" required="required" autocomplete="off" onkeyup="TextBoxKeyUp(this);" />
+                    </td>
+                    <td class="clsLocationCode" style="display:none">
+                        <input type="text" class="form-control col-xs-3 input-sm" name="LocationCode" value="<?php echo $_SESSION['LocationCode'] ?>" placeholder="Location Code" disabled />
+                    </td>
+                    <td class="clsBinCode" style="display:none">
+                        <input type="text" class="form-control col-xs-3 input-sm" name="BinCode" value="<?php echo $_SESSION['BinCode'] ?>" placeholder="Bin Code" disabled />
                     </td>
                 </tr><?php  } ?>
             </tbody>
@@ -31,6 +46,8 @@
     var arr = new Array();
     var AllSerailsAreValid = true;
     var StockCode = "";
+    var LocationCode = "";
+    var BinCode = "";
 
     function EditItem(ctrl, event) {
         event.preventDefault();
@@ -53,11 +70,19 @@
                 }
 
 
-
                 if ($(this).attr("class") == "clsSerialId") {
                     var value = $(this).find(":input").val().trim();
                     arr.push(value);
                 }
+
+                if ($(this).attr("class") == "clsLocationCode") {
+                    LocationCode = $(this).find(":input").val().trim();
+                }
+
+                if ($(this).attr("class") == "clsBinCode") {
+                    BinCode = $(this).find(":input").val().trim();
+                }
+
             });
         });
 
@@ -72,7 +97,7 @@
             }
         }
 
-        if (arrHasDupes(arr))
+        if (AllSerailsAreFilled && arrHasDupes(arr))
         {
             AllSerailsAreFilled = false;
             bootbox.alert('Duplicate serial numbers found!');
@@ -84,7 +109,7 @@
                 $.ajax({
                     url: 'autocomplete.php',
                     type: 'POST',
-                    data: { StockCode: StockCode,SerialNo: value },
+                    data: { StockCode: StockCode, SerialNo: value, LocationCode: LocationCode, BinCode: BinCode },
                     async: false,
                     success: function (data) {
                         if (data.trim() == "false")

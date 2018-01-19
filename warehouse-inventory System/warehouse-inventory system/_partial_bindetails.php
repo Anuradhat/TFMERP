@@ -120,6 +120,9 @@
             var $row = $(this).closest("tr");
             var RowNo = $row.find(".clsRowId").text();
             var TrnQty = $row.find(".clsTrnQty").text();
+            var LocationCode = $("#FromLocationCode").val();
+            var BinCode = $("#FromBinCode").val();
+
 
             if (TrnQty == 0) {
                 $('#myModal').modal('toggle');
@@ -129,7 +132,7 @@
                 $.ajax({
                     url: "create_transfernote.php",
                     type: "POST",
-                    data: { 'StockCode': RowNo.trim(), 'TrnQty': TrnQty.trim() },
+                    data: { 'StockCode': RowNo.trim(), 'TrnQty': TrnQty.trim(), 'LocationCode': LocationCode.trim(), 'BinCode': BinCode.trim() },
                     success: function (result) {
                         //$('#modal-container').html(result);
                         var modalBody = $('<div id="modalContent"></div>');
@@ -143,4 +146,6 @@
         });
     });
 
+
+    $('#table').DataTable();
 </script>

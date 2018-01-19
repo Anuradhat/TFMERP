@@ -81,8 +81,10 @@ if (isset($_POST['_PONoForHeader'])) {
 if (isset($_POST['StockCode']) && isset($_POST['SerialNo'])) {
     $StockCode = remove_junk($db->escape($_POST['StockCode']));
     $SerialNo = remove_junk($db->escape($_POST['SerialNo']));
+    $LocationCode = remove_junk($db->escape($_POST['LocationCode']));
+    $BinCode = remove_junk($db->escape($_POST['BinCode']));
 
-    $result = $db->query("call spValidateSerail('{$StockCode}','{$SerialNo}');");
+    $result = $db->query("call spValidateSerail('{$StockCode}','{$SerialNo}','{$LocationCode}','{$BinCode}');");
     $array = array();
     $row = $db->fetch_assoc($result);
 
@@ -92,6 +94,50 @@ if (isset($_POST['StockCode']) && isset($_POST['SerialNo'])) {
          echo 'false';
 }
 
+
+//Get Stock details from serial
+if (isset($_POST['SerialCode']) && isset($_POST['LocationCode'])) {
+    $SerialCode = remove_junk($db->escape($_POST['SerialCode']));
+    $LocationCode = remove_junk($db->escape($_POST['LocationCode']));
+
+    $result = $db->query("call spSelectStockFromSerial('{$SerialCode}','{$LocationCode}');");
+    $array = array();
+
+    while ($row = $db->fetch_assoc($result)) {
+        $array = array (
+            'StockCode' => $row['StockCode'],
+            'SerialNo' => $row['SerialNo'],
+            'ProductDesc' => $row['ProductDesc'],
+            'CostPrice' => $row['CostPrice'],
+            'SalePrice' => $row['SalePrice'],
+            'SIH' => $row['SIH']
+        );
+    }
+    //RETURN JSON ARRAY
+    echo json_encode($array);
+}
+
+
+
+//Product code auto generate
+if (isset($_POST['stockcode'])) {
+    $query = $_POST['stockcode'];
+    $LocationCode = $_POST['LocationCode'];
+
+    $result = $db->query ("call spStockAutoComplete('{$query}','{$LocationCode}');");
+    $array = array();
+    while ($row = $db->fetch_assoc($result)) {
+        $array[] = array (
+            'text' => $row['StockCode'].' | '.$row['ProductDesc'],
+            'value' => $row['StockCode'],
+            'cprice' => $row['CostPrice'],
+            'sprice' => $row['SalePrice'],
+            'sih' => $row['SIH'],
+        );
+    }
+    //RETURN JSON ARRAY
+    echo json_encode ($array);
+}
 
 
 ?>

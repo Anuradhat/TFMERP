@@ -222,13 +222,15 @@ if (isset($_POST['_stockcode'])) {
 
 if (isset($_POST['StockCode']) && isset($_POST['TrnQty'])) {
     $_SESSION['StockCode'] = $_POST['StockCode'];
+    $_SESSION['LocationCode'] = $_POST['LocationCode'];
+    $_SESSION['BinCode'] = $_POST['BinCode'];
     $_SESSION['TrnQty'] = $_POST['TrnQty'];
   
     return include('_partial_seriallist.php');  
 }
 
 
-if (isset($_POST['FromLocationCode']) && isset($_POST['FromBinCode'])) {
+if (isset($_POST['FromLocationCode']) && isset($_POST['FromBinCode']) && isset($_POST['BinItem'])) {
     $FromLocationCode = remove_junk($db->escape($_POST['FromLocationCode']));
     $FromBinCode = remove_junk($db->escape($_POST['FromBinCode']));
 
@@ -238,6 +240,7 @@ if (isset($_POST['FromLocationCode']) && isset($_POST['FromBinCode'])) {
     foreach($all_stocks as &$value){
         $arr_item[]  = array($value["StockCode"],$value["ProductCode"],$value["ProductDesc"],$value["CostPrice"],$value["ExpireDate"],intval($value["SIH"]),0,$arr_serial);
     }
+
     $_SESSION['details'] = $arr_item; 
 
     return include('_partial_bindetails.php'); 
@@ -383,7 +386,7 @@ if (isset($_POST['ToLocationCode'])) {
                         <div class="form-group">
                             <div class="form-group">
                                 <label>Remarks</label>
-                                <textarea name="Remarks" id="Remarks" class="form-control" placeholder="Enter remarks here.." > <?php echo remove_junk($arr_header['Remarks']) ?> </textarea>
+                                <textarea name="Remarks" id="Remarks" class="form-control" placeholder="Enter remarks here.." ><?php echo remove_junk($arr_header['Remarks']) ?></textarea>
                             </div>
                         </div>
                     </div>
@@ -495,43 +498,6 @@ if (isset($_POST['ToLocationCode'])) {
         }
     }
   
-
-    $(document).ready(function () {
-        $('#ProductCode').typeahead({
-            hint: true,
-            highlight: true,
-            minLength: 3,
-            source: function (request, response) {
-                $.ajax({
-                    url: "autocomplete.php",
-                    data: 'productcode=' + request,
-                    dataType: "json",
-                    type: "POST",
-                    success: function (data) {
-                        items = [];
-                        map = {};
-                        $.each(data, function (i, item) {
-                            var id = item.value;
-                            var name = item.text;
-                            var cprice = item.cprice;
-                            map[name] = { id: id, name: name,cprice: cprice };
-                            items.push(name);
-                        });
-                        response(items);
-                        $(".dropdown-menu").css("height", "auto");
-                    }
-                });
-            },
-            updater: function (item) {
-                $('#ProductDesc').val(map[item].name.substring(map[item].name.indexOf('|') + 2));
-                $('#hProductDesc').val(map[item].name.substring(map[item].name.indexOf('|') + 2));
-                $('#CostPrice').val(map[item].cprice);
-
-                return map[item].id;
-            }
-        });
-    });
-
     function FillFromBin() {
         var FromLocationCode = $('#FromLocationCode').val();
         $.ajax({
@@ -570,13 +536,15 @@ if (isset($_POST['ToLocationCode'])) {
         $.ajax({
             type: "POST",
             url: "create_transfernote.php", // Name of the php files
-            data: { FromLocationCode: FromLocationCode, FromBinCode: FromBinCode },
+            data: { FromLocationCode: FromLocationCode, FromBinCode: FromBinCode, BinItem: 'OK' },
             success: function (result) {
                 $("#table").html(result);
+                $('#table').DataTable();
             }
         });
 
     }
+
 </script>
 
 <?php include_once('layouts/footer.php'); ?>

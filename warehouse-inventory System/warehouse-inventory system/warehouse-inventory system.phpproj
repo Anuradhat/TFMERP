@@ -21,6 +21,7 @@
     <Compile Include="add_employee_designation.php" />
     <Compile Include="add_employee_department.php" />
     <Compile Include="approval_task.php" />
+    <Compile Include="create_salesorder.php" />
     <Compile Include="create_transfernote.php" />
     <Compile Include="create_grn.php" />
     <Compile Include="delete_employee.php" />
@@ -30,6 +31,8 @@
     <Compile Include="add_workflow.php" />
     <Compile Include="add_location.php" />
     <Compile Include="autocomplete.php" />
+    <Compile Include="_partial_sodetails.php" />
+    <Compile Include="_partial_stockdetails.php" />
     <Compile Include="_partial_bindetails.php" />
     <Compile Include="_partial_binitem.php" />
     <Compile Include="_partial_seriallist.php" />
