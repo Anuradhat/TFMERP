@@ -17,7 +17,7 @@ $all_Taxs = find_by_sql("call spSelectAllTaxRates();");
 
 <?php
 if(isset($_POST['add_product'])){
-    $req_fields = array('ProductDesc','CategoryCode','SubcategoryCode','CostPrice','SalePrice','SalesComPer','ReorderLevel');
+    $req_fields = array('ProductDesc','CategoryCode','SubcategoryCode','SalesComPer','ReorderLevel');
 
     validate_fields($req_fields);
 
@@ -29,12 +29,13 @@ if(isset($_POST['add_product'])){
         $p_CategoryCode  = remove_junk($db->escape($_POST['CategoryCode']));
         $p_SubcategoryCode  = remove_junk($db->escape($_POST['SubcategoryCode']));
         $p_SupplierCode  = remove_junk($db->escape($_POST['SupplierCode']));
-        $p_CostPrice  =  remove_junk(string2Value($db->escape($_POST['CostPrice'])));
-        $p_SalePrice  = remove_junk(string2Value($db->escape($_POST['SalePrice'])));
-        $p_WholeSalePrice  = remove_junk(string2Value($db->escape($_POST['WholeSalePrice'])));
-        $p_DiscountAmount  = remove_junk(string2Value($db->escape($_POST['DiscountAmount'])));
+        $p_CostPrice  = 0;        //remove_junk(string2Value($db->escape($_POST['CostPrice'])));
+        $p_SalePrice  = 0;       //remove_junk(string2Value($db->escape($_POST['SalePrice'])));
+        $p_WholeSalePrice  = 0; //remove_junk(string2Value($db->escape($_POST['WholeSalePrice'])));
+        $p_DiscountAmount  = 0;//remove_junk(string2Value($db->escape($_POST['DiscountAmount'])));
         $p_SalesComPer  = remove_junk(string2Value($db->escape($_POST['SalesComPer'])));
-        $p_DiscountPer  = remove_junk(string2Value($db->escape($_POST['DiscountPer'])));
+        $p_DiscountPer  = 0; //remove_junk(string2Value($db->escape($_POST['DiscountPer'])));
+        $p_SalesPer = remove_junk(string2Value($db->escape($_POST['SalesPer'])));
         $p_ReorderLevel  = remove_junk(string2Value($db->escape($_POST['ReorderLevel'])));
         $p_Warranty  = remove_junk(string2Boolean($db->escape($_POST['Warranty'])));
         $p_Tax  =    $db->escape_array($_POST['Taxs']);
@@ -64,7 +65,7 @@ if(isset($_POST['add_product'])){
 
            $query  = "call spInsertProduct('{$prod_code}','{$p_ProductDesc}','{$p_OtherDesc}','{$p_DepartmentCode}','{$p_CategoryCode}','{$p_SubcategoryCode}',
                    '{$p_SupplierCode}',{$p_CostPrice},{$p_SalePrice},{$p_WholeSalePrice},{$p_DiscountAmount},{$p_SalesComPer},{$p_DiscountPer},{$p_ReorderLevel},
-                    {$p_Warranty},{$Tax_Selected},'{$date}','{$user}');";
+                    {$p_Warranty},{$Tax_Selected},{$p_SalesPer},'{$date}','{$user}');";
 
            $db->query($query);
 
@@ -262,20 +263,26 @@ if(isset($_POST['add_product'])){
             <div class="box-body">
                 <div class="row">
                     <div class="col-md-6">
-                        <div class="form-group">
+                        <!--<div class="form-group">
                             <label>Cost Price</label>
                             <input type="text" class="form-control" name="CostPrice" pattern="([0-9]+\.)?[0-9]+" placeholder="Cost Price" required="required" />
-                        </div>
+                        </div>-->
 
-                        <div class="form-group">
+                        <!--<div class="form-group">
                             <label>Whole Sale Price</label>
                             <input type="text" class="form-control" name="WholeSalePrice" pattern="([0-9]+\.)?[0-9]+" placeholder="Whole Sale Price" />
-                        </div>
+                        </div>-->
 
-                        <div class="form-group">
+                        <!--<div class="form-group">
                             <label>Discount Percentage (<output class="inline" for="fader" id="discrate">0</output>%)</label>
                             <input type="range" class="form-control" data-slider-id="blue" min="0" max="100" value="0" step="1" data-slider-tooltip="show" name="DiscountPer" placeholder="Discount Percentage (%)" oninput="outputDiscountRateUpdate(value)" />
+                        </div>-->
+
+                        <div class="form-group">
+                          <label>Sales Percentage (<output class="inline" for="fader" id="discrate">0</output>%)</label>
+                          <input type="range" class="form-control" data-slider-id="blue" min="0" max="100" value="0" step="1" data-slider-tooltip="show" name="SalesPer" placeholder="Sales Percentage (%)" oninput="outputDiscountRateUpdate(value)" />
                         </div>
+
 
                         <div class="form-group">
                             <label>Item Tax(s)</label>
@@ -288,15 +295,15 @@ if(isset($_POST['add_product'])){
                     </div>
 
                     <div class="col-md-6">
-                        <div class="form-group">
+                        <!--<div class="form-group">
                             <label>Sale Price</label>
                             <input type="text" class="form-control" name="SalePrice" pattern="([0-9]+\.)?[0-9]+" placeholder="Sale Price" required="required"/>
-                        </div>
+                        </div>-->
 
-                        <div class="form-group">
+                        <!--<div class="form-group">
                             <label>Discount Amount</label>
                             <input type="text" class="form-control" name="DiscountAmount" pattern="([0-9]+\.)?[0-9]+" placeholder="Discount Amount" />
-                        </div>
+                        </div>-->
 
                         <div class="form-group">
                             <label>Sales Commission (<output class="inline" for="fader" id="salesrate">0</output>%)</label>

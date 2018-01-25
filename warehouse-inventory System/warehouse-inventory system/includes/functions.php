@@ -53,13 +53,16 @@ function ChangValueFromListOfArray($array,$search,$changeIndex,$NewValue) {
 
 
 function ExistInArray($array,$search) {
-    $count = 0;
-    foreach($array as $row => $value){
-        if(array_search($search, $value,true) !== false)
-        {
-            return true;
+    if(is_array($array)){
+        $count = 0;
+        foreach($array as $row => $value){
+            if(array_search($search, $value,true) !== false)
+            {
+                return true;
+            }
+            $count++;
         }
-        $count++;
+        return false;
     }
     return false;
 }

@@ -166,10 +166,15 @@ if (isset($_POST['_prodcode'])) {
 if (isset($_POST['Edit'])) {
     $ProductCode = remove_junk($db->escape($_POST['ProductCode']));
     $Qty = remove_junk($db->escape($_POST['Qty']));
+    $CostPrice = remove_junk($db->escape($_POST['CostPrice']));
 
     $arr_item = $_SESSION['details'];
+
     //Change Qty
     $arr_item = ChangValueFromListOfArray( $arr_item,$ProductCode,3,$Qty);
+    //Change Cost price
+    $arr_item = ChangValueFromListOfArray( $arr_item,$ProductCode,2,$CostPrice);
+
     $_SESSION['details'] = $arr_item;
 
     return include('_partial_podetails.php');  

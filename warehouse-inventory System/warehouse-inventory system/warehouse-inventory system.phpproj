@@ -21,6 +21,7 @@
     <Compile Include="add_employee_designation.php" />
     <Compile Include="add_employee_department.php" />
     <Compile Include="approval_task.php" />
+    <Compile Include="edit_salesorder.php" />
     <Compile Include="create_salesorder.php" />
     <Compile Include="create_transfernote.php" />
     <Compile Include="create_grn.php" />

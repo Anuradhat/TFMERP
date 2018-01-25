@@ -78,8 +78,8 @@ $all_products = find_by_sql("call spSelectAllProducts();")
                                         <th>Category</th>
                                         <th>Subcategory</th>
                                         <!--<th>Supplier</th>-->
-                                        <th>Cost Price</th>
-                                        <th>Sales Price</th>
+                                        <th>Sales comm (%)</th>
+                                        <th>Reorder Level</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -116,10 +116,10 @@ $all_products = find_by_sql("call spSelectAllProducts();")
                                             <?php //echo remove_junk($prod['SupplierName']); ?>
                                         </td>-->
                                         <td>
-                                            <?php echo remove_junk(ucfirst($prod['CostPrice'])); ?>
+                                            <?php echo remove_junk(ucfirst($prod['SalesComPer'])); ?>
                                         </td>
                                         <td>
-                                            <?php echo remove_junk(ucfirst($prod['SalePrice'])); ?>
+                                            <?php echo remove_junk(ucfirst($prod['ReorderLevel'])); ?>
                                         </td>
                                     </tr>
                                     <?php endforeach; ?>

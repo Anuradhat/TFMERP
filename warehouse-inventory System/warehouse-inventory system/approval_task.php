@@ -119,7 +119,7 @@ if (isset($_POST['Approved']) && isset($_POST['TransactionCode']) && isset($_POS
                                         <th style="display: none;">Transaction Code</th>
                                         <th>Work-Flow</th>
                                         <th>Reference Number</th>
-                                        <th>Supplier</th>
+                                        <th>Supplier/Customer</th>
                                         <th>Approval Level</th>
                                         <th>Action</th>
                                     </tr>
@@ -143,7 +143,7 @@ if (isset($_POST['Approved']) && isset($_POST['TransactionCode']) && isset($_POS
                                             <?php echo remove_junk($approvals['ReferenceNo']); ?>
                                         </td>
                                         <td>
-                                            <?php echo remove_junk(ucfirst($approvals['SupplierName'])); ?>
+                                            <?php echo remove_junk(ucfirst($approvals['RefName'])); ?>
                                         </td>
                                         <td class="clsLevel">
                                             <?php echo remove_junk(ucfirst($approvals['Level'])); ?>
@@ -217,7 +217,7 @@ if (isset($_POST['Approved']) && isset($_POST['TransactionCode']) && isset($_POS
 
            bootbox.confirm({
                title: "Confirmation",
-               message: "Do you want to reject this transaction?",
+               message: "Do you want to reject this transaction?  <br><br> <input type=text class=form-control name=comment id=comment placeholder=Comments />",
                buttons: {
                    cancel: {
                        label: '<i class="fa fa-times"></i> Cancel'

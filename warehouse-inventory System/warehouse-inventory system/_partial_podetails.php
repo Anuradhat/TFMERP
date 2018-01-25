@@ -10,6 +10,20 @@
             <th>Amount</th>
         </tr>
     </thead>
+    <tfoot>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>
+                <b>Total:</b>
+            </td>
+            <td>
+                <?php $TotalCost = 0;foreach($arr_item  as &$value){ $TotalCost += $value[2] * $value[3];} echo '<b>'.number_format($TotalCost,2).'</b>'; ?>
+            </td>
+        </tr>
+    </tfoot>
     <tbody>
         <?php  foreach($arr_item  as &$value) { ?>
         <tr>

@@ -45,7 +45,7 @@ if(isset($_POST['product'])){
 
 <?php
 if(isset($_POST['edit_product'])){
-    $req_fields = array('hProductCode','ProductDesc','CostPrice','SalePrice','SalesComPer','ReorderLevel');
+    $req_fields = array('hProductCode','ProductDesc','SalesComPer','ReorderLevel');
 
     validate_fields($req_fields);
 
@@ -54,12 +54,13 @@ if(isset($_POST['edit_product'])){
         $p_ProductDesc  = remove_junk($db->escape($_POST['ProductDesc']));
         $p_OtherDesc  = remove_junk($db->escape($_POST['OtherDesc']));
         $p_SupplierCode  = remove_junk($db->escape($_POST['SupplierCode']));
-        $p_CostPrice  =  remove_junk(string2Value($db->escape($_POST['CostPrice'])));
-        $p_SalePrice  = remove_junk(string2Value($db->escape($_POST['SalePrice'])));
-        $p_WholeSalePrice  = remove_junk(string2Value($db->escape($_POST['WholeSalePrice'])));
-        $p_DiscountAmount  = remove_junk(string2Value($db->escape($_POST['DiscountAmount'])));
+        $p_CostPrice  =  0;         //remove_junk(string2Value($db->escape($_POST['CostPrice'])));
+        $p_SalePrice  =  0;        //remove_junk(string2Value($db->escape($_POST['SalePrice'])));
+        $p_WholeSalePrice  = 0;   //remove_junk(string2Value($db->escape($_POST['WholeSalePrice'])));
+        $p_DiscountAmount  = 0; //remove_junk(string2Value($db->escape($_POST['DiscountAmount'])));
         $p_SalesComPer  = remove_junk(string2Value($db->escape($_POST['SalesComPer'])));
-        $p_DiscountPer  = remove_junk(string2Value($db->escape($_POST['DiscountPer'])));
+        $p_DiscountPer  = 0; //remove_junk(string2Value($db->escape($_POST['DiscountPer'])));
+        $p_SalesPer = remove_junk(string2Value($db->escape($_POST['SalesPer'])));
         $p_ReorderLevel  = remove_junk(string2Value($db->escape($_POST['ReorderLevel'])));
         $p_Warranty  = remove_junk(string2Boolean($db->escape($_POST['Warranty'])));
         $p_Tax  =    $db->escape_array($_POST['Taxs']);
@@ -75,9 +76,8 @@ if(isset($_POST['edit_product'])){
             $db->begin();
             //$db->query("start transaction");
 
-            $query  = "call spUpdateProduct('{$p_ProductCode}','{$p_ProductDesc}','{$p_OtherDesc}','{$p_SupplierCode}',{$p_CostPrice},
-                           {$p_SalePrice},{$p_WholeSalePrice},{$p_DiscountAmount},{$p_SalesComPer},{$p_DiscountPer},{$p_ReorderLevel},
-                           {$p_Warranty},{$Tax_Selected},'{$date}','{$user}');";
+            $query  = "call spUpdateProduct('{$p_ProductCode}','{$p_ProductDesc}','{$p_OtherDesc}','{$p_SupplierCode}',{$p_DiscountAmount},
+                       {$p_SalesComPer},{$p_DiscountPer},{$p_ReorderLevel},{$p_Warranty},{$Tax_Selected},{$p_SalesPer},'{$date}','{$user}');";
 
             $db->query($query);
 
@@ -247,9 +247,9 @@ if(isset($_POST['edit_product'])){
                             <label>Supplier</label>
                             <select class="form-control select2" style="width: 100%;" name="SupplierCode"required="required" >
                                 <option value="">Select Supplier</option>
-                                 <?php  foreach ($all_Supplier as $supp): ?>
-                                <option value="<?php echo $supp['SupplierCode'] ?>" <?php if($supp['SupplierCode'] === $product['SupplierCode']): echo "selected"; endif; ?>  ><?php echo $supp['SupplierName'] ?>
-                                </option><?php endforeach; ?>
+                                 <?php  //foreach ($all_Supplier as $supp): ?>
+                                <option value="<?php //echo $supp['SupplierCode'] ?>" <?php //if($supp['SupplierCode'] === $product['SupplierCode']): echo "selected"; endif; ?>  ><?php //echo $supp['SupplierName'] ?>
+                                </option><?php //endforeach; ?>
                             </select>
                         </div>-->
                     </div>
@@ -271,19 +271,24 @@ if(isset($_POST['edit_product'])){
             <div class="box-body">
                 <div class="row">
                     <div class="col-md-6">
-                        <div class="form-group">
+                        <!--<div class="form-group">
                             <label>Cost Price</label>
-                            <input type="text" class="form-control" name="CostPrice" placeholder="Cost Price" pattern="([0-9]+\.)?[0-9]+" required="required" value="<?php echo remove_junk($product['CostPrice']);?>"/>
-                        </div>
+                            <input type="text" class="form-control" name="CostPrice" placeholder="Cost Price" pattern="([0-9]+\.)?[0-9]+" required="required" value=""/>
+                        </div>-->
+
+                        <!--<div class="form-group">
+                            <label>Whole Sale Price</label>
+                            <input type="text" class="form-control" name="WholeSalePrice" placeholder="Whole Sale Price" pattern="([0-9]+\.)?[0-9]+" value=""/>
+                        </div>-->
+          
+                        <!--<div class="form-group">
+                            <label>Discount Percentage (<output class="inline" for="fader" id="discrate"></output>%)</label>
+                            <input type="range" class="form-control" data-slider-id="blue" min="0" max="100" value="" step="1" data-slider-tooltip="show" name="DiscountPer" placeholder="Discount Percentage (%)" oninput="outputDiscountRateUpdate(value)" />
+                        </div>-->
 
                         <div class="form-group">
-                            <label>Whole Sale Price</label>
-                            <input type="text" class="form-control" name="WholeSalePrice" placeholder="Whole Sale Price" pattern="([0-9]+\.)?[0-9]+" value="<?php echo remove_junk($product['WholeSalePrice']);?>"/>
-                        </div>
-          
-                        <div class="form-group">
-                            <label>Discount Percentage (<output class="inline" for="fader" id="discrate"><?php echo remove_junk($product['DiscountPer']);?></output>%)</label>
-                            <input type="range" class="form-control" data-slider-id="blue" min="0" max="100" value="<?php echo remove_junk($product['DiscountPer']);?>" step="1" data-slider-tooltip="show" name="DiscountPer" placeholder="Discount Percentage (%)" oninput="outputDiscountRateUpdate(value)" />
+                            <label>Sales Percentage (<output class="inline" for="fader" id="discrate"><?php echo remove_junk($product['SalesPer']);?></output>%)</label>
+                            <input type="range" class="form-control" data-slider-id="blue" min="0" max="100" value="<?php echo remove_junk($product['SalesPer']);?>" step="1" data-slider-tooltip="show" name="SalesPer" placeholder="Sales Percentage (%)" oninput="outputDiscountRateUpdate(value)" />
                         </div>
                         
                         <div class="form-group">
@@ -298,15 +303,15 @@ if(isset($_POST['edit_product'])){
                     </div>
 
                     <div class="col-md-6">
-                        <div class="form-group">
+                        <!--<div class="form-group">
                             <label>Sale Price</label>
-                            <input type="text" class="form-control" name="SalePrice" placeholder="Sale Price" pattern="([0-9]+\.)?[0-9]+"  required="required" value="<?php echo remove_junk($product['SalePrice']);?>"/>
-                        </div>
+                            <input type="text" class="form-control" name="SalePrice" placeholder="Sale Price" pattern="([0-9]+\.)?[0-9]+"  required="required" value=""/>
+                        </div>-->
 
-                        <div class="form-group">
+                        <!--<div class="form-group">
                             <label>Discount Amount</label>
-                            <input type="text" class="form-control" name="DiscountAmount" placeholder="Discount Amount" pattern="([0-9]+\.)?[0-9]+" value="<?php echo remove_junk($product['DiscountAmount']);?>"/>
-                        </div>
+                            <input type="text" class="form-control" name="DiscountAmount" placeholder="Discount Amount" pattern="([0-9]+\.)?[0-9]+" value=""/>
+                        </div>-->
 
                         <div class="form-group">
                             <label>Sales Commission (<output class="inline" for="fader" id="salesrate"><?php echo remove_junk($product['SalesComPer']);?></output>%)</label>

@@ -35,7 +35,19 @@
             <?php } ?>
             <!-- end task item -->
 
-
+            <!-- sales order approve tasks -->
+            <?php
+            $pendingPoJobs = check_pending_approvels('004');
+            if(count($pendingPoJobs) > 0){
+            ?>
+            <li>
+                <!-- PO Task item -->
+                <a href="approval_task.php?TransactionCode=004">
+                    <i class="glyphicon glyphicon-check"></i>&nbsp;Need approval for <?php echo count($pendingPoJobs); ?> sales order(s)
+                </a>
+            </li>
+            <?php } ?>
+            <!-- end task item -->
 
         </ul>
     </li>

@@ -79,6 +79,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <script src="libs/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
     <!-- Typehead -->
     <script src="libs/bower_components/typeahead/bootstrap3-typeahead.min.js"></script>
+    <!-- bootstrap datepicker -->
+    <script src="libs/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
 </head>
 <!--
 BODY TAG OPTIONS:
@@ -370,6 +372,7 @@ desired effect
                                 </a>
                                 <ul class="treeview-menu">
                                     <li><a href="create_salesorder.php"><i class="fa fa-plus-square-o"></i>Create</a></li>
+                                    <li><a href="edit_salesorder.php"><i class="fa fa-pencil-square-o "></i>Update</a></li>
                                 </ul>
                             </li>
                             <!--End Sales Order Menu-->

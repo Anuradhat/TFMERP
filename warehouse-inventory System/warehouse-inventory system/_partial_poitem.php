@@ -2,7 +2,7 @@
 <div class="row">
     <form method="post" action="create_po.php">
         <!-- /.box-header -->
-        <div class="col-xs-4">
+        <div class="col-xs-3">
             <div class="form-group">
                 <label>Product Code</label>
                 <input type="text" class="form-control" id="ProductCode" name="ProductCode" placeholder="Product Code" required="required" autocomplete="off" value="<?php echo $serchitem[0]; ?>" readonly="readonly" disabled="disabled" />
@@ -10,7 +10,7 @@
             </div>
         </div>
 
-        <div class="col-xs-4">
+        <div class="col-xs-3">
             <div class="form-group">
                 <label>Product Description</label>
                 <input type="text" class="form-control" name="ProductDesc" id="ProductDesc" placeholder="Product Description" required="required" readonly="readonly" disabled="disabled" value="<?php echo $serchitem[1]; ?>" />
@@ -18,7 +18,14 @@
         </div>
 
 
-        <div class="col-xs-4">
+        <div class="col-xs-3">
+            <div class="form-group">
+                <label>Cost Price</label>
+                <input type="text" class="integer form-control decimal" name="CostPrice" id="pCostPrice" placeholder="Cost Price" required="required" value="<?php echo $serchitem[2]; ?>" />
+            </div>
+        </div>
+
+        <div class="col-xs-3">
             <div class="form-group">
                 <label>Qty</label>
                 <input type="number" class="integer form-control integer" name="Qty" id="pQty" placeholder="Qty" required="required" value="<?php echo $serchitem[3]; ?>" />
@@ -34,6 +41,7 @@
     function EditItem(ctrl, event) {
         event.preventDefault();
 
+        var CostPrice = parseInt($("#pCostPrice").val());
         var Qty = parseInt($("#pQty").val());
         var ProductCode = $("#hProductCode").val();
 
@@ -45,7 +53,7 @@
             $.ajax({
                 url: "create_po.php",
                 type: "POST",
-                data: { Edit: 'Edit', ProductCode: ProductCode, Qty: Qty },
+                data: { Edit: 'Edit', ProductCode: ProductCode, Qty: Qty, CostPrice: CostPrice },
                 success: function (result) {
                     $("#table").html(result);
                     $('#myModal').modal('toggle');
@@ -64,5 +72,20 @@
             return false;
         }
         return true;
+    });
+
+    $(".decimal").keypress(function (e) {
+        var keyCode = (e.which) ? e.which : e.keyCode;
+        if ((keyCode >= 48 && keyCode <= 57) || (keyCode == 8))
+            return true;
+        else if (keyCode == 46) {
+            var curVal = document.activeElement.value;
+            if (curVal != null && curVal.trim().indexOf('.') == -1)
+                return true;
+            else
+                return false;
+        }
+        else
+            return false;
     });
 </script>

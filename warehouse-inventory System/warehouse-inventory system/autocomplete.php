@@ -132,7 +132,30 @@ if (isset($_POST['stockcode'])) {
             'value' => $row['StockCode'],
             'cprice' => $row['CostPrice'],
             'sprice' => $row['SalePrice'],
-            'sih' => $row['SIH'],
+            'sih' => $row['SIH']
+        );
+    }
+    //RETURN JSON ARRAY
+    echo json_encode ($array);
+}
+
+
+//Get Salesorder details
+if (isset($_POST['SalesOrderCode'])) {
+    $SalesOrderCode = $_POST['SalesOrderCode'];
+
+    $result = $db->query ("call spSelectSalesOrderHFromCode('{$SalesOrderCode}');");
+    $array = array();
+    while ($row = $db->fetch_assoc($result)) {
+        $array[] = array (
+            'SoNo' => $row['SoNo'],
+            'LocationCode' => $row['LocationCode'],
+            'CustomerCode' => $row['CustomerCode'],
+            'SalesmanCode' => $row['SalesmanCode'],
+            'WorkFlowCode' => $row['WorkFlowCode'],
+            'Remarks' => $row['Remarks'],
+            'ValidThru' => $row['ValidThru'],
+            'SoDate' => $row['SoDate']
         );
     }
     //RETURN JSON ARRAY
