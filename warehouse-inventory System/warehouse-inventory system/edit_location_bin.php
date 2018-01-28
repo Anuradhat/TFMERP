@@ -47,7 +47,7 @@ if(isset($_POST['edit_location_bin'])){
         $date    = make_date();
         $user = current_user();
 
-        $query  = "call spUpdateBin('{$p_LocationCode}','{$p_BinCode}','{$p_BinName}',{$p_DefaultBin},'{$user}');";
+        $query  = "call spUpdateBin('{$p_LocationCode}','{$p_BinCode}','{$p_BinName}',{$p_DefaultBin},'{$user['username']}');";
 
         if($db->query($query)){
             $session->msg('s',"Bin updated");

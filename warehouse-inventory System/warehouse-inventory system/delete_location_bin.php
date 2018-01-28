@@ -28,7 +28,7 @@ if(isset($_POST['bincode'])){
         exit;
     }
 
-    $delete_id = delete_by_sp("call spDeleteLocationBin('{$p_locacode}','{$p_bincode}','{$user}');");
+    $delete_id = delete_by_sp("call spDeleteLocationBin('{$p_locacode}','{$p_bincode}','{$user['username']}');");
 
     if($delete_id){
         $session->msg("s","Bin deleted.");

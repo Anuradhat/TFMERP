@@ -35,7 +35,7 @@ if(isset($_POST['add_location_bin'])){
                 redirect('add_location_bin.php',false);
             }
 
-            $query  = "call spInsertBin('{$p_LocationCode}','{$p_BinCode}','{$p_BinName}','{$user}');";
+            $query  = "call spInsertBin('{$p_LocationCode}','{$p_BinCode}','{$p_BinName}','{$user['username']}');";
 
             if($db->query($query)){
                 $db->commit();
