@@ -204,7 +204,9 @@ if(isset($_POST['edit_employee'])){
                     </div>                    
                 </div>
             </div>
+               </div>
         </div>
+            </div>
     </form>
 
 </section>

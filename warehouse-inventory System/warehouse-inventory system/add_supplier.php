@@ -202,10 +202,10 @@ if(isset($_POST['add_supplier'])){
                         <lable>VAT No:</lable>
                         <input type="text" class="form-control" name="VatNo" placeholder="VAT No" />
                     </div>
-                    <div class="col-md-3">
+                    <!--<div class="col-md-3">
                         <lable>SVAT No:</lable>
                         <input type="text" class="form-control" name="SVatNo" placeholder="SVAT No" />
-                    </div>
+                    </div>-->
                 
                     <div class="col-md-3">
                         <lable>Credit Period</lable>

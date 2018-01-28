@@ -191,10 +191,10 @@ if(isset($_POST['edit_supplier'])){
                         <lable>VAT No:</lable>
                         <input type="text" class="form-control" name="VatNo" placeholder="VAT No" value="<?php echo remove_junk($SupplierCount['SupplierVatNo']) ?>" />
                     </div>
-                    <div class="col-md-3">
+                    <!--<div class="col-md-3">
                         <lable>SVAT No:</lable>
-                        <input type="text" class="form-control" name="SVatNo" placeholder="SVAT No" value="<?php echo remove_junk($SupplierCount['SupplierSVatNo']) ?>" />
-                    </div>
+                        <input type="text" class="form-control" name="SVatNo" placeholder="SVAT No" value="<?php echo remove_junk($SupplierCount['SupplierSVatNo']) ?>" />-->
+                    <!--</div>-->
 
                     <div class="col-md-3">
                         <lable>Credit Period</lable>
