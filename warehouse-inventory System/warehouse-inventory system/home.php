@@ -6,6 +6,9 @@
   unset($_SESSION['details']);
   unset($_SESSION['PrnNos']);
   unset($_SESSION['PONos']);
+  unset($_SESSION['DiscountAmount']);
+  unset($_SESSION['card']);
+  unset($_SESSION['cheque']);
 
   if (!$session->isUserLoggedIn(true)) { redirect('index.php', false);}
 ?>

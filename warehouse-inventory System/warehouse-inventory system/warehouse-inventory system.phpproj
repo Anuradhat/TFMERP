@@ -22,6 +22,10 @@
     <Compile Include="add_employee_department.php" />
     <Compile Include="add_location_bin.php" />
     <Compile Include="approval_task.php" />
+    <Compile Include="create_invoice.php" />
+    <Compile Include="invoice_payment.php" />
+    <Compile Include="edit_customerpo.php" />
+    <Compile Include="create_customerpo.php" />
     <Compile Include="edit_salesorder.php" />
     <Compile Include="create_salesorder.php" />
     <Compile Include="create_transfernote.php" />
@@ -35,6 +39,13 @@
     <Compile Include="add_workflow.php" />
     <Compile Include="add_location.php" />
     <Compile Include="autocomplete.php" />
+    <Compile Include="_partial_addcheque.php" />
+    <Compile Include="_partial_addcreditcard.php" />
+    <Compile Include="_partial_invoiceitem.php" />
+    <Compile Include="_partial_invoicedetails.php" />
+    <Compile Include="_partial_cuspodetails.php" />
+    <Compile Include="_partial_cuspoitem.php" />
+    <Compile Include="_partial_invoiceserial.php" />
     <Compile Include="_partial_sodetails.php" />
     <Compile Include="_partial_stockdetails.php" />
     <Compile Include="_partial_bindetails.php" />
@@ -128,7 +139,6 @@
     <Compile Include="monthly_sales.php" />
     <Compile Include="product.php" />
     <Compile Include="profile.php" />
-    <Compile Include="sales.php" />
     <Compile Include="sales_report.php" />
     <Compile Include="sale_report_process.php" />
     <Compile Include="users.php" />
@@ -627,6 +637,8 @@
     <Content Include="libs\bower_components\bootstrap\package.js" />
     <Content Include="libs\bower_components\bootstrap\package.json" />
     <Content Include="libs\bower_components\bootstrap\README.md" />
+    <Content Include="libs\bower_components\cardjs\card-js.min.css" />
+    <Content Include="libs\bower_components\cardjs\card-js.min.js" />
     <Content Include="libs\bower_components\chart.js\.bower.json" />
     <Content Include="libs\bower_components\chart.js\.gitignore" />
     <Content Include="libs\bower_components\chart.js\.travis.yml" />
@@ -7875,6 +7887,7 @@
     <Folder Include="libs\bower_components\morris.js\spec\viz\exemplary\" />
     <Folder Include="libs\bower_components\bootstrap-confirmation\" />
     <Folder Include="libs\bower_components\bootbox\" />
+    <Folder Include="libs\bower_components\cardjs\" />
     <Folder Include="libs\bower_components\typeahead\" />
     <Folder Include="libs\bower_components\PACE\" />
     <Folder Include="libs\bower_components\PACE\themes\" />

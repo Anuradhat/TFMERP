@@ -53,6 +53,7 @@ if(isset($_POST['create_salesorder'])){
                 //save sales order 
                 try
                 {
+                   
                     $p_SOCode  = autoGenerateNumber('tfmSalesOrderHT',1);
 
                     $db->begin();
@@ -167,13 +168,6 @@ if (isset($_POST['LocationChanged'])) {
     return include('_partial_sodetails.php'); 
 }
 
-
-if (isset($_POST['_RowNo'])) {
-    $ProductCode = remove_junk($db->escape($_POST['_RowNo']));
-    $serchitem = ArraySearch($arr_item,$ProductCode);
-
-    return include('_partial_poitem.php'); 
-}
 
 
 if (isset($_POST['CustomerCode'])) {
@@ -442,6 +436,8 @@ if (isset($_POST['CustomerCode'])) {
             $("#Qty").focus();
         }
         else {
+            $('.loader').show();
+
             $.ajax({
                 url: 'create_salesorder.php',
                 type: "POST",
@@ -458,6 +454,7 @@ if (isset($_POST['CustomerCode'])) {
                     $('#CostPrice').val('');
                     $('#Qty').val('');
 
+                    $('.loader').fadeOut();
                     $('#StockCode').focus();
                 }
             });
@@ -506,6 +503,8 @@ if (isset($_POST['CustomerCode'])) {
     });
 
     function LocationChange() {
+        $('.loader').show();
+
         $.ajax({
             url: "create_salesorder.php",
             type: "POST",
@@ -513,11 +512,14 @@ if (isset($_POST['CustomerCode'])) {
             success: function (result) {
                 $("#table").html(result);
                 $('#message').load('_partial_message.php');
+                $('.loader').fadeOut();
             }
         });
     }
 
-  function FillSalesRep() {
+    function FillSalesRep() {
+        $('.loader').show();
+
         var CustomerCode = $('#CustomerCode').val();
 
         $.ajax({
@@ -527,6 +529,7 @@ if (isset($_POST['CustomerCode'])) {
             success: function (result) {
                 $("#SalesmanCode").html("");
                 $("#SalesmanCode").html(result);
+                $('.loader').fadeOut();
             }
         });
   }

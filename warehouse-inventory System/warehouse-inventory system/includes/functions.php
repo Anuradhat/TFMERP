@@ -51,6 +51,11 @@ function ChangValueFromListOfArray($array,$search,$changeIndex,$NewValue) {
     return $array;
 }
 
+function ChangValueOfArray($array,$changeIndex,$NewValue) {
+
+    $array[$changeIndex] = $NewValue;
+    return $array;
+}
 
 function ExistInArray($array,$search) {
     if(is_array($array)){

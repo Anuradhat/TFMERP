@@ -288,7 +288,7 @@ desired effect
                             <!--<li><a href="department.php"><i class="fa fa-th-list"></i>Department</a></li>-->
                             <li><a href="category.php"><i class="fa fa-list"></i>Category</a></li>
                             <li><a href="subcategory.php"><i class="fa fa-th-large"></i>Sub Category</a></li>
-                            <li><a href="product.php"><i class="fa fa-th"></i>Product</a></li>
+                            <li><a href="product.php"><i class="fa fa-cubes"></i>Product</a></li>
                             <li><a href="tax.php"><i class="fa fa-money"></i>Tax</a></li>
                         </ul>
                     </li>
@@ -378,9 +378,34 @@ desired effect
                             </li>
                             <!--End Sales Order Menu-->
 
+                            <!--Customer Purchase Order Menu-->
+                            <li class="treeview">
+                                <a href="#">
+                                    <i class="fa fa-cart-plus"></i> <span>Customer PO</span>
+                                    <span class="pull-right-container">
+                                        <i class="fa fa-angle-left pull-right"></i>
+                                    </span>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <li><a href="create_customerpo.php"><i class="fa fa-plus-square-o"></i>Create</a></li>
+                                    <li><a href="edit_customerpo.php"><i class="fa fa-pencil-square-o "></i>Update</a></li>
+                                </ul>
+                            </li>
+                            <!--End Customer Purchase Order Menu-->
 
-
-
+                            <!--Invoice Menu-->
+                            <li class="treeview">
+                                <a href="#">
+                                    <i class="fa fa-cart-plus"></i> <span>Invoice</span>
+                                    <span class="pull-right-container">
+                                        <i class="fa fa-angle-left pull-right"></i>
+                                    </span>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <li><a href="create_invoice.php"><i class="fa fa-plus-square-o"></i>Create</a></li>
+                                </ul>
+                            </li>
+                            <!--End Invoice Menu-->
 
 
 

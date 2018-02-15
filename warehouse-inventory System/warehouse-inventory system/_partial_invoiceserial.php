@@ -4,16 +4,16 @@ $arr_item = array();
 $StockCode = $_SESSION['StockCode'];
 
 if($_SESSION['details'] != null) $arr_item = $_SESSION['details'];
-$arr_serial =  ArraySearch($arr_item,$StockCode)[7];
+$arr_serial =  ArraySearch($arr_item,$StockCode)[6];
 
 ?>
 
-<form method="post" action="_partial_seriallist.php">
+<form method="post" action="create_invoice.php">
     <!-- /.box-header -->
     <input type="hidden" name="Edit" value="Edit" />
 
     <div class="box-body">
-        <table id="tblSerial" class="table table-bordered table-striped">
+        <table id="tblInvoiceSerial" class="table table-bordered table-striped">
             <thead>
                 <tr>
                     <th>Stock Code</th>
@@ -21,7 +21,7 @@ $arr_serial =  ArraySearch($arr_item,$StockCode)[7];
                 </tr>
             </thead>
             <tbody>
-                <?php for($count = 1;$count <= $_SESSION['TrnQty'];$count++) { ?>
+                <?php for($count = 1;$count <= $_SESSION['InvQty'];$count++) { ?>
                 <tr>
                     <td class="clsStockCode">
                         <input type="text" class="form-control col-xs-3 input-sm" name="StockCode" value="<?php echo $_SESSION['StockCode'] ?>" required="required" readonly="readonly" disabled />
@@ -31,9 +31,6 @@ $arr_serial =  ArraySearch($arr_item,$StockCode)[7];
                     </td>
                     <td class="clsLocationCode" style="display:none">
                         <input type="text" class="form-control col-xs-3 input-sm" name="LocationCode" value="<?php echo $_SESSION['LocationCode'] ?>" placeholder="Location Code" disabled />
-                    </td>
-                    <td class="clsBinCode" style="display:none">
-                        <input type="text" class="form-control col-xs-3 input-sm" name="BinCode" value="<?php echo $_SESSION['BinCode'] ?>" placeholder="Bin Code" disabled />
                     </td>
                 </tr><?php  } ?>
             </tbody>
@@ -47,7 +44,7 @@ $arr_serial =  ArraySearch($arr_item,$StockCode)[7];
     var AllSerailsAreValid = true;
     var StockCode = "";
     var LocationCode = "";
-    var BinCode = "";
+
 
     function EditItem(ctrl, event) {
         event.preventDefault();
@@ -62,7 +59,7 @@ $arr_serial =  ArraySearch($arr_item,$StockCode)[7];
         arr = [];
 
 
-        $("#tblSerial tr").each(function () {
+        $("#tblInvoiceSerial tr").each(function () {
             $('td', this).each(function () {
 
                 if ($(this).attr("class") == "clsStockCode") {
@@ -78,11 +75,6 @@ $arr_serial =  ArraySearch($arr_item,$StockCode)[7];
                 if ($(this).attr("class") == "clsLocationCode") {
                     LocationCode = $(this).find(":input").val().trim();
                 }
-
-                if ($(this).attr("class") == "clsBinCode") {
-                    BinCode = $(this).find(":input").val().trim();
-                }
-
             });
         });
 
@@ -109,8 +101,7 @@ $arr_serial =  ArraySearch($arr_item,$StockCode)[7];
                 $.ajax({
                     url: 'autocomplete.php',
                     type: 'POST',
-                    data: { V1: 'V1',StockCode: StockCode, SerialNo: value, LocationCode: LocationCode, BinCode: BinCode },
-                    async: false,
+                    data: { V2: 'V2',StockCode: StockCode, SerialNo: value, LocationCode: LocationCode },
                     success: function (data) {
                         if (data.trim() == "false")
                         {
@@ -139,7 +130,7 @@ $arr_serial =  ArraySearch($arr_item,$StockCode)[7];
             //var JSONArray = JSON.stringify(arr);
 
             $.ajax({
-                url: 'create_transfernote.php',
+                url: 'create_invoice.php',
                 type: 'POST',
                 data: { StockCode: StockCode,'arr': arr },
                 success: function (data) {

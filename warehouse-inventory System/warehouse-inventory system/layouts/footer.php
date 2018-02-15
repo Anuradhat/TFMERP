@@ -178,10 +178,8 @@ immediately after the control sidebar -->
             return false;
     });
 
-
-
   $(window).on('load', function () {
-        $('.loader').fadeOut();
+      $('.loader').fadeOut();
   });
 </script>
  <a href="javascript:" id="return-to-top"><i class="fa fa-chevron-up"></i></a>

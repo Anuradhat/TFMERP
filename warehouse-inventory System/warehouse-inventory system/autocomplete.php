@@ -78,7 +78,7 @@ if (isset($_POST['_PONoForHeader'])) {
 }
 
 //Get serail details
-if (isset($_POST['StockCode']) && isset($_POST['SerialNo'])) {
+if (isset($_POST['V1']) && isset($_POST['StockCode']) && isset($_POST['SerialNo'])) {
     $StockCode = remove_junk($db->escape($_POST['StockCode']));
     $SerialNo = remove_junk($db->escape($_POST['SerialNo']));
     $LocationCode = remove_junk($db->escape($_POST['LocationCode']));
@@ -92,6 +92,23 @@ if (isset($_POST['StockCode']) && isset($_POST['SerialNo'])) {
         echo 'true';
     else
          echo 'false';
+}
+
+
+if (isset($_POST['V2']) && isset($_POST['StockCode']) && isset($_POST['SerialNo'])) {
+    $StockCode = remove_junk($db->escape($_POST['StockCode']));
+    $SerialNo = remove_junk($db->escape($_POST['SerialNo']));
+    $LocationCode = remove_junk($db->escape($_POST['LocationCode']));
+    $BinCode = remove_junk($db->escape($_POST['BinCode']));
+
+    $result = $db->query("call spValidateSerailV2('{$StockCode}','{$SerialNo}','{$LocationCode}');");
+    $array = array();
+    $row = $db->fetch_assoc($result);
+
+    if($row['SetailStatus'] == "OK")
+        echo 'true';
+    else
+        echo 'false';
 }
 
 
@@ -109,8 +126,7 @@ if (isset($_POST['SerialCode']) && isset($_POST['LocationCode'])) {
             'SerialNo' => $row['SerialNo'],
             'ProductDesc' => $row['ProductDesc'],
             'CostPrice' => $row['CostPrice'],
-            'SalePrice' => $row['SalePrice'],
-            'SIH' => $row['SIH']
+            'SalePrice' => $row['SalePrice']
         );
     }
     //RETURN JSON ARRAY
@@ -162,5 +178,58 @@ if (isset($_POST['SalesOrderCode'])) {
     echo json_encode ($array);
 }
 
+
+//Get customer purchase order details
+if (isset($_POST['CustomerPoCode'])) {
+    $CustomerPoCode = $_POST['CustomerPoCode'];
+
+    $result = $db->query ("call spSelectCustomerPurchaseOrderHFromCode('{$CustomerPoCode}');");
+    $array = array();
+    while ($row = $db->fetch_assoc($result)) {
+        $array[] = array (
+            'CusPoNo' => $row['CusPoNo'],
+            'SoNo' => $row['SoNo'],
+            'CustomerCode' => $row['CustomerCode'],
+            'LocationCode' => $row['LocationCode'],
+            'WorkFlowCode' => $row['WorkFlowCode'],
+            'SalesmanCode' => $row['SalesmanCode'],
+            'Remarks' => $row['Remarks'],
+            'DeliveryCode' => $row['DeliveryCode'],
+            'CusPoDate' => $row['CusPoDate']
+        );
+    }
+    //RETURN JSON ARRAY
+    echo json_encode ($array);
+}
+
+
+
+if (isset($_POST['arr'])) {
+   $arr_card = array();
+   $arr_card = $_POST['arr'];
+   $_SESSION['card'] = $arr_card;
+
+   $ToatlCardPayment = 0;
+   foreach($arr_card  as &$value)
+   {
+       $ToatlCardPayment += $value["value"];
+   }
+
+    echo ($ToatlCardPayment);
+}
+
+if (isset($_POST['chequearr'])) {
+    $arr_cheque = array();
+    $arr_cheque = $_POST['chequearr'];
+    $_SESSION['cheque'] = $arr_cheque;
+
+    $ToatlChequePayment = 0;
+    foreach($arr_cheque  as &$value)
+    {
+        $ToatlChequePayment += $value["value"];
+    }
+
+    echo ($ToatlChequePayment);
+}
 
 ?>

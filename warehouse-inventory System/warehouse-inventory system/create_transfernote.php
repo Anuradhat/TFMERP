@@ -75,11 +75,11 @@ if(isset($_POST['create_transfernote'])){
                        exit;
                     }
 
-                    $IsQtyExist = false;
+                    $IsQtyExist = true;
 
                     foreach($arr_item as $row => $value)
-                        if ($value[6] > 0)
-                            $IsQtyExist = true;
+                        if ($value[6] <= 0)
+                            $IsQtyExist = false;
 
                     if(!$IsQtyExist)
                     {

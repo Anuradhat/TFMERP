@@ -118,6 +118,28 @@ function ReadSystemConfig($key)
 }
 
 
+
+
+/*--------------------------------------------------------------*/
+/*  Function for read stock SIH from stock table
+/*--------------------------------------------------------------*/
+
+function SelectStockSIH($StockCode,$LocationCode)
+{
+    global $db;
+    $query = "call spSelectStockSIHFromStockNLocationCode('{$StockCode}','{$LocationCode}');";
+    if($result = $db->query($query))
+    {
+        $row = $db->fetch_assoc($result);
+
+        $Value = $row['SIH'];
+
+        return  $Value;
+    }
+    return null;
+}
+
+
 /*--------------------------------------------------------------*/
 /*  Function for read po last process date-time from stored procedure
 /*--------------------------------------------------------------*/

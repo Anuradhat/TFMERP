@@ -49,6 +49,20 @@
             <?php } ?>
             <!-- end task item -->
 
+            <!-- Customer purchase order approve tasks -->
+            <?php
+            $pendingPoJobs = check_pending_approvels('005');
+            if(count($pendingPoJobs) > 0){
+            ?>
+            <li>
+                <!-- CPO Task item -->
+                <a href="approval_task.php?TransactionCode=005">
+                    <i class="glyphicon glyphicon-check"></i>&nbsp;Need approval for <?php echo count($pendingPoJobs); ?> customer po(s)
+                </a>
+            </li>
+            <?php } ?>
+            <!-- end task item -->
+
         </ul>
     </li>
     <li class="footer">
