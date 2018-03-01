@@ -5,6 +5,8 @@ $page_title = 'Invoice - Payment';
 require_once('includes/load.php');
 page_require_level(2);
 
+preventGetAction('create_invoice.php');
+
 $arr_header = array();
 $arr_item = array();
 $arr_card = array();
@@ -137,6 +139,11 @@ if(isset($_POST['invoice_payment'])){
                     $db->query($query);
 
 
+                    //Update customer PO to process
+                    $query  = "call spUpdateCusPurchaseOrderToProcess('{$p_CustomerPoCode}','{$date}');";
+                    $db->query($query);
+
+
                     //Insert invoice details
                     foreach($arr_item as $row => $value)
                     {
@@ -145,14 +152,15 @@ if(isset($_POST['invoice_payment'])){
                     }
 
                     //***************************** Insert Payment Details ************************************************************
+
                     //Cash
-                    $query  = "call spInsertInvoicePaymentD('{$p_InvoiceCode}','{$p_LocationCode}','P001','','','{$date}','',{$_cash},{$p_NetAmount},'{$date}','{$user}');";
+                    $query  = "call spInsertInvoicePaymentD('{$p_InvoiceCode}','{$p_LocationCode}','P001','','','','',{$_cash},{$p_NetAmount},'{$date}','{$user}');";
                     $db->query($query);
 
                     //Credit/Debit Card
                     foreach($arr_card  as &$value)
                     {
-                        $query  = "call spInsertInvoicePaymentD('{$p_InvoiceCode}','{$p_LocationCode}','P002','','{$value['key']}','{$date}','',{$value['value']},{$p_NetAmount},'{$date}','{$user}');";
+                        $query  = "call spInsertInvoicePaymentD('{$p_InvoiceCode}','{$p_LocationCode}','P002','','{$value['key']}','','',{$value['value']},{$p_NetAmount},'{$date}','{$user}');";
                         $db->query($query);
                     }
 
@@ -206,7 +214,12 @@ if(isset($_POST['invoice_payment'])){
 
                     $db->commit();
 
+                    unset($_SESSION['header']);
                     unset($_SESSION['details']);
+                    unset($_SESSION['card']);
+                    unset($_SESSION['cheque']);
+                    unset($_SESSION['banktrn']);
+                    unset($_SESSION['Cash']);
 
                     $session->msg('s',"Invoice has been saved successfully,\n   Your invoice No: ".$p_InvoiceCode);
                     redirect('create_invoice.php', false);

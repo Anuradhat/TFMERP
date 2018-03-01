@@ -166,14 +166,14 @@ desired effect
                             <!-- Menu Toggle Button -->
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 <!-- The user image in the navbar-->
-                                <img src="libs/dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
+                                <img src="../libs/images/user.png" class="user-image" alt="User Image">
                                 <!-- hidden-xs hides the username on small devices so only the image appears. -->
                                 <span class="hidden-xs">Anuradha Thennakoon</span>
                             </a>
                             <ul class="dropdown-menu">
                                 <!-- The user image in the menu -->
                                 <li class="user-header">
-                                    <img src="libs/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+                                    <img src="../libs/images/user.png" class="img-circle" alt="User Image">
                                     <p>
                                         Anuradha Thennakoon - Web Developer
                                         <small>Member since Nov. 2012</small>
@@ -207,7 +207,7 @@ desired effect
                 <!-- Sidebar user panel (optional) -->
                 <div class="user-panel">
                     <div class="pull-left image">
-                        <img src="libs/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+                        <img src="../libs/images/user.png" class="img-circle" alt="User Image">
                     </div>
                     <div class="pull-left info">
                         <p>Anuradha Thennakoon</p>
