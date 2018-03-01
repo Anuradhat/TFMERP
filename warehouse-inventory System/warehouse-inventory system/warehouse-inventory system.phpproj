@@ -39,6 +39,7 @@
     <Compile Include="add_workflow.php" />
     <Compile Include="add_location.php" />
     <Compile Include="autocomplete.php" />
+    <Compile Include="_partial_addbanktransfer.php" />
     <Compile Include="_partial_addcheque.php" />
     <Compile Include="_partial_addcreditcard.php" />
     <Compile Include="_partial_invoiceitem.php" />

@@ -232,4 +232,18 @@ if (isset($_POST['chequearr'])) {
     echo ($ToatlChequePayment);
 }
 
+if (isset($_POST['banktranarr'])) {
+    $arr_banktrn = array();
+    $arr_banktrn = $_POST['banktranarr'];
+    $_SESSION['banktrn'] = $arr_banktrn;
+
+    $ToatlBankTrnPayment = 0;
+    foreach($arr_banktrn  as &$value)
+    {
+        $ToatlBankTrnPayment += $value["value"];
+    }
+
+    echo ($ToatlBankTrnPayment);
+}
+
 ?>

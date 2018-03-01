@@ -86,6 +86,8 @@
 //Item Delete
     $(document).ready(function () {
         $(".DeleteBtn").click(function () {
+            $('.loader').show();
+
             var $row = $(this).closest("tr");
             var prodcode = $row.find(".clsRowId").text().trim();
             $.ajax({
@@ -94,6 +96,7 @@
                 data: { "_stockcode": prodcode },
                 success: function (result) {
                     $('#table').html(result);
+                    $('.loader').fadeOut();
                 }
             });
 
@@ -104,6 +107,7 @@
 
     $(document).ready(function () {
         $(".EditBtn").click(function () {
+            $('.loader').show();
 
             var $row = $(this).closest("tr");
             var RowNo = $row.find(".clsRowId").text();
@@ -117,6 +121,7 @@
                     modalBody.append(result);
                     $("#myModalLabel").text('Invoice Item');
                     $('.modal-body').html(modalBody);
+                    $('.loader').fadeOut();
                 }
             });
 
@@ -127,6 +132,7 @@
 
     $(document).ready(function () {
         $(".SerialBtn").click(function () {
+            $('.loader').show();
 
             var $row = $(this).closest("tr");
             var RowNo = $row.find(".clsRowId").text();
@@ -148,6 +154,7 @@
                         modalBody.append(result);
                         $("#myModalLabel").text('Serial Details');
                         $('.modal-body').html(modalBody);
+                        $('.loader').fadeOut();
                     }
                 });
             }
@@ -157,6 +164,8 @@
 
 
     $("#DiscountAmount").change(function () {
+        $('.loader').show();
+
         var GrossAmount =  parseFloat($("#GrossAmount").val());
         var DiscountAmount = parseFloat($("#DiscountAmount").val());
 
@@ -174,6 +183,7 @@
             });
 
             $("#DiscountAmount").val("0.00");
+            $('.loader').fadeOut();
         }
         else
         {
@@ -189,6 +199,8 @@
 
 
             $("#NetAmount").val((GrossAmount - DiscountAmount).toFixed(2));
+
+            $('.loader').fadeOut();
         }
     });
 </script>

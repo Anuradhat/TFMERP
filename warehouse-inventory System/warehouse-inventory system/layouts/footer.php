@@ -130,7 +130,7 @@ immediately after the control sidebar -->
 
 <script>
     $(function () {
-        $('.table').DataTable();
+        //$('.table').DataTable();
         $('.slider').slider();
   })
 </script>

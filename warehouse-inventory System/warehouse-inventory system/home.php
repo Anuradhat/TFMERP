@@ -9,6 +9,7 @@
   unset($_SESSION['DiscountAmount']);
   unset($_SESSION['card']);
   unset($_SESSION['cheque']);
+  unset($_SESSION['banktrn']);
 
   if (!$session->isUserLoggedIn(true)) { redirect('index.php', false);}
 ?>

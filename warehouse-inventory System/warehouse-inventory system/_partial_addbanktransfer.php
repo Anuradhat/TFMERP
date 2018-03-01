@@ -12,7 +12,7 @@ $all_banks = find_by_sql("call spSelectAllBanks();");
         <div class="row">
             <div class="col-md-4">
                 <div class="form-group">
-                    <input type="text" class="form-control integer" id="chequenumber" placeholder="Cheque Number" autocomplete="off" />
+                    <input type="text" class="form-control integer" id="accountnumber" placeholder="Account Number" autocomplete="off" />
                 </div>
 
                 <div class="form-group">
@@ -27,36 +27,38 @@ $all_banks = find_by_sql("call spSelectAllBanks();");
                         </option><?php endforeach; ?>
                     </select>
                 </div>
+
             </div>
             <div class="col-md-4">
                 <div class="form-group">
-                    <input type="text" class="form-control" autocomplete="off" name="ChequeDate" id="datepicker" placeholder="Cheque Date" />
+                    <input type="text" class="form-control" id="accountname" placeholder="Account Name" autocomplete="off" />
                 </div>
 
                 <div class="form-group pull-right">
                     <button type="button" class="btn btn-success add-row" value="Add">&nbsp;Add&nbsp;&nbsp;</button>
                 </div>
+               
             </div>
         </div>
     </div>
 
-    <?php  foreach($arr_cheque  as &$value) { ?>
-       <script> dict.push({ key: '<?php echo $value['key']?>',bank: '<?php echo $value['bank']?>',date: '<?php echo $value['date']?>',value: '<?php echo $value['value']?>' }); </script>
+    <?php  foreach($arr_banktrn  as &$value) { ?>
+       <script> dict.push({ key: '<?php echo $value['key']?>',bank: '<?php echo $value['bank']?>',name: '<?php echo $value['name']?>',value: '<?php echo $value['value']?>' }); </script>
     <?php  } ?>
 
-    <table id="tblCheque" class="table table-bordered table-striped">
+    <table id="tblBankTrn" class="table table-bordered table-striped">
         <thead>
             <tr>
                 <th>Action</th>
-                <th>Cheque Number</th>
+                <th>Account Number</th>
                 <th>Bank</th>
-                <th>Cheque Date</th>
+                <th>Account Name</th>
                 <th>Payment (Rs)</th>
             </tr>
         </thead>
         <tfoot>
         </tfoot>
-        <tbody><?php  foreach($arr_cheque  as &$value) { ?>
+        <tbody><?php  foreach($arr_banktrn  as &$value) { ?>
             <tr>
                 <td>
                     <div>
@@ -65,7 +67,7 @@ $all_banks = find_by_sql("call spSelectAllBanks();");
                 </td>       
                 <td id="RowId" class="clsRowId"><?php echo $value["key"] ?></td>
                 <td><?php echo $value["bank"] ?></td>
-                <td><?php echo $value["date"] ?></td>
+                <td><?php echo $value["name"] ?></td>
                 <td><?php echo number_format($value["value"],2) ?>
                 </td>
             </tr> <?php  } ?>
@@ -93,9 +95,6 @@ $all_banks = find_by_sql("call spSelectAllBanks();");
 
                 dict.splice(index, 1);
 
-                ///if (dict.length == 0)
-                //    dict = [0];
-
                 $(this).parents("tr").first().remove();
             });
         });
@@ -103,32 +102,32 @@ $all_banks = find_by_sql("call spSelectAllBanks();");
 
         $(document).ready(function () {
             $(".add-row").click(function () {
-                var ChequeNumber = $("#chequenumber").val();
+                var AccountNumber = $("#accountnumber").val();
                 var BankCode = $("#BankCode").val();
-                var ChequeDate = $("#datepicker").val();
-                var ChequeValue = $("#Value").val();
+                var AccountName = $("#accountname").val();
+                var TransferValue = $("#Value").val();
 
-                if (ChequeNumber == "")
+                if (AccountNumber == "")
                 {
-                    bootbox.alert('Please enter cheque number.');
+                    bootbox.alert('Please enter account number.');
                 }
                 else if (BankCode == "")
                 {
                     bootbox.alert('Please select bank.');
                 }
-                else if (ChequeValue <= 0) {
+                else if (TransferValue <= 0) {
                     bootbox.alert('Please enter amount.');
                 }
                 else {
-                    var markup = "<tr><td><button type='button' class='btn btn-danger btn-xs glyphicon glyphicon-trash DeleteBtn' id='btnDelete'></button></td><td class='clsRowId'>" + ChequeNumber + "</td><td>" + BankCode + "</td><td>" + ChequeDate + "</td><td>" + parseFloat(ChequeValue).toFixed(2) + "</td></tr>";
-                    $("#tblCheque tbody").append(markup);
+                    var markup = "<tr><td><button type='button' class='btn btn-danger btn-xs glyphicon glyphicon-trash DeleteBtn' id='btnDelete'></button></td><td class='clsRowId'>" + AccountNumber + "</td><td>" + BankCode + "</td><td>" + AccountName + "</td><td>" + parseFloat(TransferValue).toFixed(2) + "</td></tr>";
+                    $("#tblBankTrn tbody").append(markup);
 
-                    dict.push({ key: ChequeNumber,bank: BankCode,date: ChequeDate, value: ChequeValue });
+                    dict.push({ key: AccountNumber, bank: BankCode, name: AccountName, value: TransferValue });
 
 
-                    $("#chequenumber").val('');
+                    $("#accountnumber").val('');
                     $('#BankCode').val('').trigger('change');
-                    $("#datepicker").val('');
+                    $("#accountname").val('');
                     $("#Value").val('');
                 }
             });
@@ -168,11 +167,11 @@ $all_banks = find_by_sql("call spSelectAllBanks();");
         $.ajax({
             url: "autocomplete.php",
             type: "POST",
-            data: { "chequearr": dict.length == 0 ? null : dict },
+            data: { "banktranarr": dict.length == 0 ? null : dict },
             success: function (data) {
                 var val = (data == null || data === "" ? 0.00 : data);
   
-                $('#ChequePayment').val(parseFloat(val).toFixed(2));
+                $('#BankTransferPayment').val(parseFloat(val).toFixed(2));
                 CalculateCreditDue();
                 $('#myModal').modal('toggle');
                 $('.loader').fadeOut();
@@ -181,17 +180,9 @@ $all_banks = find_by_sql("call spSelectAllBanks();");
     }
 
 
-    //Initialize Date picker
-    $('#datepicker').datepicker({
-        format: 'yyyy/mm/dd',
-        startDate: '-1d',
-        autoclose: true
-    })
-
 
     function CalculateCreditDue() {
-        $('.loader').show();
-
+      $('.loader').show();
         var NetAmount = $("#hNetAmount").val() == "" ? 0 : $("#hNetAmount").val();
         var CashValue = $("#CashPayment").val() == "" ? 0 : $("#CashPayment").val();
         var CardValue = $("#CardPayment").val() == "" ? 0 : $("#CardPayment").val();
@@ -200,7 +191,6 @@ $all_banks = find_by_sql("call spSelectAllBanks();");
 
         var Credit = (parseFloat(NetAmount) - (parseFloat(CashValue) + parseFloat(CardValue) + parseFloat(ChequeValue) + parseFloat(TransferValue))) < 0 ? 0 : (parseFloat(NetAmount) - (parseFloat(CashValue) + parseFloat(CardValue) + parseFloat(ChequeValue) + parseFloat(TransferValue)));
         $("#Credit").val((Credit).toFixed(2));
-
         $('.loader').fadeOut();
     }
 </script>

@@ -68,7 +68,20 @@
         $(document).ready(function () {
             $(".DeleteBtn").click(function () {
                 var $row = $(this).closest("tr");
-                $(this).parents("tr").remove();
+                var cardcode = $row.find(".clsRowId").text().trim();
+
+                var index = 0;
+
+                for (var i = 0; i < dict.length ; i++) {
+                    if (dict[i].key === cardcode) {
+                        index = i;
+                        break;
+                    }
+                }
+
+                dict.splice(index, 1);
+
+                $(this).parents("tr").first().remove();
             });
         });
 
@@ -87,7 +100,7 @@
                 }
                 else {
                     var markup = "<tr><td><button type='button' class='btn btn-danger btn-xs glyphicon glyphicon-trash DeleteBtn' id='btnDelete'></button></td><td class='clsRowId'>" + CardNumber + "</td><td>" + parseFloat(CardValue).toFixed(2) + "</td></tr>";
-                    $("table tbody").append(markup);
+                    $("#tblCard tbody").append(markup);
 
                     dict.push({ key: CardNumber, value: CardValue });
 
@@ -128,29 +141,34 @@
 
     function EditItem(ctrl, event)
     {
+        $('.loader').show();
+
         $.ajax({
             url: "autocomplete.php",
             type: "POST",
-            data: { "arr": dict },
+            data: { "arr": dict.length == 0 ? null : dict },
             success: function (data) {
-                $('#CardPayment').val(parseFloat(data).toFixed(2));
+                var val = (data == null || data === "" ? 0.00 : data);
+                $('#CardPayment').val(parseFloat(val).toFixed(2));
                 CalculateCreditDue();
-               $('#myModal').modal('toggle');
+                $('#myModal').modal('toggle');
+                $('.loader').fadeOut();
             }
         });
     }
 
     function CalculateCreditDue() {
+        $('.loader').show();
+
         var NetAmount = $("#hNetAmount").val() == "" ? 0 : $("#hNetAmount").val();
         var CashValue = $("#CashPayment").val() == "" ? 0 : $("#CashPayment").val();
         var CardValue = $("#CardPayment").val() == "" ? 0 : $("#CardPayment").val();
         var ChequeValue = $("#ChequePayment").val() == "" ? 0 : $("#ChequePayment").val();
+        var TransferValue = $("#BankTransferPayment").val() == "" ? 0 : $("#BankTransferPayment").val();
 
-        //alert(NetAmount);
-        //alert(CashValue);
-        //alert(CardValue);
-        //alert(ChequeValue);
+        var Credit = (parseFloat(NetAmount) - (parseFloat(CashValue) + parseFloat(CardValue) + parseFloat(ChequeValue) + parseFloat(TransferValue))) < 0 ? 0 : (parseFloat(NetAmount) - (parseFloat(CashValue) + parseFloat(CardValue) + parseFloat(ChequeValue) + parseFloat(TransferValue)));
+        $("#Credit").val((Credit).toFixed(2));
 
-        $("#Credit").val((parseFloat(NetAmount) - (parseFloat(CashValue) + parseFloat(CardValue) + parseFloat(ChequeValue))).toFixed(2));
+        $('.loader').fadeOut();
     }
 </script>

@@ -30,7 +30,7 @@ $all_CPO =  find_by_sql("call spSelectReleseCustomerPurchaseOrderFromCustomerCod
 
 if(isset($_POST['create_invoice'])){
 
-    if($_POST['create_invoice'] == "Paid")
+    if($_POST['create_invoice'] == "Payment")
     {
         $req_fields = array('LocationCode','CustomerCode','CustomerPoCode','SalesmanCode');
 
@@ -366,7 +366,7 @@ if (isset($_POST['Edit'])) {
                 <div class="row">
                     <div class="col-md-12 ">
                         <div class="btn-group">
-                            <button type="submit" name="create_invoice" class="btn btn-primary" value="Paid">&nbsp;Paid&nbsp;&nbsp;</button>
+                            <button type="submit" name="create_invoice" class="btn btn-primary" value="Payment">&nbsp;Payment&nbsp;</button>
                             <button type="reset" class="btn btn-success">&nbsp;Reset&nbsp;&nbsp;</button>
                             <button type="button" class="btn btn-warning" onclick="window.location = 'home.php'">Cancel  </button>
                         </div>
@@ -656,6 +656,7 @@ if (isset($_POST['Edit'])) {
 
 
     $("#SerialCode").on('keyup', function (e) {
+        $('.loader').show();
 
         var SerialCode = $('#SerialCode').val();
         var LocationCode = $('#LocationCode').val();
@@ -701,6 +702,8 @@ if (isset($_POST['Edit'])) {
                             $('#SalePrice').val(0.00);
                             $('#CostPrice').val(0.00);
                             $('#SerialCode').focus();
+
+                            $('.loader').fadeOut();
                         }
                         else
                         {
@@ -711,6 +714,8 @@ if (isset($_POST['Edit'])) {
 
                             
                             $('#SalePrice').focus();
+
+                            $('.loader').fadeOut();
                         }
                     }
                 });
@@ -721,6 +726,8 @@ if (isset($_POST['Edit'])) {
 
 
     function FillCPO() {
+        $('.loader').show();
+
         var Customer = $('#CustomerCode').val();
 
         $.ajax({
@@ -741,12 +748,14 @@ if (isset($_POST['Edit'])) {
             success: function (result) {
                 $("#table").html(result);
                 $('#message').load('_partial_message.php');
+                $('.loader').fadeOut();
             }
         });
     }
 
 
     function FillCPODetails() {
+        $('.loader').show();
         var CustomerPoCode = $('#CustomerPoCode').val();
 
         if (CustomerPoCode == "") {
@@ -789,6 +798,7 @@ if (isset($_POST['Edit'])) {
             data: { FillTable: 'OK', CustomerPoCode: CustomerPoCode },
             success: function (result) {
                 $("#table").html(result);
+                $('.loader').fadeOut();
             }
         });
     }

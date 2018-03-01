@@ -9,6 +9,8 @@ $arr_header = array();
 $arr_item = array();
 $arr_card = array();
 $arr_cheque = array();
+$arr_banktrn = array();
+
 $_cash = 0;
 
 
@@ -16,25 +18,238 @@ if($_SESSION['header'] != null) $arr_header = $_SESSION['header'];
 if($_SESSION['details'] != null) $arr_item = $_SESSION['details'];
 if($_SESSION['card'] != null) $arr_card = $_SESSION['card'];
 if($_SESSION['cheque'] != null) $arr_cheque = $_SESSION['cheque'];
+if($_SESSION['banktrn'] != null) $arr_banktrn = $_SESSION['banktrn'];
 if($_SESSION['Cash'] != null) $_cash = $_SESSION['Cash'];
 
 $Location = find_by_sp("call spSelectLocationFromCode('{$arr_header['LocationCode']}');");
 $Customer = find_by_sp("call spSelectCustomerFromCode('{$arr_header['CustomerCode']}');");
 $Salesman = find_by_sp("call spSelectEmployeeFromEpf('{$arr_header['SalesmanCode']}');");
 
+
+
+
 ?>
 
 
 <?php
 
-if (isset($_POST['CardPayment'])) {
+if(isset($_POST['invoice_payment'])){
 
+    if($_POST['invoice_payment'] == "Save")
+    {
+        $req_fields = array();
+
+        validate_fields($req_fields);
+
+
+        if(empty($errors))
+        {
+            $p_LocationCode  = $arr_header['LocationCode'];
+            $p_CustomerCode  = $arr_header['CustomerCode'];
+            $p_CustomerPoCode  = $arr_header['CustomerPoCode'];
+            $p_SalesmanCode = $arr_header['SalesmanCode'];
+            $p_Remarks  = $arr_header['Remarks'];
+
+            $p_GrossAmount = $arr_header['GrossAmount'];
+            $p_DiscountAmount = $arr_header['Discount'];
+            $p_NetAmount = $arr_header['NetAmount'];
+
+            $date    = make_date();
+            $datetime = make_datetime();
+            $user = "anush";
+
+
+            //Get all sessions values
+            $arr_item= $_SESSION['details'];
+
+            //check details values
+            if(count($arr_item)>0)
+            {
+
+                //Check transaction qty
+                $IsQtyExist = true;
+
+                foreach($arr_item as $row => $value)
+                    if ($value[4] <= 0)
+                        $IsQtyExist = false;
+
+                if(!$IsQtyExist)
+                {
+                    $session->msg("d", "Some invoice item qty not found.");
+                    redirect('invoice_payment.php',false);
+                }
+
+
+                //******* Check with SIH ***************************************
+                foreach($arr_item as $row => $value)
+                {
+                    if (SelectStockSIH($value[0],$p_LocationCode) < $value[4])
+                    {
+                        $session->msg("d", "Some invoice qty is greater than SIH.");
+                        redirect('invoice_payment.php',false);
+                        exit;
+                    }
+                }
+
+                //********************** Check serial qty ************************
+                foreach($arr_item as $row => $value)
+                {
+                    $StockCode = $value[0];
+                    $InvQty = $value[4];
+
+                    if($InvQty > 0)
+                    {
+                        $SerialCount = count($value[6]);
+                        if($InvQty != $SerialCount)
+                        {
+                            $session->msg("d", "Invoice serial details are invalid. Reference: ".$StockCode);
+                            redirect('invoice_payment.php',false);
+                            exit;
+                        }
+                    }
+                }
+
+
+                //Create invoice
+                try
+                {
+                    $p_InvoiceCode  = autoGenerateNumber('tfmInvoiceHT',1);
+
+                    $db->begin();
+
+                    $Invoice_count = find_by_sp("call spSelectInvoiceHFromCode('{$p_InvoiceCode}');");
+
+                    if($Invoice_count)
+                    {
+                        $session->msg("d", "This invoice number exist in the system.");
+                        redirect('create_invoice.php',false);
+                    }
+
+                    $TotalCardValue = 0;  foreach($arr_card  as &$value) { $TotalCardValue += $value["value"];}
+                    $TotalChequeValue = 0;  foreach($arr_cheque  as &$value) { $TotalChequeValue += $value["value"];}
+                    $ToatlBankTrnPayment = 0;  foreach($arr_banktrn  as &$value) { $ToatlBankTrnPayment += $value["value"];}
+                    $Credit = ($arr_header['NetAmount'] - ($_cash + $TotalCardValue + $TotalChequeValue +$ToatlBankTrnPayment)) < 0 ? 0 : ($arr_header['NetAmount'] - ($_cash + $TotalCardValue + $TotalChequeValue +$ToatlBankTrnPayment));
+
+                    $PaidAmount = $_cash + $TotalCardValue + $TotalChequeValue + $ToatlBankTrnPayment;
+
+                    //Insert invoice header details
+                    $query  = "call spInsertInvoiceH('{$p_InvoiceCode}','{$p_LocationCode}','{$date}','{$datetime}','{$p_CustomerPoCode}','{$p_CustomerCode}',{$p_GrossAmount},0,{$p_DiscountAmount},{$p_NetAmount},{$Credit},{$PaidAmount},{$Credit},'{$p_SalesmanCode}',0,'','{$date}','{$user}');";
+                    $db->query($query);
+
+
+                    //Insert invoice details
+                    foreach($arr_item as $row => $value)
+                    {
+                        $query  = "call spInsertInvoiceD('{$p_InvoiceCode}','{$p_LocationCode}','{$value[0]}','{$value[1]}',{$value[2]},{$value[3]},{$value[4]},0,{$value[5]});";
+                        $db->query($query);
+                    }
+
+                    //***************************** Insert Payment Details ************************************************************
+                    //Cash
+                    $query  = "call spInsertInvoicePaymentD('{$p_InvoiceCode}','{$p_LocationCode}','P001','','','{$date}','',{$_cash},{$p_NetAmount},'{$date}','{$user}');";
+                    $db->query($query);
+
+                    //Credit/Debit Card
+                    foreach($arr_card  as &$value)
+                    {
+                        $query  = "call spInsertInvoicePaymentD('{$p_InvoiceCode}','{$p_LocationCode}','P002','','{$value['key']}','{$date}','',{$value['value']},{$p_NetAmount},'{$date}','{$user}');";
+                        $db->query($query);
+                    }
+
+                    //Cheque
+                    foreach($arr_cheque  as &$value)
+                    {
+                        $query  = "call spInsertInvoicePaymentD('{$p_InvoiceCode}','{$p_LocationCode}','P004','{$value['bank']}','{$value['key']}','{$value['date']}','',{$value['value']},{$p_NetAmount},'{$date}','{$user}');";
+                        $db->query($query);
+                    }
+
+                    if($_SESSION['banktrn'] != null) $arr_banktrn = $_SESSION['banktrn'];
+
+                    //Bank Transfer
+                    foreach($arr_banktrn  as &$value)
+                    {
+                        $query  = "call spInsertInvoicePaymentD('{$p_InvoiceCode}','{$p_LocationCode}','P005','{$value['bank']}','{$value['key']}','{$value['date']}','{$value['name']}',{$value['value']},{$p_NetAmount},'{$date}','{$user}');";
+                        $db->query($query);
+                    }
+
+
+                    //Update Stock and serials
+                    foreach($arr_item as $row => $value)
+                    {
+                        $SerialCodes = $value[6];
+
+                        foreach($SerialCodes as $row => $Serial)
+                        {
+                            $SerialDetails = find_by_sp("call spSelectGRNSerialDetailsFromSerialCode('{$Serial}');");
+                            $StockDetails = find_by_sp("call spSelectStock('{$value[0]}','{$SerialDetails['LocationCode']}','{$SerialDetails['BinCode']}');");
+
+                            //Update serial flag
+                            $query  = "call spUpdateSaleFlagGRNSerialFromSerialCode('{$Serial}');";
+                            $db->query($query);
+
+                            //Insert Invoice Serials
+                            $query  = "call spInsertInvoiceSerialD('{$p_InvoiceCode}','{$p_LocationCode}','{$value[0]}','{$Serial}');";
+                            $db->query($query);
+
+                            //Update Stock
+                            $query  = "call spUpdateStock('{$value[0]}','{$SerialDetails['LocationCode']}','{$SerialDetails['BinCode']}',1,'{$date}');";
+                            $db->query($query);
+
+                            //Insert stock movement
+                            $query  = "call spStockMovement('{$value[0]}','{$SerialDetails['LocationCode']}','{$SerialDetails['BinCode']}',
+                                       '{$StockDetails['ProductCode']}','{$StockDetails['SupplierCode']}','006',{$value[2]},{$value[3]},0,{$StockDetails['AvgCostPrice']},0,-1,'{$StockDetails['ExpireDate']}','{$date}','{$user}');";
+                            $db->query($query);
+                        }
+                    }
+
+
+
+                    $db->commit();
+
+                    unset($_SESSION['details']);
+
+                    $session->msg('s',"Invoice has been saved successfully,\n   Your invoice No: ".$p_InvoiceCode);
+                    redirect('create_invoice.php', false);
+
+                }
+                catch(Exception $ex)
+                {
+                    $db->rollback();
+
+                    $session->msg('d',' Sorry failed to added!');
+                    redirect('create_customerpo.php', false);
+                }
+
+
+            }
+            else
+            {
+                $session->msg("w",' Invoice item(s) not found!');
+                redirect('invoice_payment.php',false);
+            }
+        }
+        else
+        {
+            $session->msg("d", $errors);
+            redirect('invoice_payment.php',false);
+        }
+
+    }
+}
+
+
+
+
+if (isset($_POST['CardPayment'])) {
     return include('_partial_addcreditcard.php');
 }
 
 if (isset($_POST['ChequePayment'])) {
-
     return include('_partial_addcheque.php');
+}
+
+if (isset($_POST['BankTrnsfer'])) {
+    return include('_partial_addbanktransfer.php');
 }
 
 if (isset($_POST['CardNumber']) && isset($_POST['Value'])) {
@@ -73,7 +288,7 @@ if (isset($_POST['CashPayment'])) {
         .column {
             float: left;
             padding: 10px;
-            height: 600px; /* Should be removed. Only for demonstration */
+            height: 600px;
         }
 
         .column1 {
@@ -87,100 +302,241 @@ if (isset($_POST['CashPayment'])) {
         .column3 {
             width: 25%;
         }
-
-        .number {
-            width: 50px;
-            height: 50px;
-            background: #80c0ff;
-            color: #FFF;
-            font-size: 12px;
-            text-align: center;
-            border-radius: 50%;
-            float: left;
-            padding-top: 5px;
-            margin-left: 10px;
-        }
-
-        .step {
-            width: 100%;
-            height: auto;
-            color: #80c0ff;
-            padding-left: 1%;
-            padding-top: 20px;
-            float: left;
-            position: relative;
-        }
-
-            .step:after {
-                content: '';
-                width: 80%;
-                height: 3px;
-                background: #80c0ff;
-                position: absolute;
-                bottom: 0;
-                right: 0;
-                border-top-left-radius: 10px;
-                border-bottom-left-radius: 10px;
-            }
-
-        .title {
-            float: left;
-            width: 70%;
-            margin-left: 3%;
-            font-size: 1.2em;
-            font-weight: 200;
-            margin-top: -5px;
-        }
-
-            .title t1 {
-                font-weight: 200;
-            }
     </style>
 </section>
 
 <!-- Main content -->
 <section class="content">
     <!-- Your Page Content Here -->
-
-    <div class="row">
-        <div class="column column1">
-            <div class="box box-default">
-                <div class="box-header with-border">
-                    <h3 class="box-title">Billing Information</h3>
-
-                    <div class="box-tools pull-right">
-                        <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                            <i class="fa fa-minus"></i>
-                        </button>
+    <form method="post" action="invoice_payment.php">
+        <div class="box box-default">
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-md-12 ">
+                        <div>
+                            <div class="btn-group">
+                                <button type="submit" name="invoice_payment" class="btn btn-primary" value="Save">&nbsp;Save&nbsp;</button>
+                                <button type="button" class="btn btn-warning" onclick="window.location = 'home.php'">Cancel  </button>
+                            </div>
+                            <button type="button" class="btn btn-success pull-right" onclick="window.location = 'create_invoice.php'">Go To Invoice</button>
+                        </div>
                     </div>
                 </div>
+            </div>
+        </div>
 
-                <div class="box-body">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group">
+        <div class="row">
+            <div id="message" class="col-md-12">
+                <?php include('_partial_message.php'); ?>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="column column1">
+                <div class="box box-default">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Billing Information</h3>
+
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                <i class="fa fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="col-md-12">
                                 <div class="form-group">
-                                    <label>Location</label>
-                                    <input type="text" class="form-control" name="Location" readonly="readonly" disabled="disabled" value="<?php echo $Location['LocationName']  ?>" />
+                                    <div class="form-group">
+                                        <label>Location</label>
+                                        <input type="text" class="form-control" name="Location" readonly="readonly" disabled="disabled" value="<?php echo $Location['LocationName']  ?>" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Customer</label>
+                                        <input type="text" class="form-control" name="Customer" readonly="readonly" disabled="disabled" value="<?php echo $Customer['CustomerName']  ?>" />
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Customer PO</label>
+                                        <input type="text" class="form-control" name="CustomerPo" readonly="readonly" disabled="disabled" value="<?php echo $arr_header['CustomerPoCode'];  ?>" />
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Salesman</label>
+                                        <input type="text" class="form-control" name="Salesman" readonly="readonly" disabled="disabled" value="<?php echo $Salesman['EmployeeName']  ?>" />
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Remarks</label>
+                                        <input type="text" class="form-control" name="Remarks" readonly="readonly" disabled="disabled" value="<?php echo $arr_header['Remarks'];  ?>" />
+                                    </div>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="column column2">
+                <div class="box box-default">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Payment Information</h3>
+
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                <i class="fa fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <input type="hidden" id="hNetAmount" value="<?php  echo $arr_header['NetAmount'] ?>" />
+
+
                                 <div class="form-group">
-                                    <label>Customer</label>
-                                    <input type="text" class="form-control" name="Customer" readonly="readonly" disabled="disabled" value="<?php echo $Customer['CustomerName']  ?>" />
+                                    <label>Cash Payment</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control text-right" id="CashPayment" name="CashPayment" placeholder="Cash Payment" value="<?php echo number_format($_cash,2,'.',''); ?>" autocomplete="off" />
+                                        <span class="input-group-btn">
+                                            <button type="button" class="CardBtn btn btn-default btn-flat" data-toggle="modal" data-target="#myModal" contenteditable="false" disabled>
+                                                <i class="fa fa-money"></i>
+                                            </button>
+                                        </span>
+                                    </div>
                                 </div>
 
                                 <div class="form-group">
-                                    <label>Customer PO</label>
-                                    <input type="text" class="form-control" name="CustomerPo" readonly="readonly" disabled="disabled" value="<?php echo $arr_header['CustomerPoCode'];  ?>" />
+                                    <label>Card Payment</label>
+                                    <div class="input-group">
+                                        <?php  $TotalCardValue = 0;  foreach($arr_card  as &$value) { $TotalCardValue += $value["value"]; } ?>
+                                        <input type="text" class="form-control text-right" id="CardPayment" name="CardPayment" placeholder="Credit/Debit Card Payment" value="<?php echo number_format($TotalCardValue,2,'.',''); ?>" autocomplete="off" readonly="readonly" disabled />
+                                        <span class="input-group-btn">
+                                            <button type="button" class="CardBtn btn btn-default btn-flat" data-toggle="modal" data-target="#myModal" contenteditable="false">
+                                                <i class="fa fa-credit-card"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label>Cheque Payment</label>
+                                    <div class="input-group">
+                                        <?php  $TotalChequeValue = 0;  foreach($arr_cheque  as &$value) { $TotalChequeValue += $value["value"]; } ?>
+                                        <input type="text" class="form-control text-right" id="ChequePayment" name="ChequePayment" placeholder="Cheque Payment" value="<?php echo number_format($TotalChequeValue,2,'.',''); ?>" autocomplete="off" readonly="readonly" disabled />
+                                        <span class="input-group-btn">
+                                            <button type="button" class="ChequeBtn btn btn-default btn-flat" data-toggle="modal" data-target="#myModal" contenteditable="false">
+                                                <i class="fa fa-newspaper-o"></i>
+                                            </button>
+                                        </span>
+                                    </div>
                                 </div>
 
                                 <div class="form-group">
-                                    <label>Salesman</label>
-                                    <input type="text" class="form-control" name="Salesman" readonly="readonly" disabled="disabled" value="<?php echo $Salesman['EmployeeName']  ?>" />
+                                    <label>Bank Transfer Payment</label>
+                                    <div class="input-group">
+                                        <?php  $ToatlBankTrnPayment = 0;  foreach($arr_banktrn  as &$value) { $ToatlBankTrnPayment += $value["value"]; } ?>
+                                        <input type="text" class="form-control text-right" id="BankTransferPayment" name="BankTransferPayment" placeholder="Bank Transfer Payment" value="<?php echo number_format($ToatlBankTrnPayment,2,'.',''); ?>" autocomplete="off" readonly="readonly" disabled />
+                                        <span class="input-group-btn">
+                                            <button type="button" class="BankTrnBtn btn btn-default btn-flat" data-toggle="modal" data-target="#myModal" contenteditable="false">
+                                                <i class="fa fa-share-square-o"></i>
+                                            </button>
+                                        </span>
+                                    </div>
                                 </div>
 
+
                                 <div class="form-group">
-                                    <label>Remarks</label>
-                                    <input type="text" class="form-control" name="Remarks" readonly="readonly" disabled="disabled" value="<?php echo $arr_header['Remarks'];  ?>" />
+                                    <label>Credit</label>
+                                    <div class="input-group">
+                                        <?php  $Credit = ($arr_header['NetAmount'] - ($_cash + $TotalCardValue + $TotalChequeValue +$ToatlBankTrnPayment)) < 0 ? 0 : ($arr_header['NetAmount'] - ($_cash + $TotalCardValue + $TotalChequeValue +$ToatlBankTrnPayment)); ?>
+                                        <input type="text" class="form-control text-right" name="Credit" id="Credit" placeholder="Credit Value" autocomplete="off" value="<?php  echo number_format($Credit,2,'.',''); ?>" readonly="readonly" disabled />
+                                        <span class="input-group-btn">
+                                            <button type="button" class="btn btn-default btn-flat" disabled>
+                                                <i class="fa fa-handshake-o"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="column column3">
+                <div class="box box-default">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Finalize Invoice</h3>
+
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                <i class="fa fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="table-responsive">
+                                    <table id="InvoiceSummary" class="table table-condensed">
+                                        <thead>
+                                            <tr>
+                                                <td>
+                                                    <strong>Item</strong>
+                                                </td>
+                                                <td class="text-right">
+                                                    <strong>Totals</strong>
+                                                </td>
+                                            </tr>
+                                        </thead>
+                                        <tfoot>
+                                            <tr>
+                                                <td class="thick-line"></td>
+                                                <td class="thick-line"></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="thick-line text-center">
+                                                    <strong>Gross Amount (Rs)</strong>
+                                                </td>
+                                                <td class="thick-line text-right">
+                                                    <?php echo number_format($arr_header['GrossAmount'],2); ?>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="thick-line text-center">
+                                                    <strong>Discount Amount (Rs)</strong>
+                                                </td>
+                                                <td class="thick-line text-right">
+                                                    <?php echo number_format($arr_header['Discount'],2); ?>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="thick-line text-center">
+                                                    <strong>Net Amount (Rs)</strong>
+                                                </td>
+                                                <td class="thick-line text-right">
+                                                    <?php echo number_format($arr_header['NetAmount'],2); ?>
+                                                </td>
+                                            </tr>
+                                        </tfoot>
+                                        <tbody>
+                                            <?php  foreach($arr_item  as &$value) { ?>
+                                            <tr>
+                                                <td>
+                                                    <?php echo substr($value[1],6)."..." ?>
+                                                </td>
+                                                <td class="text-right">
+                                                    <?php echo number_format(($value[5] == null ? 0 : $value[3] * $value[4]),2) ?>
+                                                </td>
+                                            </tr>
+                                            <?php  } ?>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
@@ -188,112 +544,14 @@ if (isset($_POST['CashPayment'])) {
                 </div>
             </div>
         </div>
-
-        <div class="column column2">
-            <div class="box box-default">
-                <div class="box-header with-border">
-                    <h3 class="box-title">Payment Information</h3>
-
-                    <div class="box-tools pull-right">
-                        <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                            <i class="fa fa-minus"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="box-body">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <input type="hidden" id="hNetAmount" value="<?php  echo $arr_header['NetAmount'] ?>" />
-
-
-                            <div class="form-group">
-                                <label>Cash Payment</label>
-                                <div class="input-group">
-                                    <input type="text" class="form-control text-right" id="CashPayment" name="CashPayment" placeholder="Cash Payment" value="<?php echo number_format($_cash,2,'.',''); ?>" autocomplete="off" />
-                                    <span class="input-group-btn">
-                                        <button type="button" class="CardBtn btn btn-default btn-flat" data-toggle="modal" data-target="#myModal" contenteditable="false" disabled>
-                                            <i class="fa fa-money"></i>
-                                        </button>
-                                    </span>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label>Card Payment</label>
-                                <div class="input-group">
-                                    <?php  $TotalCardValue = 0;  foreach($arr_card  as &$value) { $TotalCardValue += $value["value"]; } ?>
-                                    <input type="text" class="form-control text-right" id="CardPayment" name="CardPayment" placeholder="Credit/Debit Card Payment" value="<?php echo number_format($TotalCardValue,2,'.',''); ?>" autocomplete="off" readonly="readonly" disabled />
-                                    <span class="input-group-btn">
-                                        <button type="button" class="CardBtn btn btn-default btn-flat" data-toggle="modal" data-target="#myModal" contenteditable="false">
-                                            <i class="fa fa-credit-card"></i>
-                                        </button>
-                                    </span>
-                                </div>
-                            </div>
-
-
-                            <div class="form-group">
-                                <label>Cheque Payment</label>
-                                <div class="input-group">
-                                    <?php  $TotalChequeValue = 0;  foreach($arr_cheque  as &$value) { $TotalChequeValue += $value["value"]; } ?>
-                                    <input type="text" class="form-control text-right" id="ChequePayment" name="ChequePayment" placeholder="Cheque Payment" value="<?php echo number_format($TotalChequeValue,2,'.',''); ?>" autocomplete="off" readonly="readonly" disabled />
-                                    <span class="input-group-btn">
-                                        <button type="button" class="ChequeBtn btn btn-default btn-flat" data-toggle="modal" data-target="#myModal" contenteditable="false">
-                                            <i class="fa fa-newspaper-o"></i>
-                                        </button>
-                                    </span>
-                                </div>
-                               </div>
-
-                            <div class="form-group">
-                                <label>Credit</label>
-                                <div class="input-group">
-                                    <input type="text" class="form-control text-right" name="Credit" id="Credit" placeholder="Credit Value" autocomplete="off" value="<?php  echo number_format(($arr_header['NetAmount'] - ($_cash + $TotalCardValue + $TotalChequeValue)),2,'.','') ?>" readonly="readonly" disabled />
-                                    <span class="input-group-btn">
-                                        <button type="button" class="btn btn-default btn-flat" disabled>
-                                            <i class="fa fa-handshake-o"></i>
-                                        </button>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="column column3">
-            <div class="box box-default">
-                <div class="box-header with-border">
-                    <h3 class="box-title">Finalize Invoice</h3>
-
-                    <div class="box-tools pull-right">
-                        <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                            <i class="fa fa-minus"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="box-body">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <?php  foreach($arr_item  as &$value) { ?>
-                            <?php echo substr($value[1],6)."..."."&nbsp;&nbsp;&nbsp;".$value[4]."&nbsp;&nbsp;&nbsp;".number_format(($value[5] == null ? 0 : $value[3] * $value[4]),2)."<br/>"?>
-                            <?php  } ?>
-                            <hr class="divider" />
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+  </form>
 </section>
 <?php include_once('layouts/footer.php'); ?>
 
 <script>
     $(document).ready(function () {
         $(".CardBtn").click(function () {
+            $('.loader').show();
 
             var $row = $(this).closest("tr");
             var RowNo = $row.find(".clsRowId").text();
@@ -307,15 +565,17 @@ if (isset($_POST['CashPayment'])) {
                     modalBody.append(result);
                     $("#myModalLabel").text('Credit/Debit Card Payment');
                     $('.modal-body').html(modalBody);
+                    $('.loader').fadeOut();
                 }
             });
 
 
         });
     });
-
+    
     $(document).ready(function () {
         $(".ChequeBtn").click(function () {
+            $('.loader').show();
 
             var $row = $(this).closest("tr");
             var RowNo = $row.find(".clsRowId").text();
@@ -329,6 +589,31 @@ if (isset($_POST['CashPayment'])) {
                     modalBody.append(result);
                     $("#myModalLabel").text('Cheque Payment');
                     $('.modal-body').html(modalBody);
+                    $('.loader').fadeOut();
+                }
+            });
+
+
+        });
+    });
+
+    $(document).ready(function () {
+        $(".BankTrnBtn").click(function () {
+            $('.loader').show();
+
+            var $row = $(this).closest("tr");
+            var RowNo = $row.find(".clsRowId").text();
+
+            $.ajax({
+                url: "invoice_payment.php",
+                type: "POST",
+                data: 'BankTrnsfer=' + 'OK',
+                success: function (result) {
+                    var modalBody = $('<div id="modalContent"></div>');
+                    modalBody.append(result);
+                    $("#myModalLabel").text('Bank Transfer');
+                    $('.modal-body').html(modalBody);
+                    $('.loader').fadeOut();
                 }
             });
 
@@ -338,6 +623,8 @@ if (isset($_POST['CashPayment'])) {
 
 
     $("#CashPayment").change(function () {
+        $('.loader').show();
+
         var CashPayment = parseFloat($("#CashPayment").val());
 
         if (CashPayment < 0)
@@ -352,6 +639,7 @@ if (isset($_POST['CashPayment'])) {
                 data: { CashPayment: CashPayment },
                 success: function (result) {
                     CalculateCreditDue();
+                    $('.loader').fadeOut();
                 }
             });
 
@@ -360,11 +648,20 @@ if (isset($_POST['CashPayment'])) {
 
 
     function CalculateCreditDue() {
+        $('.loader').show();
+
         var NetAmount = $("#hNetAmount").val() == "" ? 0 : $("#hNetAmount").val();
         var CashValue = $("#CashPayment").val() == "" ? 0 : $("#CashPayment").val();
         var CardValue = $("#CardPayment").val() == "" ? 0 : $("#CardPayment").val();
         var ChequeValue = $("#ChequePayment").val() == "" ? 0 : $("#ChequePayment").val();
+        var TransferValue = $("#BankTransferPayment").val() == "" ? 0 : $("#BankTransferPayment").val();
+        
 
-        $("#Credit").val((parseFloat(NetAmount) - (parseFloat(CashValue) + parseFloat(CardValue) + parseFloat(ChequeValue))).toFixed(2));
+        var Credit = (parseFloat(NetAmount) - (parseFloat(CashValue) + parseFloat(CardValue) + parseFloat(ChequeValue) + parseFloat(TransferValue))) < 0 ? 0 : (parseFloat(NetAmount) - (parseFloat(CashValue) + parseFloat(CardValue) + parseFloat(ChequeValue) + parseFloat(TransferValue)));
+        $("#Credit").val((Credit).toFixed(2));
+
+        $('.loader').fadeOut();
     }
+
+
 </script>
