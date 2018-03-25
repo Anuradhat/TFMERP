@@ -78,7 +78,6 @@ $all_customers = find_by_sql("call spSelectAllCustomers();")
                                         <th>Telephone</th>
                                         <th>VAT</th>
                                         <th>SVAT</th>
-                                        <th>Credit Period</th>
                                         <th>Sales Person</th>
                                     </tr>
                                 </thead>
@@ -102,8 +101,7 @@ $all_customers = find_by_sql("call spSelectAllCustomers();")
                                             <td><?php echo remove_junk($cus['Tel']); ?></td>
                                             <td><?php echo remove_junk($cus['VATNo']); ?></td>
                                             <td> <?php echo remove_junk($cus['SVATNo']); ?></td>
-                                            <td> <?php echo remove_junk($cus['CreditPeriod']); ?></td>
-                                            <td><?php echo remove_junk(ucfirst($cus['SalesPersonCode'])); ?></td>
+                                            <td><?php echo remove_junk(ucfirst($cus['EmployeeName'])); ?></td>
                                         </tr>
                                     <?php endforeach; ?>
                                 </tbody>

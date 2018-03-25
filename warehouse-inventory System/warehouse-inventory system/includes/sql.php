@@ -121,13 +121,32 @@ function ReadSystemConfig($key)
 
 
 /*--------------------------------------------------------------*/
-/*  Function for read stock SIH from stock table
+/*  Function for read stock SIH from stock table For Location and Stock code
 /*--------------------------------------------------------------*/
 
 function SelectStockSIH($StockCode,$LocationCode)
 {
     global $db;
     $query = "call spSelectStockSIHFromStockNLocationCode('{$StockCode}','{$LocationCode}');";
+    if($result = $db->query($query))
+    {
+        $row = $db->fetch_assoc($result);
+
+        $Value = $row['SIH'];
+
+        return  $Value;
+    }
+    return null;
+}
+
+/*--------------------------------------------------------------*/
+/*  Function for read stock SIH from stock table For Location and Product code
+/*--------------------------------------------------------------*/
+
+function SelectStockSIHFormProduct($ProductCode,$LocationCode)
+{
+    global $db;
+    $query = "call spSelectStockSIHFromProductNLocationCode('{$ProductCode}','{$LocationCode}');";
     if($result = $db->query($query))
     {
         $row = $db->fetch_assoc($result);

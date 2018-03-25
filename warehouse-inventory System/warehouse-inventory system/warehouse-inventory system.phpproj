@@ -23,6 +23,7 @@
     <Compile Include="add_location_bin.php" />
     <Compile Include="approval_task.php" />
     <Compile Include="create_invoice.php" />
+    <Compile Include="includes\FlashMessages.php" />
     <Compile Include="invoice_payment.php" />
     <Compile Include="edit_customerpo.php" />
     <Compile Include="create_customerpo.php" />

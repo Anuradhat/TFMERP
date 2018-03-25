@@ -4,9 +4,9 @@
         <!-- /.box-header -->
         <div class="col-xs-3">
             <div class="form-group">
-                <label>Stock Code</label>
-                <input type="text" class="form-control" id="StockCode" name="StockCode" placeholder="Product Code" required="required" autocomplete="off" value="<?php echo $serchitem[0]; ?>" readonly="readonly" disabled="disabled" />
-                <input type="hidden" name="hStockCode" id="hStockCode" value="<?php echo $serchitem[0]; ?>" />
+                <label>Product Code</label>
+                <input type="text" class="form-control" id="StockCode" name="ProductCode" placeholder="Product Code" required="required" autocomplete="off" value="<?php echo $serchitem[0]; ?>" readonly="readonly" disabled="disabled" />
+                <input type="hidden" name="hProductCode" id="hProductCode" value="<?php echo $serchitem[0]; ?>" />
             </div>
         </div>
 
@@ -42,7 +42,7 @@
         event.preventDefault();
 
         var Qty = parseInt($("#pQty").val());
-        var StockCode = $("#hStockCode").val();
+        var ProductCode = $("#hProductCode").val();
         //var SalePrice = $("#SalePrices").val();
 
 
@@ -58,7 +58,7 @@
             $.ajax({
                 url: "create_invoice.php",
                 type: "POST",
-                data: { Edit: 'Edit', StockCode: StockCode,Qty: Qty },
+                data: { Edit: 'Edit', ProductCode: ProductCode, Qty: Qty },
                 success: function (result) {
                     $("#table").html(result);
                     $('#myModal').modal('toggle');

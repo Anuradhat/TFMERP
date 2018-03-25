@@ -4,9 +4,9 @@
         <!-- /.box-header -->
         <div class="col-xs-3">
             <div class="form-group">
-                <label>Stock Code</label>
-                <input type="text" class="form-control" id="StockCode" name="StockCode" placeholder="Product Code" required="required" autocomplete="off" value="<?php echo $serchitem[0]; ?>" readonly="readonly" disabled="disabled" />
-                <input type="hidden" name="hStockCode" id="hStockCode" value="<?php echo $serchitem[0]; ?>" />
+                <label>Product Code</label>
+                <input type="text" class="form-control" id="ProductCode" name="StockCode" placeholder="Product Code" required="required" autocomplete="off" value="<?php echo $serchitem[0]; ?>" readonly="readonly" disabled="disabled" />
+                <input type="hidden" name="hProductCode" id="hProductCode" value="<?php echo $serchitem[0]; ?>" />
             </div>
         </div>
 
@@ -21,14 +21,14 @@
         <div class="col-xs-3">
             <div class="form-group">
                 <label>Sale Price</label>
-                <input type="text" class="integer form-control decimal" name="CostPrice" id="pCostPrice" placeholder="Cost Price" required="required" value="<?php echo $serchitem[3]; ?>" disabled readonly="readonly" />
+                <input type="text" class="integer form-control decimal" name="CostPrice" id="pCostPrice" placeholder="Cost Price" required="required" value="<?php echo $serchitem[2]; ?>" disabled readonly="readonly" />
             </div>
         </div>
 
         <div class="col-xs-3">
             <div class="form-group">
                 <label>Qty</label>
-                <input type="number" class="integer form-control integer" name="Qty" id="pQty" placeholder="Qty" required="required" value="<?php echo $serchitem[4]; ?>" />
+                <input type="number" class="integer form-control integer" name="Qty" id="pQty" placeholder="Qty" required="required" value="<?php echo $serchitem[3]; ?>" />
             </div>
         </div>
     </form>
@@ -42,7 +42,7 @@
         event.preventDefault();
 
         var Qty = parseInt($("#pQty").val());
-        var StockCode = $("#hStockCode").val();
+        var ProductCode = $("#hProductCode").val();
 
         if (Qty <= 0) {
             $("#pQty").focus();
@@ -52,7 +52,7 @@
             $.ajax({
                 url: "create_customerpo.php",
                 type: "POST",
-                data: { Edit: 'Edit', StockCode: StockCode, Qty: Qty },
+                data: { Edit: 'Edit', ProductCode: ProductCode, Qty: Qty },
                 success: function (result) {
                     $("#table").html(result);
                     $('#myModal').modal('toggle');

@@ -1,5 +1,5 @@
 
-<table id="table" class="table table-bordered table-striped">
+
     <thead>
         <tr>
             <th>Action</th>
@@ -65,7 +65,7 @@
             </td>
         </tr><?php  } ?>
     </tbody>
-</table>
+
 
 <script>
 
@@ -146,6 +146,4 @@
         });
     });
 
-
-    $('#table').DataTable();
 </script>

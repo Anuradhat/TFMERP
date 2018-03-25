@@ -170,6 +170,25 @@ function redirect($url, $permanent = false)
 }
 
 
+function RedirectWithMethodPost($dest)
+{
+    $url = $params = '';
+    if( strpos($dest,'?') ) { list($url,$params) = explode('?',$dest,2); }
+    else { $url = $dest; }
+    echo "<form id='the-form'
+      method='post'
+      enctype='multipart/form-data'
+      action='$url'>\n";
+    foreach( explode('&',$params) as $kv )
+    {
+        if( strpos($kv,'=') === false ) { continue; }
+        list($k,$v) = explode('=',$kv,2);
+        echo "<input type='hidden' name='$k' value='$v'>\n";
+    }
+}
+
+
+
 function preventGetAction($url)
 {
     if (!isset($_SERVER['HTTP_REFERER']))

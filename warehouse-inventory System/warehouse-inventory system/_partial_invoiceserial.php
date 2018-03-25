@@ -1,10 +1,10 @@
 <?php
 $arr_serial = array();
 $arr_item = array();
-$StockCode = $_SESSION['StockCode'];
+$ProductCode = $_SESSION['ProductCode'];
 
 if($_SESSION['details'] != null) $arr_item = $_SESSION['details'];
-$arr_serial =  ArraySearch($arr_item,$StockCode)[6];
+$arr_serial =  ArraySearch($arr_item,$ProductCode)[6];
 
 ?>
 
@@ -16,15 +16,15 @@ $arr_serial =  ArraySearch($arr_item,$StockCode)[6];
         <table id="tblInvoiceSerial" class="table table-bordered table-striped">
             <thead>
                 <tr>
-                    <th>Stock Code</th>
+                    <th>Product Code</th>
                     <th>Serial Number</th>
                 </tr>
             </thead>
             <tbody>
                 <?php for($count = 1;$count <= $_SESSION['InvQty'];$count++) { ?>
                 <tr>
-                    <td class="clsStockCode">
-                        <input type="text" class="form-control col-xs-3 input-sm" name="StockCode" value="<?php echo $_SESSION['StockCode'] ?>" required="required" readonly="readonly" disabled />
+                    <td class="clsProductCode">
+                        <input type="text" class="form-control col-xs-3 input-sm" name="ProductCode" value="<?php echo $_SESSION['ProductCode'] ?>" required="required" readonly="readonly" disabled />
                     </td>
                     <td class="clsSerialId">
                         <input type="text" class="form-control col-xs-3 input-sm" name="SerialCode" value="<?php if($arr_serial[$count-1] != null)  echo $arr_serial[$count-1] ?>" placeholder="Serial Code" required="required" autocomplete="off" onkeyup="TextBoxKeyUp(this);" />
@@ -42,7 +42,7 @@ $arr_serial =  ArraySearch($arr_item,$StockCode)[6];
 <script type="text/javascript">
     var arr = new Array();
     var AllSerailsAreValid = true;
-    var StockCode = "";
+    var ProductCode = "";
     var LocationCode = "";
 
 
@@ -62,8 +62,8 @@ $arr_serial =  ArraySearch($arr_item,$StockCode)[6];
         $("#tblInvoiceSerial tr").each(function () {
             $('td', this).each(function () {
 
-                if ($(this).attr("class") == "clsStockCode") {
-                    StockCode = $(this).find(":input").val().trim();
+                if ($(this).attr("class") == "clsProductCode") {
+                    ProductCode = $(this).find(":input").val().trim();
                 }
 
 
@@ -101,7 +101,7 @@ $arr_serial =  ArraySearch($arr_item,$StockCode)[6];
                 $.ajax({
                     url: 'autocomplete.php',
                     type: 'POST',
-                    data: { V2: 'V2',StockCode: StockCode, SerialNo: value, LocationCode: LocationCode },
+                    data: { V3: 'V3', ProductCode: ProductCode, SerialNo: value, LocationCode: LocationCode },
                     success: function (data) {
                         if (data.trim() == "false")
                         {
@@ -132,7 +132,7 @@ $arr_serial =  ArraySearch($arr_item,$StockCode)[6];
             $.ajax({
                 url: 'create_invoice.php',
                 type: 'POST',
-                data: { StockCode: StockCode,'arr': arr },
+                data: { ProductCode: ProductCode, 'arr': arr },
                 success: function (data) {
                     $('#myModal').modal('toggle');
                 }

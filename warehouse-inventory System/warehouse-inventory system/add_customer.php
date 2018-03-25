@@ -6,11 +6,14 @@ require_once('includes/load.php');
 page_require_level(2);
 
 
+$default_salesrepDesig = ReadSystemConfig('DefaultSalesRepDesigCode');
+$all_salesrep = find_by_sql("call spSelectEmployeeFromDesignationCode('{$default_salesrepDesig}');");
+
 ?>
 
 <?php
 if(isset($_POST['add_customer'])){
-    $req_fields = array('CustomerName','CustomerAddress2','CustomerAddress3','ContactPerson', 'Tel');
+    $req_fields = array('CustomerName','CustomerAddress2','CustomerAddress3','ContactPerson', 'Tel','SalesmanCode');
     
     validate_fields($req_fields);
     
@@ -36,7 +39,7 @@ if(isset($_POST['add_customer'])){
         $p_CreditPeriod  = remove_junk(string2Value($db->escape($_POST['CreditPeriod'])));
         $p_VATNo  = remove_junk($db->escape($_POST['VATNo']));
         $p_SVATNo = remove_junk($db->escape($_POST['SVATNo']));
-        $p_SalesPersonCode = remove_junk($db->escape($_POST['SalesPersonCode']));
+        $p_SalesPersonCode = remove_junk($db->escape($_POST['SalesmanCode']));
 
         $date    = make_date();
         $user = "anush";
@@ -286,8 +289,10 @@ if(isset($_POST['add_customer'])){
 
                         <div class="form-group">
                             <label>Sales Person</label>
-                            <select class="form-control select2" name="SalesPersonCode">
-                                <option value="">Select Sales Person</option>
+                            <select class="form-control select2" style="width: 100%;" name="SalesmanCode" id="SalesmanCode" required="required">
+                                <option value="">Select Salesman</option><?php  foreach ($all_salesrep as $srep): ?>
+                                <option value="<?php echo $srep['EpfNumber'] ?>"><?php echo $srep['EmployeeName'] ?>
+                                </option><?php endforeach; ?>
                             </select>
                         </div>
                     </div>

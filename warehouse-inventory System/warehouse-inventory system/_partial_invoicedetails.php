@@ -3,7 +3,7 @@
     <thead>
         <tr>
             <th>Action</th>
-            <th>Stock Code</th>
+            <th>Product Code</th>
             <th>Product Description</th>
             <th>Sale Price</th>
             <th>Qty</th>
@@ -48,7 +48,7 @@
     </tfoot>
     <tbody>
         <?php  foreach($arr_item  as &$value) {
-                   $CustomerPoLocation = $_SESSION['CustomerPoLocation'];  $SIH = SelectStockSIH($value[0],$CustomerPoLocation)   ?>
+                   $Location =  $_SESSION['LocationCode'];  $SIH = SelectStockSIHFormProduct($value[0],$Location)   ?>
         <tr <?php if($SIH < $value[4]) echo "class=text-danger"; ?>>
             <td>
                 <div>
@@ -93,7 +93,7 @@
             $.ajax({
                 url: "create_invoice.php",
                 type: "POST",
-                data: { "_stockcode": prodcode },
+                data: { "_productcode": prodcode },
                 success: function (result) {
                     $('#table').html(result);
                     $('.loader').fadeOut();
@@ -147,7 +147,7 @@
                 $.ajax({
                     url: "create_invoice.php",
                     type: "POST",
-                    data: { 'StockCode': RowNo.trim(), 'InvQty': InvQty.trim(), 'LocationCode': LocationCode.trim() },
+                    data: { 'ProductCode': RowNo.trim(), 'InvQty': InvQty.trim(), 'LocationCode': LocationCode.trim() },
                     success: function (result) {
                         //$('#modal-container').html(result);
                         var modalBody = $('<div id="modalContent"></div>');

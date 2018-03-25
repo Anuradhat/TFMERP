@@ -4,7 +4,7 @@ ob_start();
 session_set_cookie_params(0);
 session_start();
 
-$page_title = 'Create Sales Order';
+$page_title = 'Create Quotation';
 require_once('includes/load.php');
 // Checkin What level user has permission to view this page
 page_require_level(2);
@@ -12,11 +12,13 @@ page_require_level(2);
 $default_flow = ReadSystemConfig('DefaultSOWorkFlow');
 $default_salesrepDesig = ReadSystemConfig('DefaultSalesRepDesigCode');
 
+$current_user = current_user();
 
-$all_Customers = find_by_sql("call spSelectAllCustomers();");
+//$all_Customers = find_by_sql("call spSelectAllCustomers();");
 $all_workflows = find_by_sql("call spSelectAllWorkFlow();");
 $all_locations = find_by_sql("call spSelectAllLocations();");
 $all_salesrep = find_by_sql("call spSelectEmployeeFromDesignationCode('{$default_salesrepDesig}');");
+$all_Customers = find_by_sql("call spSelectCustomerFromSalesmanCode('{$current_user["EmployeeCode"]}');");
 
 $arr_item = array();
 
@@ -29,14 +31,13 @@ if(isset($_POST['create_salesorder'])){
 
     if($_POST['create_salesorder'] == "save")
     {
-        $req_fields = array('CustomerCode','LocationCode','WorkFlowCode','SalesmanCode','ValidThru');
+        $req_fields = array('CustomerCode','WorkFlowCode','SalesmanCode','ValidThru');
 
         validate_fields($req_fields);
 
         if(empty($errors))
         {
             $p_CustomerCode  = remove_junk($db->escape($_POST['CustomerCode']));
-            $p_LocationCode  = remove_junk($db->escape($_POST['LocationCode']));
             $p_WorkFlowCode  = remove_junk($db->escape($_POST['WorkFlowCode']));
             $p_SalesmanCode  = remove_junk($db->escape($_POST['SalesmanCode']));
             $p_Remarks  = remove_junk($db->escape($_POST['Remarks']));
@@ -50,7 +51,7 @@ if(isset($_POST['create_salesorder'])){
             //check details values
             if(count($arr_item)>0)
             {
-                //save sales order 
+                //save quotation 
                 try
                 {
                    
@@ -62,18 +63,18 @@ if(isset($_POST['create_salesorder'])){
 
                     if($So_count)
                     {
-                        $session->msg("d", "This sales order number exist in the system.");
+                        $session->msg("d", "This quotation number exist in the system.");
                         redirect('create_salesorder.php',false);
                     }
 
-                    //Insert sales order header details
-                    $query  = "call spInsertSalesOrderH('{$p_SOCode}','{$p_LocationCode}','{$p_CustomerCode}','{$p_SalesmanCode}','{$date}','{$p_WorkFlowCode}','{$p_Remarks}',{$p_ValidThru},'{$date}','{$user}');";
+                    //Insert quotation header details
+                    $query  = "call spInsertSalesOrderH('{$p_SOCode}','','{$p_CustomerCode}','{$p_SalesmanCode}','{$date}','{$p_WorkFlowCode}','{$p_Remarks}',{$p_ValidThru},'{$date}','{$user}');";
                     $db->query($query);
 
-                    //Insert sales order item details
+                    //Insert quotation item details
                     foreach($arr_item as $row => $value)
                     {
-                        $query  = "call spInsertSalesOrderD('{$p_SOCode}','{$value[0]}','{$value[1]}',{$value[2]},{$value[3]},{$value[4]},{$value[5]});";
+                        $query  = "call spInsertSalesOrderD('{$p_SOCode}','{$value[0]}','{$value[1]}',0,{$value[2]},{$value[3]},{$value[4]});";
                         $db->query($query);
                     }
 
@@ -81,7 +82,7 @@ if(isset($_POST['create_salesorder'])){
                     
                     unset($_SESSION['details']);
 
-                    $session->msg('s',"Sales order has been saved successfully,\n   Your Sales order No: ".$p_SOCode);
+                    $session->msg('s',"Quotation has been saved successfully,\n   Your Quotation No: ".$p_SOCode);
                     redirect('create_salesorder.php', false);
 
                 }
@@ -96,7 +97,7 @@ if(isset($_POST['create_salesorder'])){
             }
             else
             {
-                $session->msg("w",' Sales order item(s) not found!');
+                $session->msg("w",' Quotation item(s) not found!');
                 redirect('create_salesorder.php',false);
             }
         }
@@ -118,25 +119,29 @@ if (isset($_POST['_stockcode'])) {
     return include('_partial_sodetails.php');  
 }
 
+if (isset($_POST['SalesmanCodeSelection'])) {
+    $SalesmanCode = remove_junk($db->escape($_POST['SalesmanCodeSelection']));
+   
+    $Customer = find_by_sql("call spSelectCustomerFromSalesmanCode('{$SalesmanCode}');");
+    echo "<option value=''>Select Customer</option>";
 
+    foreach($Customer as &$value){
+        echo "<option value ={$value["CustomerCode"]}>{$value["CustomerName"]}</option>";
+    } 
+    return;
+}
 
 
 if (isset($_POST['Add'])) {
-    $LocationCode = remove_junk($db->escape($_POST['LocationCode']));
-    $StockCode = remove_junk($db->escape($_POST['StockCode']));
+    $ProductCode = remove_junk($db->escape($_POST['ProductCode']));
     $ProductDesc = remove_junk($db->escape($_POST['ProductDesc']));
-    $CostPrice = remove_junk($db->escape($_POST['CostPrice']));
     $SalePrice = remove_junk($db->escape($_POST['SalePrice']));
     $Qty = remove_junk($db->escape($_POST['Qty']));
 
-    
+   
     $arr_item = $_SESSION['details'];
     
-    if($LocationCode == "" || $StockCode == "")
-    {
-        $session->msg('d',"Location or stock code is not found!");
-    }
-    else if($SalePrice == "")
+    if($SalePrice == "" || $SalePrice <= 0)
     {
         $session->msg('d',"Invalid sales price.");
     }
@@ -147,27 +152,18 @@ if (isset($_POST['Add'])) {
     else
     {
 
-        if(ExistInArray($arr_item,$StockCode))
+        if(ExistInArray($arr_item,$ProductCode))
         {
             $session->msg('d',"This item exist in the list.");
         }
         else
         {
-            $arr_item[] = array($StockCode,$ProductDesc,$CostPrice,$SalePrice,$Qty,$Qty * $SalePrice); 
+            $arr_item[] = array($ProductCode,$ProductDesc,$SalePrice,$Qty,$Qty * $SalePrice); 
             $_SESSION['details'] = $arr_item;     
         }
     }
     return include('_partial_sodetails.php'); 
 }
-
-if (isset($_POST['LocationChanged'])) {
-    $arr_item = array();
-
-    $_SESSION['details'] = null;
-
-    return include('_partial_sodetails.php'); 
-}
-
 
 
 if (isset($_POST['CustomerCode'])) {
@@ -194,7 +190,7 @@ if (isset($_POST['CustomerCode'])) {
 
 <section class="content-header">
     <h1>
-        Create Sales Order
+        Create Quotation
     </h1>
     <ol class="breadcrumb">
         <li>
@@ -202,7 +198,7 @@ if (isset($_POST['CustomerCode'])) {
                 <i class="fa fa-dashboard"></i>Transaction
             </a>
         </li>
-        <li class="active">Sales Order</li>
+        <li class="active">Quotation</li>
     </ol>
     <style>
         form {
@@ -249,37 +245,12 @@ if (isset($_POST['CustomerCode'])) {
                     <div class="col-md-4">
                         <div class="form-group">
                             <div class="form-group">
-                                <label>Sales Oder No</label>
+                                <label>Quotation No</label>
                                 <input type="text" class="form-control" name="SoNo" placeholder="Code will generate after save" readonly="readonly" disabled="disabled" />
                             </div>
                         </div>
 
-
-                        <div class="form-group">
-                            <label>Location</label>
-                            <select class="form-control select2" style="width: 100%;" name="LocationCode" id="LocationCode" onchange="LocationChange();" required>
-                                <option value = "">Select Location</option><?php  foreach ($all_locations as $loc): ?>
-                                <option value="<?php echo $loc['LocationCode'] ?>" ><?php echo $loc['LocationName'] ?>
-                                </option><?php endforeach; ?>
-                            </select>
-                        </div>
-                       
-                        <div class="form-group">
-                            <label>Valid Period</label>
-                            <input type="text" class="form-control pull-right integer" autocomplete="off" name="ValidThru" id="ValidThru" placeholder="Days" required="required" />
-                        </div>
-                    </div>
-
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label>Customer</label>
-                            <select class="form-control select2" style="width: 100%;" name="CustomerCode" id="CustomerCode" required="required" onchange="FillSalesRep();">
-                                <option value="">Select Customer</option><?php  foreach ($all_Customers as $cus): ?>
-                                <option value="<?php echo $cus['CustomerCode'] ?>"><?php echo $cus['CustomerName'] ?>
-                                </option><?php endforeach; ?>
-                            </select>
-                        </div>
-
+                        
                         <div class="form-group">
                             <label>Approvals Flow</label>
                             <select class="form-control select2" style="width: 100%;" name="WorkFlowCode" id="WorkFlowCode" required="required">
@@ -292,31 +263,44 @@ if (isset($_POST['CustomerCode'])) {
                         <div class="form-group">
                             <label>Remarks</label>
                             <textarea name="Remarks" id="Remarks" class="form-control" placeholder="Enter remarks here.."></textarea>
+                        </div>  
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Salesman</label>
+                            <select class="form-control select2" style="width: 100%;" name="SalesmanCode" id="SalesmanCode" required="required"onchange="FillCustomer();">
+                                <option value="">Select Salesman</option><?php  foreach ($all_salesrep as $srep): ?>
+                                <option value="<?php echo $srep['EpfNumber'] ?>" <?php if($srep['EpfNumber'] === $current_user["EmployeeCode"]): echo "selected"; endif; ?>><?php echo $srep['EmployeeName'] ?>
+                                </option><?php endforeach; ?>
+                            </select>
                         </div>
+
+
+                        <div class="form-group">
+                            <label>Valid Period</label>
+                            <input type="text" class="form-control pull-right integer" autocomplete="off" name="ValidThru" id="ValidThru" placeholder="Days" required="required" />
+                        </div>          
                     </div>
 
 
                     <div class="col-md-4">
                         <div class="form-group">
+                            <label>Customer</label>
+                            <select class="form-control select2" style="width: 100%;" name="CustomerCode" id="CustomerCode" required="required">
+                                <option value="">Select Customer</option><?php  foreach ($all_Customers as $cus): ?>
+                                <option value="<?php echo $cus['CustomerCode'] ?>"><?php echo $cus['CustomerName'] ?>
+                                </option><?php endforeach; ?>
+                            </select>
+                        </div>
+
+
+                        <div class="form-group">
                             <div class="form-group">
                                 <label>Date</label>
                                 <input type="text" class="form-control" name="SoDate" placeholder="Date" readonly="readonly" disabled="disabled" value="<?php echo make_date(); ?>" />
                             </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Salesman</label>
-                            <select class="form-control select2" style="width: 100%;" name="SalesmanCode" id="SalesmanCode" required="required">
-                                <option value="">Select Salesman</option><?php  foreach ($all_salesrep as $srep): ?>
-                                <option value="<?php echo $srep['EpfNumber'] ?>"><?php echo $srep['EmployeeName'] ?>
-                                </option><?php endforeach; ?>
-                            </select>
-
-                            
-                        </div>
-                       
-
-
+                        </div>            
                     </div>
 
                 </div>
@@ -334,15 +318,9 @@ if (isset($_POST['CustomerCode'])) {
                 <div class="row">
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label>Stock Code</label>
-                            <input type="text" class="form-control" name="StockCode" id="StockCode" placeholder="Stock Code" required="required" autocomplete="off" />
-                        </div>   
-                        
-                        <div class="form-group">
-                         <label>Qty</label>
-                          <input type="number" class="form-control integer" name="pQty" id="Qty" placeholder="Qty" required="required" />
-                         </div>
-    
+                            <label>Product Code</label>
+                            <input type="text" class="form-control" name="ProductCode" id="ProductCode" placeholder="Product Code" required="required" autocomplete="off" />
+                        </div>                        
                     </div>
 
                     <div class="col-md-3">
@@ -355,18 +333,16 @@ if (isset($_POST['CustomerCode'])) {
 
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label>Cost Price</label>
-                            <input type="text" class="form-control decimal" name="CostPrice" id="CostPrice" pattern="([0-9]+\.)?[0-9]+" placeholder="Cost Price" required="required" disabled readonly="readonly" />
-                        </div> 
-
-
+                            <label>Sale Price</label>
+                            <input type="text" class="form-control decimal" name="SalePrice" id="SalePrice" pattern="([0-9]+\.)?[0-9]+" placeholder="Sale Price" required="required" />
+                        </div>
 
                     </div>
 
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label>Sale Price</label>
-                            <input type="text" class="form-control decimal" name="SalePrice" id="SalePrice" pattern="([0-9]+\.)?[0-9]+" placeholder="Sale Price" required="required" />
+                            <label>Qty</label>
+                            <input type="number" class="form-control integer" name="pQty" id="Qty" placeholder="Qty" required="required" />
                         </div>
                                       
                         <div class="form-group pull-right">
@@ -386,7 +362,7 @@ if (isset($_POST['CustomerCode'])) {
 
     <div class="box box-default">
         <div class="box-header with-border">
-            <h3 class="box-title">Sales Order Item(s)</h3>
+            <h3 class="box-title">Quotation Item(s)</h3>
 
             <div class="box-tools pull-right">
                 <button type="button" class="btn btn-box-tool" data-widget="collapse">
@@ -411,21 +387,16 @@ if (isset($_POST['CustomerCode'])) {
 
 <script type="text/javascript">
     function AddItem(ctrl, event) {
-        //event.preventDefault();
-        var LocationCode = $('#LocationCode').val();
-        var StockCode = $('#StockCode').val();
+        event.preventDefault();
+
+        var ProductCode = $('#ProductCode').val();
         var ProductDesc = $('#ProductDesc').val();
-        var CostPrice = $('#CostPrice').val()
         var SalePrice = $('#SalePrice').val();
         var Qty = $('#Qty').val();
 
-        if (LocationCode == "") {
-            $("#LocationCode").focus();
-            bootbox.alert('Please select stock location.');
-        }
-        else if ($('#StockCode').val() == "" || $('#CostPrice').val() == "" || $('#CostPrice').val() <= 0) {
-            $("#SerialCode").focus();
-            bootbox.alert('Please enter correct item serial.');
+        if ($('#ProductCode').val() == "") {
+            bootbox.alert('Please select correct product.');
+            $("#ProductCode").focus();
         }
         else if ($('#SalePrice').val() == "" || $('#SalePrice').val() <= 0) {
             $("#SalePrice").focus();
@@ -441,36 +412,38 @@ if (isset($_POST['CustomerCode'])) {
             $.ajax({
                 url: 'create_salesorder.php',
                 type: "POST",
-                data: { Add: 'Add', LocationCode: LocationCode, StockCode: StockCode, ProductDesc: ProductDesc,CostPrice: CostPrice,SalePrice: SalePrice, Qty: Qty },
+                data: { Add: 'Add', ProductCode: ProductCode, ProductDesc: ProductDesc, SalePrice: SalePrice, Qty: Qty },
                 success: function (result) {
                     $("#table").html(result);
                     $('#message').load('_partial_message.php');
                 },
                 complete: function (result)
                 {
-                    $('#StockCode').val('');
+                    $('#ProductCode').val('');
                     $('#ProductDesc').val('');
                     $('#SalePrice').val('');
                     $('#CostPrice').val('');
                     $('#Qty').val('');
 
                     $('.loader').fadeOut();
-                    $('#StockCode').focus();
+                    $('#ProductCode').focus();
                 }
             });
         }
     }
   
     $(document).ready(function () {
-        $('#StockCode').typeahead({
+
+        $('#ProductCode').typeahead({
             hint: true,
             highlight: true,
             minLength: 3,
             source: function (request, response) {
-                var LocationCode = $('#LocationCode').val();
+                $('.loader').show();
                 $.ajax({
+
                     url: "autocomplete.php",
-                    data: { stockcode: request, LocationCode: LocationCode},
+                    data: { productcode: request},
                     dataType: "json",
                     type: "POST",
                     success: function (data) {
@@ -487,6 +460,7 @@ if (isset($_POST['CustomerCode'])) {
                         });
                         response(items);
                         $(".dropdown-menu").css("height", "auto");
+                        $('.loader').fadeOut();
                     }
                 });
             },
@@ -502,37 +476,42 @@ if (isset($_POST['CustomerCode'])) {
         });
     });
 
-    function LocationChange() {
+
+ 
+    function FillCustomer() {
         $('.loader').show();
 
+        var SalesmanCode = $('#SalesmanCode').val();
         $.ajax({
             url: "create_salesorder.php",
             type: "POST",
-            data: { LocationChanged: 'OK'},
+            data: { SalesmanCodeSelection: SalesmanCode },
             success: function (result) {
-                $("#table").html(result);
-                $('#message').load('_partial_message.php');
+                $("#CustomerCode").html(""); // clear before appending new list
+                $("#CustomerCode").html(result);
                 $('.loader').fadeOut();
             }
         });
     }
 
-    function FillSalesRep() {
-        $('.loader').show();
 
-        var CustomerCode = $('#CustomerCode').val();
 
-        $.ajax({
-            type: "POST",
-            url: "create_salesorder.php", // Name of the php files
-            data: { "CustomerCode": CustomerCode },
-            success: function (result) {
-                $("#SalesmanCode").html("");
-                $("#SalesmanCode").html(result);
-                $('.loader').fadeOut();
-            }
-        });
-  }
+  //  function FillSalesRep() {
+  //      $('.loader').show();
+
+  //      var CustomerCode = $('#CustomerCode').val();
+
+  //      $.ajax({
+  //          type: "POST",
+  //          url: "create_salesorder.php", // Name of the php files
+  //          data: { "CustomerCode": CustomerCode },
+  //          success: function (result) {
+  //              $("#SalesmanCode").html("");
+  //              $("#SalesmanCode").html(result);
+  //              $('.loader').fadeOut();
+  //          }
+  //      });
+  //}
 
   //$('#SerialCode').keypress(function (e) {
   //    var SerialCode = $('#SerialCode').val();
@@ -593,10 +572,14 @@ if (isset($_POST['CustomerCode'])) {
 
   //        }
   //  }
-  //});
+    //});
+
+    $('#ValidThru').keypress(function (e) {
+       // alert(this.value);
+  });
 
 
-  $('#StockCode').keypress(function (e) {
+  $('#ProductCode').keypress(function (e) {
       if (e.which == 13) {
           $('#SalePrice').focus();
       }

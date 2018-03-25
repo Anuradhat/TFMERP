@@ -11,7 +11,6 @@ $all_Category = find_by_sql("call spSelectAllCategory();");
 $all_Subcategory = find_by_sql("call spSelectAllSubcategory();");
 //$all_Supplier = find_by_sql("call spSelectAllSuppliers();");
 $all_Taxs = find_by_sql("call spSelectAllTaxRates();");
-
 ?>
 
 

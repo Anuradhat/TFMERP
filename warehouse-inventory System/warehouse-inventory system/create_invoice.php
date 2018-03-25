@@ -19,6 +19,12 @@ $all_salesrep = find_by_sql("call spSelectEmployeeFromDesignationCode('{$default
 $arr_header = array();
 $arr_item = array();
 
+if (strtoupper($_SERVER['REQUEST_METHOD']) == 'GET' && !$flashMessages->hasErrors() && !$flashMessages->hasWarnings()) // $session->msg == null
+{
+    $_SESSION['details']  = null;
+    $_SESSION['header'] = null;
+}
+
 if($_SESSION['header'] != null) $arr_header = $_SESSION['header'];
 if($_SESSION['details'] != null) $arr_item = $_SESSION['details'];
 
@@ -47,7 +53,7 @@ if(isset($_POST['create_invoice'])){
             $date    = make_date();
             $user = "anush";
 
-            
+
             $arr_header = array('LocationCode'=>$p_LocationCode,'CustomerCode'=>$p_CustomerCode,
                                     'CustomerPoCode'=>$p_CustomerPoCode,'SalesmanCode'=>$p_SalesmanCode,'Remarks'=>$p_Remarks,
                                      'GrossAmount' => 0,'NetAmount' => 0, 'Discount' => 0);
@@ -60,7 +66,7 @@ if(isset($_POST['create_invoice'])){
             //check details values
             if(count($arr_item)>0)
             {
-        
+
                     //Check transaction qty
                     $IsQtyExist = true;
 
@@ -70,18 +76,20 @@ if(isset($_POST['create_invoice'])){
 
                     if(!$IsQtyExist)
                     {
-                        $session->msg("d", "Some invoice item qty not found.");
-                        redirect('create_invoice.php',false);
+                        //$session->msg("d", "Some invoice item qty not found.");
+                        //redirect('create_invoice.php',false);
+                        $flashMessages->warning('Some invoice item qty not found.','create_invoice.php');
                     }
 
 
                     //******* Check with SIH ***************************************
                     foreach($arr_item as $row => $value)
                     {
-                        if (SelectStockSIH($value[0],$p_LocationCode) < $value[4])
+                        if (SelectStockSIHFormProduct($value[0],$p_LocationCode) < $value[4])
                         {
-                            $session->msg("d", "Some invoice qty is greater than SIH.");
-                            redirect('create_invoice.php',false);
+                            //$session->msg("d", "Some invoice qty is greater than SIH.");
+                            //redirect('create_invoice.php',false);
+                            $flashMessages->warning('Some invoice qty is greater than SIH.','create_invoice.php');
                             exit;
                         }
                     }
@@ -89,7 +97,7 @@ if(isset($_POST['create_invoice'])){
                     //********************** Check serial qty ************************
                     foreach($arr_item as $row => $value)
                     {
-                        $StockCode = $value[0];
+                        $ProductCode = $value[0];
                         $InvQty = $value[4];
 
                         if($InvQty > 0)
@@ -97,8 +105,9 @@ if(isset($_POST['create_invoice'])){
                             $SerialCount = count($value[6]);
                             if($InvQty != $SerialCount)
                             {
-                                $session->msg("d", "Invoice serial details are invalid. Reference: ".$StockCode);
-                                redirect('create_invoice.php',false);
+                                $flashMessages->warning('Invoice serial details are invalid. Reference: '.$ProductCode,'create_invoice.php');
+                                //$session->msg("d", "Invoice serial details are invalid. Reference: ");
+                                //redirect('create_invoice.php',false);
                                 exit;
                             }
                         }
@@ -109,7 +118,7 @@ if(isset($_POST['create_invoice'])){
                      foreach($arr_item as $row => $value)
                      {
                          $GrossAmount += $value[3] * $value[4];
-                     } 
+                     }
 
                      $_SESSION['DiscountAmount'] = $_SESSION['DiscountAmount'] == null ? 0 : $_SESSION['DiscountAmount'];
 
@@ -126,58 +135,69 @@ if(isset($_POST['create_invoice'])){
             }
             else
             {
-                $session->msg("w",' Invoice item(s) not found!');
-                redirect('create_invoice.php',false);
+                //$session->msg("w",' Invoice item(s) not found!');
+                //redirect('create_invoice.php',false);
+                $flashMessages->warning('Invoice item(s) not found!','create_invoice.php');
             }
         }
         else
         {
-            $session->msg("d", $errors);
-            redirect('create_invoice.php',false);
+            $flashMessages->error($errors,'create_invoice.php');
+            //$session->msg("d", $errors);
+            //redirect('create_invoice.php',false);
         }
 
     }
 }
 
-if (isset($_POST['_stockcode'])) {
-    $stockcode = remove_junk($db->escape($_POST['_stockcode']));
+
+if (isset($_POST['_LocationCode'])) {
+    $LocationCode = remove_junk($db->escape($_POST['_LocationCode']));
+    $_SESSION['LocationCode'] = $LocationCode;
+
+   return;
+}
+
+
+if (isset($_POST['_productcode'])) {
+    $productcode = remove_junk($db->escape($_POST['_productcode']));
     $arr_item = $_SESSION['details'];
-    $arr_item = RemoveValueFromListOfArray( $arr_item,$stockcode);
+    $arr_item = RemoveValueFromListOfArray( $arr_item,$productcode);
     $_SESSION['details'] = $arr_item;
 
-    return include('_partial_invoicedetails.php');  
+    return include('_partial_invoicedetails.php');
 }
 
 if (isset($_POST['DiscountAmount'])) {
     $DiscountAmount = remove_junk($db->escape($_POST['DiscountAmount']));
     $_SESSION['DiscountAmount'] = $DiscountAmount;
 
-    return include('_partial_invoicedetails.php');  
+    return include('_partial_invoicedetails.php');
 }
 
 
-if (isset($_POST['StockCode']) && isset($_POST['InvQty'])) {
-    $_SESSION['StockCode'] = $_POST['StockCode'];
+if (isset($_POST['ProductCode']) && isset($_POST['InvQty'])) {
+    $_SESSION['ProductCode'] = $_POST['ProductCode'];
     $_SESSION['LocationCode'] = $_POST['LocationCode'];
     $_SESSION['InvQty'] = $_POST['InvQty'];
-    
-    return include('_partial_invoiceserial.php');  
+
+    return include('_partial_invoiceserial.php');
 }
 
 
-if (isset($_POST['StockCode']) && isset($_POST['arr'])) {
+if (isset($_POST['ProductCode']) && isset($_POST['arr'])) {
     $arr_serial = array();
-    
-    $StockCode = remove_junk($db->escape($_POST['StockCode']));
+
+    $ProductCode = remove_junk($db->escape($_POST['ProductCode']));
     $arr_serial = $db->escape_array($_POST['arr']);
 
-    
+
     //Get all sessions values
     $arr_item = $_SESSION['details'];
 
-    $arr_item = ChangValueFromListOfArray($arr_item,$StockCode,6,$arr_serial);
+    $arr_item = ChangValueFromListOfArray($arr_item,$ProductCode,6,$arr_serial);
 
-    $_SESSION['details'] = $arr_item;  
+    $_SESSION['details'] = $arr_item;
 }
 
 if (isset($_POST['Add'])) {
@@ -189,9 +209,9 @@ if (isset($_POST['Add'])) {
     $SalePrice = remove_junk($db->escape($_POST['SalePrice']));
     $Qty = remove_junk($db->escape($_POST['Qty']));
 
-    
+
     $arr_item = $_SESSION['details'];
-    
+
     if($LocationCode == "" || $StockCode == "")
     {
         $session->msg('d',"Location or stock code is not found!");
@@ -232,19 +252,19 @@ if (isset($_POST['Add'])) {
                 //Chnage serial
                 $arr_item =  ChangValueFromListOfArray($arr_item,$StockCode,6,$serial_item);
 
-                //$arr_item[] = array($StockCode,$ProductDesc,$CostPrice,$SalePrice,++$Qty,$Qty * $SalePrice,$serial_item); 
+                //$arr_item[] = array($StockCode,$ProductDesc,$CostPrice,$SalePrice,++$Qty,$Qty * $SalePrice,$serial_item);
                 $_SESSION['details'] = $arr_item;
-            }  
+            }
         }
         else
         {
             $arr_serial = array($SerialCode);
-            $arr_item[] = array($StockCode,$ProductDesc,$CostPrice,$SalePrice,$Qty,$Qty * $SalePrice,$arr_serial); 
-            $_SESSION['details'] = $arr_item;     
+            $arr_item[] = array($StockCode,$ProductDesc,$CostPrice,$SalePrice,$Qty,$Qty * $SalePrice,$arr_serial);
+            $_SESSION['details'] = $arr_item;
         }
     }
 
-    return include('_partial_invoicedetails.php'); 
+    return include('_partial_invoicedetails.php');
 }
 
 if (isset($_POST['CustomerChanged'])) {
@@ -252,7 +272,7 @@ if (isset($_POST['CustomerChanged'])) {
 
     $_SESSION['details'] = null;
 
-    return include('_partial_invoicedetails.php'); 
+    return include('_partial_invoicedetails.php');
 }
 
 
@@ -280,7 +300,7 @@ if (isset($_POST['Customer'])) {
     $CustomerCode = remove_junk($db->escape($_POST['Customer']));
 
     $all_CPO = find_by_sql("call spSelectReleseCustomerPurchaseOrderFromCustomerCode('{$CustomerCode}');");
-    
+
     echo "<option value=''>Select Customer PO</option>";
     foreach($all_CPO as &$value){
         echo "<option value ={$value["CusPoNo"]}>{$value["CusPoNo"]}</option>";
@@ -295,31 +315,28 @@ if (isset($_POST['FillTable']) &&  isset($_POST['CustomerPoCode'])) {
 
     $CustomerPoCode = remove_junk($db->escape($_POST['CustomerPoCode']));
 
-    $CPO_Header = find_by_sp("call spSelectCustomerPurchaseOrderHFromCode('{$CustomerPoCode}');");
-    $_SESSION['CustomerPoLocation'] = $CPO_Header["LocationCode"];
-
     $CPO_Details = find_by_sql("call spSelectCustomerPurchaseOrderDFromCode('{$CustomerPoCode}');");
     $arr_serial = array();
 
     foreach($CPO_Details as &$value){
-        $arr_item[]  = array($value["StockCode"],$value["ProductDesc"],$value["CostPrice"],$value["SellingPrice"],$value["Qty"],$value["Amount"],$arr_serial);
+        $arr_item[]  = array($value["ProductCode"],$value["ProductDesc"],$value["CostPrice"],$value["SellingPrice"],$value["Qty"],$value["Amount"],$arr_serial);
     }
-    $_SESSION['details'] = $arr_item; 
+    $_SESSION['details'] = $arr_item;
 
     return include('_partial_invoicedetails.php');
 }
 
 
 if (isset($_POST['_RowNo'])) {
-    $StockCode = remove_junk($db->escape($_POST['_RowNo']));
-    $serchitem = ArraySearch($arr_item,$StockCode);
+    $ProductCode = remove_junk($db->escape($_POST['_RowNo']));
+    $serchitem = ArraySearch($arr_item,$ProductCode);
 
-    return include('_partial_invoiceitem.php'); 
+    return include('_partial_invoiceitem.php');
 }
 
 if (isset($_POST['Edit'])) {
-    
-    $StockCode = remove_junk($db->escape($_POST['StockCode']));
+
+    $ProductCode = remove_junk($db->escape($_POST['ProductCode']));
     //$SalePrice = remove_junk($db->escape($_POST['SalePrice']));
     $Qty = remove_junk($db->escape($_POST['Qty']));
 
@@ -328,11 +345,11 @@ if (isset($_POST['Edit'])) {
     //Change Sale price
     //$arr_item = ChangValueFromListOfArray( $arr_item,$StockCode,3,$SalePrice);
     //Change Qty
-    $arr_item = ChangValueFromListOfArray( $arr_item,$StockCode,4,$Qty);
+    $arr_item = ChangValueFromListOfArray( $arr_item,$ProductCode,4,$Qty);
 
     $_SESSION['details'] = $arr_item;
 
-    return include('_partial_invoicedetails.php');  
+    return include('_partial_invoicedetails.php');
 }
 ?>
 
@@ -399,7 +416,7 @@ if (isset($_POST['Edit'])) {
                                 <input type="text" class="form-control" name="InvoiceNo" placeholder="Code will generate after save" readonly="readonly" disabled="disabled" />
                             </div>
                         </div>
-                        
+
                         <div class="form-group">
                             <label>Customer Purchase Order</label>
                             <select class="form-control select2" style="width: 100%;" name="CustomerPoCode" id="CustomerPoCode"  onchange="FillCPODetails();" <?php if ($Required_CusPO == 1) echo "required=required"  ?> >
@@ -419,7 +436,7 @@ if (isset($_POST['Edit'])) {
                     <div class="col-md-4">
                         <div class="form-group">
                             <label>Location</label>
-                            <select class="form-control select2" style="width: 100%;" name="LocationCode" id="LocationCode" required="required">
+                            <select class="form-control select2" style="width: 100%;" name="LocationCode" id="LocationCode" required="required" onchange="LocationChange();">
                                 <option value="">Select Location</option><?php  foreach ($all_locations as $loc): ?>
                                 <option value="<?php echo $loc['LocationCode'] ?>" <?php if($loc['LocationCode'] == $arr_header["LocationCode"]) echo "selected";  ?>><?php echo $loc['LocationName'] ?>
                                 </option><?php endforeach; ?>
@@ -453,7 +470,7 @@ if (isset($_POST['Edit'])) {
                                 </option><?php endforeach; ?>
                             </select>
                         </div>
- 
+
                     </div>
 
                 </div>
@@ -474,13 +491,13 @@ if (isset($_POST['Edit'])) {
                             <label>Serial Code</label>
                             <input type="text" class="form-control" name="SerialCode" id="SerialCode" placeholder="Serial Code" required="required" autocomplete="off" />
                             <input type="hidden" name="StockCode" id="StockCode" />
-                        </div>   
-                        
+                        </div>
+
                         <!--<div class="form-group">
                          <label>Qty</label>
                           <input type="number" class="form-control integer" name="pQty" id="Qty" placeholder="Qty" required="required" />
                          </div>-->
-    
+
                     </div>
 
                     <div class="col-md-3">
@@ -488,14 +505,14 @@ if (isset($_POST['Edit'])) {
                             <label>Product Description</label>
                             <input type="text" class="form-control" name="ProductDesc" id="ProductDesc" placeholder="Product Description" required="required" readonly="readonly" disabled="disabled" />
                             <input type="hidden" name="hProductDesc" id="hProductDesc" />
-                        </div>      
+                        </div>
                     </div>
 
                     <div class="col-md-3">
                         <div class="form-group">
                             <label>Cost Price</label>
                             <input type="text" class="form-control decimal" name="CostPrice" id="CostPrice" pattern="([0-9]+\.)?[0-9]+" placeholder="Cost Price" required="required" disabled readonly="readonly" />
-                        </div> 
+                        </div>
 
                     </div>
 
@@ -504,7 +521,7 @@ if (isset($_POST['Edit'])) {
                             <label>Sale Price</label>
                             <input type="text" class="form-control decimal" name="SalePrice" id="SalePrice" pattern="([0-9]+\.)?[0-9]+" placeholder="Sale Price" required="required" />
                         </div>
-                                      
+
                         <div class="form-group pull-right">
                             <label>&nbsp;</label><br>
                             <button type="button" class="btn btn-info" id="item"  onclick="AddItem(this, event);" value="item">&nbsp;&nbsp;&nbsp;Add&nbsp;&nbsp;&nbsp;</button>
@@ -598,7 +615,7 @@ if (isset($_POST['Edit'])) {
             });
         }
     }
-  
+
     //function LocationChange()
     //{
     //    $.ajax({
@@ -612,7 +629,7 @@ if (isset($_POST['Edit'])) {
     //    });
     //}
 
-  
+
     //$(document).ready(function () {
     //    $('#StockCode').typeahead({
     //        hint: true,
@@ -662,7 +679,7 @@ if (isset($_POST['Edit'])) {
         var LocationCode = $('#LocationCode').val();
 
         if (e.keyCode == 13) {
-         
+
             if (LocationCode == "") {
                 bootbox.alert('Please select stock location.');
             }
@@ -712,7 +729,7 @@ if (isset($_POST['Edit'])) {
                             $('#CostPrice').val(parseFloat(CostPrice).toFixed(2));
                             $('#SalePrice').val(parseFloat(SalePrice).toFixed(2));
 
-                            
+
                             $('#SalePrice').focus();
 
                             $('.loader').fadeOut();
@@ -759,7 +776,7 @@ if (isset($_POST['Edit'])) {
         var CustomerPoCode = $('#CustomerPoCode').val();
 
         if (CustomerPoCode == "") {
-            $('#LocationCode').val('').trigger('change');
+            //$('#LocationCode').val('').trigger('change');
             $('#SalesmanCode').val('').trigger('change');
         }
 
@@ -772,7 +789,7 @@ if (isset($_POST['Edit'])) {
             success: function (data) {
                 //Fill header details
                 jQuery(data).each(function (i, item) {
-                    $('#LocationCode').val(item.LocationCode).trigger('change');
+                    //$('#LocationCode').val(item.LocationCode).trigger('change');
                     $('#SalesmanCode').val(item.SalesmanCode).trigger('change');
                 });
 
@@ -798,6 +815,22 @@ if (isset($_POST['Edit'])) {
             data: { FillTable: 'OK', CustomerPoCode: CustomerPoCode },
             success: function (result) {
                 $("#table").html(result);
+                $('.loader').fadeOut();
+            }
+        });
+    }
+
+    function LocationChange()
+    {
+        $('.loader').show();
+
+        var LocationCode = $('#LocationCode').val();
+        $.ajax({
+            url: "create_invoice.php",
+            type: "POST",
+            data: { _LocationCode: LocationCode },
+            success: function (result) {
+                //$("#table").html(result);
                 $('.loader').fadeOut();
             }
         });

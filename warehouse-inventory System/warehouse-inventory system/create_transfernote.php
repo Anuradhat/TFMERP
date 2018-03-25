@@ -454,7 +454,9 @@ if (isset($_POST['ToLocationCode'])) {
             <div class="row">
                 <div class="col-md-12">
                     <div class="form-group">
-                        <?php include('_partial_bindetails.php'); ?>
+                        <table id="tblBinDetails" class="table table-bordered table-striped">
+                            <?php include('_partial_bindetails.php'); ?>
+                        </table>
                     </div>
                     </div>
                 </div>
@@ -529,21 +531,30 @@ if (isset($_POST['ToLocationCode'])) {
     }
 
 
+
     function FillDetails() {
         var FromLocationCode = $('#FromLocationCode').val();
         var FromBinCode = $('#FromBinCode').val();
+        //var table = $('table').DataTable({ destroy: true });
 
         $.ajax({
             type: "POST",
             url: "create_transfernote.php", // Name of the php files
             data: { FromLocationCode: FromLocationCode, FromBinCode: FromBinCode, BinItem: 'OK' },
-            success: function (result) {
-                $("#table").html(result);
-                $('#table').DataTable();
+            success: function (result) {                
+                //$("#tblBinDetails").remove();
+                $("#tblBinDetails").html(result);
+                $('table').DataTable();
+                //$('.table').DataTable();
+                //table.ajax.reload();
             }
         });
+     }
 
-    }
+  
+    //$(function () {
+    //  $("table").DataTable();
+    //})
 
 </script>
 

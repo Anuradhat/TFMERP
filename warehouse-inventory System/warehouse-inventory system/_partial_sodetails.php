@@ -3,7 +3,7 @@
     <thead>
         <tr>
             <th>Action</th>
-            <th>Stock Code</th>
+            <th>Product Code</th>
             <th>Product Description</th>
             <th>Sale Price</th>
             <th>Qty</th>
@@ -20,7 +20,7 @@
                 <b>Total:</b>
             </td>
             <td>
-                <?php $TotalAmount = 0;foreach($arr_item  as &$value){ $TotalAmount += $value[5];} echo '<b>'.number_format($TotalAmount,2).'</b>'; ?>
+                <?php $TotalAmount = 0;foreach($arr_item  as &$value){ $TotalAmount += $value[4];} echo '<b>'.number_format($TotalAmount,2).'</b>'; ?>
             </td>
         </tr>
     </tfoot>
@@ -39,13 +39,13 @@
                 <?php echo $value[1] ?>
             </td>
             <td>
-                <?php echo number_format(($value[3] == null ? 0 : $value[3]),2) ?>
+                <?php echo number_format(($value[2] == null ? 0 : $value[2]),2) ?>
             </td>
             <td>
-                <?php echo $value[4] ?>
+                <?php echo $value[3] ?>
             </td>
             <td>
-                <?php  echo number_format(($value[5] == null ? 0 : $value[5]),2) ?>
+                <?php  echo number_format(($value[4] == null ? 0 : $value[4]),2) ?>
             </td>
         </tr><?php  } ?>
     </tbody>
@@ -61,7 +61,7 @@
             $.ajax({
                 url: "create_salesorder.php",
                 type: "POST",
-                data: { "_stockcode": prodcode },
+                data: { "_productcode": prodcode },
                 success: function (result) {
                     $('#table').html(result);
                 }

@@ -14,7 +14,8 @@ if (isset($_POST['productcode'])) {
         $array[] = array (
             'text' => $row['ProductCode'].' | '.$row['ProductDesc'],
             'value' => $row['ProductCode'],
-            'cprice' => $row['CostPrice']
+            'cprice' => $row['CostPrice'],
+            'sprice' => $row['SalePrice']
         );
     }
     //RETURN JSON ARRAY
@@ -111,6 +112,22 @@ if (isset($_POST['V2']) && isset($_POST['StockCode']) && isset($_POST['SerialNo'
         echo 'false';
 }
 
+if (isset($_POST['V3']) && isset($_POST['ProductCode']) && isset($_POST['SerialNo'])) {
+    $ProductCode = remove_junk($db->escape($_POST['ProductCode']));
+    $SerialNo = remove_junk($db->escape($_POST['SerialNo']));
+    $LocationCode = remove_junk($db->escape($_POST['LocationCode']));
+    $BinCode = remove_junk($db->escape($_POST['BinCode']));
+
+    $result = $db->query("call spValidateSerailV3('{$ProductCode}','{$SerialNo}','{$LocationCode}');");
+    $array = array();
+    $row = $db->fetch_assoc($result);
+
+    if($row['SetailStatus'] == "OK")
+        echo 'true';
+    else
+        echo 'false';
+}
+
 
 //Get Stock details from serial
 if (isset($_POST['SerialCode']) && isset($_POST['LocationCode'])) {
@@ -133,6 +150,23 @@ if (isset($_POST['SerialCode']) && isset($_POST['LocationCode'])) {
     echo json_encode($array);
 }
 
+//Get customer details from customer code
+if (isset($_POST['Customer'])) {
+    $Customer = remove_junk($db->escape($_POST['Customer']));
+
+    $result = $db->query("call spSelectCustomerFromCode('{$Customer}');");
+    $array = array();
+
+    while ($row = $db->fetch_assoc($result)) {
+        $array = array (
+            'CustomerCode' => $row['CustomerCode'],
+            'CustomerName' => $row['CustomerName'],
+            'Credit' => $row['Credit']
+        );
+    }
+    //RETURN JSON ARRAY
+    echo json_encode($array);
+}
 
 
 //Product code auto generate
@@ -191,6 +225,7 @@ if (isset($_POST['CustomerPoCode'])) {
             'SoNo' => $row['SoNo'],
             'CustomerCode' => $row['CustomerCode'],
             'LocationCode' => $row['LocationCode'],
+            'ReferenceNo' => $row['ReferenceNo'],
             'WorkFlowCode' => $row['WorkFlowCode'],
             'SalesmanCode' => $row['SalesmanCode'],
             'Remarks' => $row['Remarks'],
