@@ -14,6 +14,12 @@ $all_workflows = find_by_sql("call spSelectAllWorkFlow();");
 
 $default_flow = ReadSystemConfig('DefaultPOWorkFlow');
 
+if (strtoupper($_SERVER['REQUEST_METHOD']) == 'GET' && !$flashMessages->hasErrors() && !$flashMessages->hasWarnings())
+{
+    unset($_SESSION['details']);
+    unset($_SESSION['header']);
+}
+
 $arr_item = array();
 
 if($_SESSION['details'] != null) $arr_item = $_SESSION['details'];
@@ -23,7 +29,7 @@ if($_SESSION['details'] != null) $arr_item = $_SESSION['details'];
 
 if(isset($_POST["Add"]) && isset($_POST["ProductCode"]))
 {
-    $req_fields = array('ProductCode','hProductDesc','CostPrice','pQty');   
+    $req_fields = array('ProductCode','hProductDesc','CostPrice','pQty');
 
     validate_fields($req_fields);
 
@@ -38,16 +44,17 @@ if(isset($_POST["Add"]) && isset($_POST["ProductCode"]))
 
         if(!$prod_count)
         {
-            $session->msg("d", "This product code not exist in the system.");
-            return include('_partial_podetails.php');  
+
+            $flashMessages->warning('This product code not exist in the system.');
+            return include('_partial_podetails.php');
         }
 
 
         if ($_SESSION['details'] == null)
         {
             $arr_item[]  = array($p_ProductCode,$p_ProductDesc,$p_CostPrice,$p_Qty);
-            $_SESSION['details'] = $arr_item; 
-            return include('_partial_podetails.php'); 
+            $_SESSION['details'] = $arr_item;
+            return include('_partial_podetails.php');
         }
         else
         {
@@ -57,12 +64,12 @@ if(isset($_POST["Add"]) && isset($_POST["ProductCode"]))
             {
                 $arr_item[] = array($p_ProductCode,$p_ProductDesc,$p_CostPrice,$p_Qty);
                 $_SESSION['details'] = $arr_item;
-                return include('_partial_podetails.php'); 
+                return include('_partial_podetails.php');
             }
             else
             {
-                $session->msg("w", "This product exist in the table.");
-                return include('_partial_podetails.php');  
+                $flashMessages->warning('This product exist in the list.');
+                return include('_partial_podetails.php');
             }
 
         }
@@ -94,8 +101,8 @@ if(isset($_POST['create_po'])){
             //check details values
             if(count($arr_item)>0)
             {
-                //save purchase order 
-                
+                //save purchase order
+
                 try
                 {
                     $p_POCode  = autoGenerateNumber('tfmPoHT',1);
@@ -106,8 +113,8 @@ if(isset($_POST['create_po'])){
 
                     if($Po_count)
                     {
-                        $session->msg("d", "This purchase order number exist in the system.");
-                        redirect('create_po.php',false);
+                        $flashMessages->warning('This purchase order number exist in the system.','create_po.php');
+
                     }
 
                     //Insert purchase order header details
@@ -123,32 +130,27 @@ if(isset($_POST['create_po'])){
                     }
 
                     $db->commit();
-                    
-                    unset($_SESSION['details']);
 
-                    $session->msg('s',"Purchase order has been saved successfully,\n   Your Purchase order No: ".$p_POCode);
-                    redirect('create_po.php', false);
+                    $flashMessages->success('Purchase order has been saved successfully,\n   Your Purchase order No: '.$p_POCode,'create_po.php');
 
                 }
                 catch(Exception $ex)
                 {
                     $db->rollback();
 
-                    $session->msg('d',' Sorry failed to added!');
-                    redirect('create_po.php', false);
+                    $flashMessages->error('Sorry failed to create purchase order. '.$ex->getMessage(),'create_po.php');
                 }
 
             }
             else
             {
-                $session->msg("w",' Purchase order item(s) not found!');
-                redirect('create_po.php',false);
+
+                $flashMessages->warning('Purchase order item(s) not found!','create_po.php');
             }
         }
         else
         {
-            $session->msg("d", $errors);
-            redirect('create_po.php',false);
+            $flashMessages->warning($errors,'create_po.php');
         }
 
     }
@@ -160,7 +162,7 @@ if (isset($_POST['_prodcode'])) {
     $arr_item = RemoveValueFromListOfArray( $arr_item,$prodcode);
     $_SESSION['details'] = $arr_item;
 
-    return include('_partial_podetails.php');  
+    return include('_partial_podetails.php');
 }
 
 if (isset($_POST['Edit'])) {
@@ -177,7 +179,7 @@ if (isset($_POST['Edit'])) {
 
     $_SESSION['details'] = $arr_item;
 
-    return include('_partial_podetails.php');  
+    return include('_partial_podetails.php');
 }
 
 
@@ -186,15 +188,15 @@ if (isset($_POST['_PRNo'])) {
 
     $PRNo = remove_junk($db->escape($_POST['_PRNo']));
     //$all_PRHeader = find_by_sql("call spSelectAllPRHeaderDetailsFromPRNo('{$PRNo}');");
-    
+
 
     $all_PRDetsils = find_by_sql("call spSelectAllPRDetailsFromPRNo('{$PRNo}');");
     if($_SESSION['details'] == null) $arr_item = $_SESSION['details']; else $arr_item[] = $_SESSION['details'];
     foreach($all_PRDetsils as $row => $value){
         $arr_item[]  = array($value["ProductCode"],$value["ProductDesc"],$value["LastPurchasePrice"],$value["Qty"]);
-        $_SESSION['details'] = $arr_item; 
+        $_SESSION['details'] = $arr_item;
     }
-    return include('_partial_podetails.php'); 
+    return include('_partial_podetails.php');
 }
 
 
@@ -203,7 +205,7 @@ if (isset($_POST['_RowNo'])) {
     $ProductCode = remove_junk($db->escape($_POST['_RowNo']));
     $serchitem = ArraySearch($arr_item,$ProductCode);
 
-    return include('_partial_poitem.php'); 
+    return include('_partial_poitem.php');
 }
 
 
@@ -296,7 +298,7 @@ if (isset($_POST['Supplier'])) {
                                 <option value="" selected disabled>Select Purchase Requisition</option>
                             </select>
                         </div>
-                       
+
                     </div>
 
                     <div class="col-md-4">
@@ -335,7 +337,7 @@ if (isset($_POST['Supplier'])) {
                                 <textarea name="Remarks" id="Remarks" class="form-control" placeholder="Enter remarks here.."></textarea>
                             </div>
                         </div>
-                       
+
 
 
                     </div>
@@ -452,7 +454,7 @@ if (isset($_POST['Supplier'])) {
             });
         }
     }
-  
+
 
     $(document).ready(function () {
         $('#ProductCode').typeahead({

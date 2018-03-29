@@ -169,6 +169,10 @@
         var Credit = (parseFloat(NetAmount) - (parseFloat(CashValue) + parseFloat(CardValue) + parseFloat(ChequeValue) + parseFloat(TransferValue))) < 0 ? 0 : (parseFloat(NetAmount) - (parseFloat(CashValue) + parseFloat(CardValue) + parseFloat(ChequeValue) + parseFloat(TransferValue)));
         $("#Credit").val((Credit).toFixed(2));
 
+        var TotalPayment = parseFloat(CashValue) + parseFloat(CardValue) + parseFloat(ChequeValue) + parseFloat(TransferValue);
+        $("#TotalPayment").val((TotalPayment).toFixed(2));
+
+
         $('.loader').fadeOut();
     }
 </script>

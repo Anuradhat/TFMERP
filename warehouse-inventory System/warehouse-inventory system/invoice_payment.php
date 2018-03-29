@@ -77,18 +77,20 @@ if(isset($_POST['invoice_payment'])){
 
                 if(!$IsQtyExist)
                 {
-                    $session->msg("d", "Some invoice item qty not found.");
-                    redirect('invoice_payment.php',false);
+                    $flashMessages->warning('Some invoice item qty not found.','invoice_payment.php');
+                    //$session->msg("d", "Some invoice item qty not found.");
+                    //redirect('invoice_payment.php',false);
                 }
 
 
                 //******* Check with SIH ***************************************
                 foreach($arr_item as $row => $value)
                 {
-                    if (SelectStockSIH($value[0],$p_LocationCode) < $value[4])
+                    if (SelectStockSIHFormProduct($value[0],$p_LocationCode) < $value[4])
                     {
-                        $session->msg("d", "Some invoice qty is greater than SIH.");
-                        redirect('invoice_payment.php',false);
+                        //$session->msg("d", "Some invoice qty is greater than SIH.");
+                        //redirect('invoice_payment.php',false);
+                        $flashMessages->warning('Some invoice qty is greater than SIH.','invoice_payment.php');
                         exit;
                     }
                 }
@@ -96,7 +98,7 @@ if(isset($_POST['invoice_payment'])){
                 //********************** Check serial qty ************************
                 foreach($arr_item as $row => $value)
                 {
-                    $StockCode = $value[0];
+                    $ProductCode = $value[0];
                     $InvQty = $value[4];
 
                     if($InvQty > 0)
@@ -104,8 +106,9 @@ if(isset($_POST['invoice_payment'])){
                         $SerialCount = count($value[6]);
                         if($InvQty != $SerialCount)
                         {
-                            $session->msg("d", "Invoice serial details are invalid. Reference: ".$StockCode);
-                            redirect('invoice_payment.php',false);
+                            //$session->msg("d", "Invoice serial details are invalid. Reference: ".$StockCode);
+                            //redirect('invoice_payment.php',false);
+                            $flashMessages->warning('Invoice serial details are invalid. Reference: '.$ProductCode,'invoice_payment.php');
                             exit;
                         }
                     }
@@ -123,14 +126,14 @@ if(isset($_POST['invoice_payment'])){
 
                     if($Invoice_count)
                     {
-                        $session->msg("d", "This invoice number exist in the system.");
-                        redirect('create_invoice.php',false);
+                        //$session->msg("d", "This invoice number exist in the system.");
+                        $flashMessages->warning('Duplicate invoice number found','invoice_payment.php');
                     }
 
                     $TotalCardValue = 0;  foreach($arr_card  as &$value) { $TotalCardValue += $value["value"];}
                     $TotalChequeValue = 0;  foreach($arr_cheque  as &$value) { $TotalChequeValue += $value["value"];}
                     $ToatlBankTrnPayment = 0;  foreach($arr_banktrn  as &$value) { $ToatlBankTrnPayment += $value["value"];}
-                    $Credit = ($arr_header['NetAmount'] - ($_cash + $TotalCardValue + $TotalChequeValue +$ToatlBankTrnPayment)) < 0 ? 0 : ($arr_header['NetAmount'] - ($_cash + $TotalCardValue + $TotalChequeValue +$ToatlBankTrnPayment));
+                    $Credit = ($arr_header['NetAmount'] - ($_cash + $TotalCardValue + $TotalChequeValue + $ToatlBankTrnPayment)) < 0 ? 0 : ($arr_header['NetAmount'] - ($_cash + $TotalCardValue + $TotalChequeValue +$ToatlBankTrnPayment));
 
                     $PaidAmount = $_cash + $TotalCardValue + $TotalChequeValue + $ToatlBankTrnPayment;
 
@@ -147,36 +150,47 @@ if(isset($_POST['invoice_payment'])){
                     //Insert invoice details
                     foreach($arr_item as $row => $value)
                     {
-                        $query  = "call spInsertInvoiceD('{$p_InvoiceCode}','{$p_LocationCode}','{$value[0]}','{$value[1]}',{$value[2]},{$value[3]},{$value[4]},0,{$value[5]});";
+                        $LineAmount = $value[4] * $value[3];
+                        $query  = "call spInsertInvoiceD('{$p_InvoiceCode}','{$p_LocationCode}','{$value[0]}','{$value[1]}',{$value[2]},{$value[3]},{$value[4]},0,{$LineAmount});";
                         $db->query($query);
                     }
+
+                    //Update Customer Due
+                    $query  = "call spUpdateCustomerDue('{$p_CustomerCode}',{$Credit});";
+                    $db->query($query);
 
                     //***************************** Insert Payment Details ************************************************************
 
+
                     //Cash
-                    $query  = "call spInsertInvoicePaymentD('{$p_InvoiceCode}','{$p_LocationCode}','P001','','','','',{$_cash},{$p_NetAmount},'{$date}','{$user}');";
+                    $query  = "call spInsertInvoicePaymentD('{$p_InvoiceCode}','{$p_LocationCode}','P001','006','','','','',{$_cash},{$p_NetAmount},'{$date}','{$user}');";
                     $db->query($query);
 
+
+
                     //Credit/Debit Card
-                    foreach($arr_card  as &$value)
+                    foreach($arr_card  as $row => $value)
                     {
-                        $query  = "call spInsertInvoicePaymentD('{$p_InvoiceCode}','{$p_LocationCode}','P002','','{$value['key']}','','',{$value['value']},{$p_NetAmount},'{$date}','{$user}');";
+                        $query  = "call spInsertInvoicePaymentD('{$p_InvoiceCode}','{$p_LocationCode}','P002','006','','{$value['key']}','','',{$value['value']},{$p_NetAmount},'{$date}','{$user}');";
                         $db->query($query);
                     }
+
+
 
                     //Cheque
-                    foreach($arr_cheque  as &$value)
+                    foreach($arr_cheque  as $row => $value)
                     {
-                        $query  = "call spInsertInvoicePaymentD('{$p_InvoiceCode}','{$p_LocationCode}','P004','{$value['bank']}','{$value['key']}','{$value['date']}','',{$value['value']},{$p_NetAmount},'{$date}','{$user}');";
+                        $query  = "call spInsertInvoicePaymentD('{$p_InvoiceCode}','{$p_LocationCode}','P004','006','{$value['bank']}','{$value['key']}','{$value['date']}','',{$value['value']},{$p_NetAmount},'{$date}','{$user}');";
                         $db->query($query);
                     }
 
-                    if($_SESSION['banktrn'] != null) $arr_banktrn = $_SESSION['banktrn'];
+
+
 
                     //Bank Transfer
-                    foreach($arr_banktrn  as &$value)
+                    foreach($arr_banktrn  as $row => $value)
                     {
-                        $query  = "call spInsertInvoicePaymentD('{$p_InvoiceCode}','{$p_LocationCode}','P005','{$value['bank']}','{$value['key']}','{$value['date']}','{$value['name']}',{$value['value']},{$p_NetAmount},'{$date}','{$user}');";
+                        $query  = "call spInsertInvoicePaymentD('{$p_InvoiceCode}','{$p_LocationCode}','P005','006','{$value['bank']}','{$value['key']}','{$value['date']}','{$value['name']}',{$value['value']},{$p_NetAmount},'{$date}','{$user}');";
                         $db->query($query);
                     }
 
@@ -189,62 +203,50 @@ if(isset($_POST['invoice_payment'])){
                         foreach($SerialCodes as $row => $Serial)
                         {
                             $SerialDetails = find_by_sp("call spSelectGRNSerialDetailsFromSerialCode('{$Serial}');");
-                            $StockDetails = find_by_sp("call spSelectStock('{$value[0]}','{$SerialDetails['LocationCode']}','{$SerialDetails['BinCode']}');");
+                            $StockDetails = find_by_sp("call spSelectStock('{$SerialDetails['StockCode']}','{$SerialDetails['LocationCode']}','{$SerialDetails['BinCode']}');");
 
                             //Update serial flag
                             $query  = "call spUpdateSaleFlagGRNSerialFromSerialCode('{$Serial}');";
                             $db->query($query);
 
                             //Insert Invoice Serials
-                            $query  = "call spInsertInvoiceSerialD('{$p_InvoiceCode}','{$p_LocationCode}','{$value[0]}','{$Serial}');";
+                            $query  = "call spInsertInvoiceSerialD('{$p_InvoiceCode}','{$p_LocationCode}','{$SerialDetails['StockCode']}','{$Serial}');";
                             $db->query($query);
 
                             //Update Stock
-                            $query  = "call spUpdateStock('{$value[0]}','{$SerialDetails['LocationCode']}','{$SerialDetails['BinCode']}',1,'{$date}');";
+                            $query  = "call spUpdateStock('{$SerialDetails['StockCode']}','{$SerialDetails['LocationCode']}','{$SerialDetails['BinCode']}',1,'{$date}');";
                             $db->query($query);
 
                             //Insert stock movement
-                            $query  = "call spStockMovement('{$value[0]}','{$SerialDetails['LocationCode']}','{$SerialDetails['BinCode']}',
-                                       '{$StockDetails['ProductCode']}','{$StockDetails['SupplierCode']}','006',{$value[2]},{$value[3]},0,{$StockDetails['AvgCostPrice']},0,-1,'{$StockDetails['ExpireDate']}','{$date}','{$user}');";
+                            $query  = "call spStockMovement('{$SerialDetails['StockCode']}','{$SerialDetails['LocationCode']}','{$SerialDetails['BinCode']}',
+                                       '{$StockDetails['ProductCode']}','{$Serial}','{$p_InvoiceCode}','{$StockDetails['SupplierCode']}','006',{$value[2]},{$value[3]},0,{$StockDetails['AvgCostPrice']},0,-1,'{$StockDetails['ExpireDate']}','{$date}','{$user}');";
                             $db->query($query);
                         }
                     }
 
-
-
                     $db->commit();
 
-                    unset($_SESSION['header']);
-                    unset($_SESSION['details']);
-                    unset($_SESSION['card']);
-                    unset($_SESSION['cheque']);
-                    unset($_SESSION['banktrn']);
-                    unset($_SESSION['Cash']);
 
-                    $session->msg('s',"Invoice has been saved successfully,\n   Your invoice No: ".$p_InvoiceCode);
-                    redirect('create_invoice.php', false);
+                    $flashMessages->success('Invoice has been saved successfully,\n   Your invoice No: '.$p_InvoiceCode,'create_invoice.php');
 
                 }
                 catch(Exception $ex)
                 {
                     $db->rollback();
 
-                    $session->msg('d',' Sorry failed to added!');
-                    redirect('create_customerpo.php', false);
+                    $flashMessages->error('Sorry failed to create invoice! '.$ex->getMessage(),'invoice_payment.php');
                 }
 
 
             }
             else
             {
-                $session->msg("w",' Invoice item(s) not found!');
-                redirect('invoice_payment.php',false);
+                $flashMessages->warning('Invoice item(s) not found!'.$ex->getMessage(),'invoice_payment.php');
             }
         }
         else
         {
-            $session->msg("d", $errors);
-            redirect('invoice_payment.php',false);
+            $flashMessages->warning($errors,'invoice_payment.php');
         }
 
     }
@@ -412,7 +414,7 @@ if (isset($_POST['CashPayment'])) {
                                 <div class="form-group">
                                     <label>Cash Payment</label>
                                     <div class="input-group">
-                                        <input type="text" class="form-control text-right" id="CashPayment" name="CashPayment" placeholder="Cash Payment" value="<?php echo number_format($_cash,2,'.',''); ?>" autocomplete="off" />
+                                        <input type="text" class="form-control text-right integer" id="CashPayment" name="CashPayment" placeholder="Cash Payment" value="<?php echo number_format($_cash,2,'.',''); ?>" autocomplete="off" />
                                         <span class="input-group-btn">
                                             <button type="button" class="CardBtn btn btn-default btn-flat" data-toggle="modal" data-target="#myModal" contenteditable="false" disabled>
                                                 <i class="fa fa-money"></i>
@@ -676,5 +678,14 @@ if (isset($_POST['CashPayment'])) {
         $('.loader').fadeOut();
     }
 
+    //Textbox integer accept
+    $(".integer").keypress(function (evt) {
+        evt = (evt) ? evt : window.event;
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return false;
+        }
+        return true;
+    });
 
 </script>

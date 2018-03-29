@@ -11,6 +11,13 @@ page_require_level(2);
 
 $all_Supplier = find_by_sql("call spSelectAllSuppliers();");
 
+
+if (strtoupper($_SERVER['REQUEST_METHOD']) == 'GET' && !$flashMessages->hasErrors() && !$flashMessages->hasWarnings())
+{
+    unset($_SESSION['details']);
+    unset($_SESSION['header']);
+}
+
 $arr_item = array();
 $arr_header = array();
 
@@ -38,7 +45,8 @@ if(isset($_POST["ProductCode"]))
 
         if(!$prod_count)
         {
-            $session->msg("d", "This product code not exist in the system.");
+            $flashMessages->warning('This product code not exist in the system.');
+
             return include('_partial_pritems.php');
         }
 
@@ -63,7 +71,8 @@ if(isset($_POST["ProductCode"]))
             }
             else
             {
-                $session->msg("w", "This product exist in the table.");
+                $flashMessages->warning('This product exist in the list.');
+
                 return include('_partial_pritems.php');
             }
 
@@ -109,8 +118,7 @@ if(isset($_POST['edit_pr'])){
 
                     if(!$Pr_count)
                     {
-                        $session->msg("d", "This purchase requisition code not exist in the system.");
-                        redirect('edit_pr.php',false);
+                        $flashMessages->warning('This purchase requisition code not exist in the system.','edit_pr.php');
                     }
 
                     //Update purchase requisition header details
@@ -130,32 +138,25 @@ if(isset($_POST['edit_pr'])){
 
                     $db->commit();
                     
-                    unset($_SESSION['header']);
-                    unset($_SESSION['details']);
-
-                    $session->msg('s',"Purchase requisition has been updated successfully");
-                    redirect('edit_pr.php', false);
+                    $flashMessages->success('Purchase requisition has been updated successfully','edit_pr.php');
 
                 }
                 catch(Exception $ex)
                 {
                     $db->rollback();
 
-                    $session->msg('d',' Sorry failed to updated!');
-                    redirect('edit_pr.php', false);
+                    $flashMessages->error('Sorry failed to update purchase requisition. '.$ex->getMessage(),'edit_pr.php');
                 }
 
             }
             else
             {
-                $session->msg("w",' Purchase requisition item(s) not found!');
-                redirect('edit_pr.php',false);
+                $flashMessages->warning('Purchase requisition item(s) not found!','edit_pr.php');
             }
         }
         else
         {
-            $session->msg("d", $errors);
-            redirect('edit_pr.php',false);
+            $flashMessages->warning($errors,'edit_pr.php');
         }
 
     }
@@ -364,6 +365,7 @@ if (isset($_POST['_PRNo'])) {
 <script type="text/javascript">
     function AddItem(ctrl, event) {
         event.preventDefault();
+        $('.loader').show();
 
         if ($('#ProductCode').val() == "")
         {
@@ -391,6 +393,15 @@ if (isset($_POST['_PRNo'])) {
                 success: function (result) {
                     $("#table").html(result);
                     $('#message').load('_partial_message.php');
+                },
+                complete: function (result) {
+                    $('#ProductCode').val('');
+                    $('#ProductDesc').val('');
+                    $('#LastPurchasePrice').val('');
+                    $('#Qty').val('');
+
+                    $('.loader').fadeOut();
+                    $('#ProductCode').focus();
                 }
             });
         }

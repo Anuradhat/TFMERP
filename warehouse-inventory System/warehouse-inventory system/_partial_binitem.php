@@ -62,7 +62,7 @@
                 type: "POST",
                 data: $("form").serialize(),
                 success: function (result) {
-                    $("#table").html(result);
+                    $("#tblBinDetails").html(result);
                     $('#myModal').modal('toggle');
                     //$('#modal-container').modal('hide');
                 }

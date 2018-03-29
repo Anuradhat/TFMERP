@@ -11,10 +11,14 @@ page_require_level(2);
 
 $all_Supplier = find_by_sql("call spSelectAllSuppliers();");
 
+
+if (strtoupper($_SERVER['REQUEST_METHOD']) == 'GET' && !$flashMessages->hasErrors() && !$flashMessages->hasWarnings())
+{
+    unset($_SESSION['details']);
+    unset($_SESSION['header']);
+}
+
 $arr_item = array();
-
-
-
 
 if($_SESSION['details'] != null) $arr_item = $_SESSION['details'];
 
@@ -40,7 +44,8 @@ if(isset($_POST["ProductCode"]))
 
         if(!$prod_count)
         {
-            $session->msg("d", "This product code not exist in the system.");
+            $flashMessages->warning('This product code not exist in the system.');
+
             return include('_partial_pritems.php');
         }
 
@@ -65,7 +70,8 @@ if(isset($_POST["ProductCode"]))
             }
             else
             {
-                $session->msg("w", "This product exist in the table.");
+                $flashMessages->warning('This product exist in the list.');
+
                 return include('_partial_pritems.php');
             }
 
@@ -108,8 +114,7 @@ if(isset($_POST['create_pr'])){
 
                     if($Pr_count)
                     {
-                        $session->msg("d", "This purchase requisition code exist in the system.");
-                        redirect('create_pr.php',false);
+                        $flashMessages->warning('This purchase requisition code exist in the system.','create_pr.php');
                     }
 
                     //Insert purchase requisition header details
@@ -124,32 +129,27 @@ if(isset($_POST['create_pr'])){
                     }
 
                     $db->commit();
-                   
-                    unset($_SESSION['details']);
 
-                    $session->msg('s',"Purchase requisition has been saved successfully,\n   Your Purchase Requisition No: ".$p_PRCode);
-                    redirect('create_pr.php', false);
+                    $flashMessages->success('Purchase requisition has been saved successfully,\n   Your Purchase Requisition No: '.$p_PRCode,'create_pr.php');
 
                 }
                 catch(Exception $ex)
                 {
                     $db->rollback();
 
-                    $session->msg('d',' Sorry failed to added!');
-                    redirect('create_pr.php', false);
+                    $flashMessages->error('Sorry failed to create purchase requisition. '.$ex->getMessage(),'create_pr.php');
+
                 }
 
             }
             else
             {
-                $session->msg("w",' Purchase requisition item(s) not found!');
-                redirect('create_pr.php',false);
+                $flashMessages->warning('Purchase requisition item(s) not found!','create_pr.php');
             }
         }
         else
         {
-            $session->msg("d", $errors);
-            redirect('create_pr.php',false);
+            $flashMessages->warning($errors,'create_pr.php');
         }
 
     }
@@ -343,6 +343,7 @@ if (isset($_POST['_prodcode'])) {
 <script type="text/javascript">
     function AddItem(ctrl, event) {
         event.preventDefault();
+        $('.loader').show();
 
         if ($('#ProductCode').val() == "")
         {
@@ -370,6 +371,15 @@ if (isset($_POST['_prodcode'])) {
                 success: function (result) {
                     $("#table").html(result);
                     $('#message').load('_partial_message.php');
+                },
+                complete: function (result) {
+                    $('#ProductCode').val('');
+                    $('#ProductDesc').val('');
+                    $('#LastPurchasePrice').val('');
+                    $('#Qty').val('');
+
+                    $('.loader').fadeOut();
+                    $('#ProductCode').focus();
                 }
             });
         }

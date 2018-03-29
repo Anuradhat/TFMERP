@@ -41,6 +41,8 @@
     function EditItem(ctrl, event) {
         event.preventDefault();
 
+        $('.loader').show();
+
         var Qty = parseInt($("#pQty").val());
         var ProductCode = $("#hProductCode").val();
         //var SalePrice = $("#SalePrices").val();
@@ -50,8 +52,9 @@
         //    $("#SalePrice").focus();
         //    bootbox.alert('Invalid sale price.');
         //}
-        if (Qty <= 0) {
+        if (Qty <= 0 || isNaN(Qty)) {
             $("#pQty").focus();
+            $('.loader').fadeOut();
             bootbox.alert('You enter qty is invalid.');
         }
         else {
@@ -62,6 +65,7 @@
                 success: function (result) {
                     $("#table").html(result);
                     $('#myModal').modal('toggle');
+                    $('.loader').fadeOut();
                     //$('#modal-container').modal('hide');
                 }
             });

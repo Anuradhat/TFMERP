@@ -22,6 +22,13 @@ $all_Customers = find_by_sql("call spSelectCustomerFromSalesmanCode('{$current_u
 
 $arr_item = array();
 
+if (strtoupper($_SERVER['REQUEST_METHOD']) == 'GET' && !$flashMessages->hasErrors() && !$flashMessages->hasWarnings())
+{
+    unset($_SESSION['details']);
+    unset($_SESSION['header']);
+}
+
+
 if($_SESSION['details'] != null) $arr_item = $_SESSION['details'];
 ?>
 
@@ -63,8 +70,7 @@ if(isset($_POST['create_salesorder'])){
 
                     if($So_count)
                     {
-                        $session->msg("d", "This quotation number exist in the system.");
-                        redirect('create_salesorder.php',false);
+                        $flashMessages->warning('This quotation number exist in the system.','create_salesorder.php');
                     }
 
                     //Insert quotation header details
@@ -80,31 +86,26 @@ if(isset($_POST['create_salesorder'])){
 
                     $db->commit();
                     
-                    unset($_SESSION['details']);
-
-                    $session->msg('s',"Quotation has been saved successfully,\n   Your Quotation No: ".$p_SOCode);
-                    redirect('create_salesorder.php', false);
+                    $flashMessages->success('Quotation has been saved successfully,\n   Your Quotation No: '.$p_SOCode,'create_salesorder.php');
 
                 }
                 catch(Exception $ex)
                 {
                     $db->rollback();
 
-                    $session->msg('d',' Sorry failed to added!');
-                    redirect('create_salesorder.php', false);
+                    $flashMessages->error('Sorry failed to create quotation. '.$ex->getMessage(),'create_salesorder.php');
+
                 }
 
             }
             else
             {
-                $session->msg("w",' Quotation item(s) not found!');
-                redirect('create_salesorder.php',false);
+                $flashMessages->warning('Quotation item(s) not found!','create_salesorder.php');
             }
         }
         else
         {
-            $session->msg("d", $errors);
-            redirect('create_salesorder.php',false);
+            $flashMessages->warning($errors,'create_salesorder.php');
         }
 
     }
@@ -143,18 +144,19 @@ if (isset($_POST['Add'])) {
     
     if($SalePrice == "" || $SalePrice <= 0)
     {
-        $session->msg('d',"Invalid sales price.");
+
+        $flashMessages->warning('Invalid sales price.');
     }
     else if($Qty <= 0)
     {
-        $session->msg('d',"Invalid item qty.");
+        $flashMessages->warning('Invalid item qty.');
     }
     else
     {
 
         if(ExistInArray($arr_item,$ProductCode))
         {
-            $session->msg('d',"This item exist in the list.");
+            $flashMessages->warning('This item exist in the list.');
         }
         else
         {

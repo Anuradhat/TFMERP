@@ -11,6 +11,11 @@ page_require_level(2);
 
 $all_locations = find_by_sql("call spSelectAllLocations();");
  
+if (strtoupper($_SERVER['REQUEST_METHOD']) == 'GET' && !$flashMessages->hasErrors() && !$flashMessages->hasWarnings())
+{
+    unset($_SESSION['details']);
+    unset($_SESSION['header']);
+}
 
 $arr_item = array();
 $arr_header = array();
@@ -69,10 +74,7 @@ if(isset($_POST['create_transfernote'])){
 
                     if($TransferNote_count)
                     {
-                       // unset($_SESSION['details']);
-                       $session->msg("d", "This transfer note number exist in the system.");
-                       redirect('create_transfernote.php',false);
-                       exit;
+                       $flashMessages->warning('This transfer note number exist in the system','create_transfernote.php');
                     }
 
                     $IsQtyExist = true;
@@ -83,10 +85,7 @@ if(isset($_POST['create_transfernote'])){
 
                     if(!$IsQtyExist)
                     {
-                        //unset($_SESSION['details']);
-                        $session->msg("d", "Transfer note qty not found.");
-                        redirect('create_transfernote.php',false);
-                        exit;
+                        $flashMessages->warning('Transfer note qty not found.','create_transfernote.php');
                     }
 
                     foreach($arr_item as $row => $value)
@@ -99,10 +98,7 @@ if(isset($_POST['create_transfernote'])){
                             $SerialCount = count($value[7]);
                             if($TrnQty != $SerialCount)
                             {
-                                //unset($_SESSION['details']);
-                                $session->msg("d", "Transfer serial details are invalid. Reference: ".$StockCode);
-                                redirect('create_transfernote.php',false);
-                                exit;
+                                $flashMessages->warning('Transfer serial details are invalid. Reference: '.$StockCode,'create_transfernote.php');
                             }
                         }
                     }
@@ -154,7 +150,7 @@ if(isset($_POST['create_transfernote'])){
 
                             //Insert stock movement (+)
                             $query  = "call spStockMovement('{$stock["StockCode"]}','{$p_ToLocationCode}','{$p_ToBinCode}',
-                                       '{$stock["ProductCode"]}','{$stock["SupplierCode"]}','003',{$stock["CostPrice"]},{$stock["SalePrice"]},0,{$stock["AvgCostPrice"]},{$stock["AvgSalePrice"]},{$value[6]},'{$stock["ExpireDate"]}',
+                                       '{$stock["ProductCode"]}','','{$p_TransferNoteNo}','{$stock["SupplierCode"]}','003',{$stock["CostPrice"]},{$stock["SalePrice"]},0,{$stock["AvgCostPrice"]},{$stock["AvgSalePrice"]},{$value[6]},'{$stock["ExpireDate"]}',
                                          '{$date}','{$user}');";
                             $db->query($query);
 
@@ -163,32 +159,25 @@ if(isset($_POST['create_transfernote'])){
 
                     $db->commit();
                     
-                    unset($_SESSION['header']);
-                    unset($_SESSION['details']);
-
-                    $session->msg('s',"Transfer note has been saved successfully,\n   Your transfer note No: ".$p_TransferNoteNo);
-                    redirect('create_transfernote.php', false);
+                    $flashMessages->success('Transfer note has been saved successfully,\n   Your transfer note No: '.$p_TransferNoteNo,'create_transfernote.php');
 
                 }
                 catch(Exception $ex)
                 {
                     $db->rollback();
 
-                    $session->msg('d',' Sorry failed to added!');
-                    redirect('create_transfernote.php', false);
+                    $flashMessages->error('Sorry failed to create transfer note. '.$ex->getMessage(),'create_transfernote.php');
                 }
 
             }
             else
             {
-                $session->msg("w",' Transfer note item(s) not found!');
-                redirect('create_transfernote.php',false);
+                $flashMessages->warning('Transfer note item(s) not found!','create_transfernote.php');
             }
         }
         else
         {
-            $session->msg("d", $errors);
-            redirect('create_transfernote.php',false);
+            $flashMessages->warning($errors,'create_transfernote.php');
         }
 
     }

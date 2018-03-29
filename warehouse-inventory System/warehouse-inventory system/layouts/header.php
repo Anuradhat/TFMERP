@@ -232,7 +232,7 @@ desired effect
                     <li class="header">Master Data</li>
                     <!-- Optionally, you can add icons to the links -->
                     <!--<li class="active"><a href="#"><i class="fa fa-link"></i> <span>Link</span></a></li>
-                    <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>-->
+        <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>-->
                     <li class="treeview">
                         <a href="#">
 
@@ -292,6 +292,9 @@ desired effect
                             <li><a href="tax.php"><i class="fa fa-money"></i>Tax</a></li>
                         </ul>
                     </li>
+
+
+
                     <li class="header">Transaction</li>
 
                     <li class="treeview">
@@ -303,7 +306,7 @@ desired effect
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                       
+
                             <!--Purchase Requisition Menu-->
                             <li class="treeview">
                                 <a href="#">
@@ -318,8 +321,6 @@ desired effect
                                 </ul>
                             </li>
                             <!--End Purchase Requisition Menu-->
-
-
                             <!--Purchase Order Menu-->
                             <li class="treeview">
                                 <a href="#">
@@ -334,7 +335,6 @@ desired effect
                                 </ul>
                             </li>
                             <!--End Purchase Requisition Menu-->
-
                             <!--Good Received Note Menu-->
                             <li class="treeview">
                                 <a href="#">
@@ -348,7 +348,6 @@ desired effect
                                 </ul>
                             </li>
                             <!--End Good Received Note Menu-->
-
                             <!--Transfer Note Menu-->
                             <li class="treeview">
                                 <a href="#">
@@ -362,7 +361,6 @@ desired effect
                                 </ul>
                             </li>
                             <!--End Transfer Note Menu-->
-
                             <!--Sales Order Menu-->
                             <li class="treeview">
                                 <a href="#">
@@ -377,7 +375,6 @@ desired effect
                                 </ul>
                             </li>
                             <!--End Sales Order Menu-->
-
                             <!--Customer Purchase Order Menu-->
                             <li class="treeview">
                                 <a href="#">
@@ -392,7 +389,6 @@ desired effect
                                 </ul>
                             </li>
                             <!--End Customer Purchase Order Menu-->
-
                             <!--Invoice Menu-->
                             <li class="treeview">
                                 <a href="#">
@@ -406,25 +402,57 @@ desired effect
                                 </ul>
                             </li>
                             <!--End Invoice Menu-->
-
-
-
-
-
-
-
-
-
-
-
-
-
-                            
                         </ul>
                     </li>
-                </ul>
-                <!-- /.sidebar-menu -->
-            </section>
+                    <!--End Transaction Menu-->
+
+
+
+
+
+
+
+
+
+
+                    <li class="treeview">
+                        <a href="#">
+
+                            <i class="fa fa-folder"></i> <span>Payments</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="customer_payment.php"><i class="fa fa-user"></i>Customer</a></li>
+                            
+
+                            </ul>
+                        </li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                        </ul>
+                        <!-- /.sidebar-menu -->
+</section>
             <!-- /.sidebar -->
         </aside>
         <?php endif;?>

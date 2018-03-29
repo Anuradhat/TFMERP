@@ -21,8 +21,14 @@ $arr_item = array();
 
 if (strtoupper($_SERVER['REQUEST_METHOD']) == 'GET' && !$flashMessages->hasErrors() && !$flashMessages->hasWarnings()) // $session->msg == null
 {
-    $_SESSION['details']  = null;
-    $_SESSION['header'] = null;
+    unset($_SESSION['details']);
+    unset($_SESSION['header']);
+    unset($_SESSION['card']);
+    unset($_SESSION['cheque']);
+    unset($_SESSION['banktrn']);
+    unset($_SESSION['Cash']);
+    unset($_SESSION['DiscountAmount']);
+    unset($_SESSION['LocationCode']);
 }
 
 if($_SESSION['header'] != null) $arr_header = $_SESSION['header'];
@@ -142,7 +148,7 @@ if(isset($_POST['create_invoice'])){
         }
         else
         {
-            $flashMessages->error($errors,'create_invoice.php');
+            $flashMessages->warning($errors,'create_invoice.php');
             //$session->msg("d", $errors);
             //redirect('create_invoice.php',false);
         }

@@ -17,9 +17,10 @@ $all_workflows = find_by_sql("call spSelectAllWorkFlow();");
 //$all_locations = find_by_sql("call spSelectAllLocations();");
 
 
-if (strtoupper($_SERVER['REQUEST_METHOD']) == 'GET')
+if (strtoupper($_SERVER['REQUEST_METHOD']) == 'GET' && !$flashMessages->hasErrors() && !$flashMessages->hasWarnings())
 {
-    $_SESSION['details']  = null;
+    unset($_SESSION['details']);
+    unset($_SESSION['header']);
 }
 
 $arr_item = array();
@@ -62,8 +63,7 @@ if(isset($_POST['edit_customerpo'])){
 
                     if(!$CusPo_count)
                     {
-                        $session->msg("d", "This customer purchase order not exist in the system.");
-                        redirect('edit_customerpo.php',false);
+                        $flashMessages->warning('This customer purchase order not exist in the system.','edit_customerpo.php');
                     }
 
                     //Update customer purchase order header details
@@ -84,31 +84,27 @@ if(isset($_POST['edit_customerpo'])){
 
                     $db->commit();
                     
-                    unset($_SESSION['details']);
+                    $flashMessages->success('Customer purchase order has been successfully updated.','edit_customerpo.php');
                     
-                    $session->msg('s', "Customer purchase order has been successfully updated");
-                    redirect('edit_customerpo.php', false);
 
                 }
                 catch(Exception $ex)
                 {
                     $db->rollback();
 
-                    $session->msg('d',' Sorry failed to update!');
-                    redirect('edit_customerpo.php', false);
+                    $flashMessages->error('Sorry failed to update customer purchase order. '.$ex->getMessage(),'edit_customerpo.php');
+
                 }
 
             }
             else
             {
-                $session->msg("w",' Customer purchase order item(s) not found!');
-                redirect('edit_customerpo.php',false);
+                $flashMessages->warning('Customer purchase order item(s) not found!','edit_customerpo.php');
             }
         }
         else
         {
-            $session->msg("d", $errors);
-            redirect('edit_customerpo.php',false);
+            $flashMessages->warning($errors,'edit_customerpo.php');
         }
 
     }
@@ -120,7 +116,7 @@ if (isset($_POST['_productcode'])) {
     $arr_item = RemoveValueFromListOfArray( $arr_item,$productcode);
     $_SESSION['details'] = $arr_item;
 
-    return include('_partial_sodetails.php');  
+    return include('_partial_cuspodetails.php');  
 }
 
 
@@ -138,22 +134,22 @@ if (isset($_POST['Add'])) {
     
     if($ProductCode == "")
     {
-        $session->msg('d',"Product code is not found!");
+        $flashMessages->warning('Product code is not found!');
     }
     else if($SalePrice == "" || $SalePrice <=0)
     {
-        $session->msg('d',"Invalid sales price.");
+        $flashMessages->warning('Invalid sales price.');
     }
     else if($Qty <= 0)
     {
-        $session->msg('d',"Invalid item qty.");
+        $flashMessages->warning('Invalid item qty.');
     }
     else
     {
 
         if(ExistInArray($arr_item,$ProductCode))
         {
-            $session->msg('d',"This item exist in the list.");
+            $flashMessages->warning('This item exist in the list.');
         }
         else
         {

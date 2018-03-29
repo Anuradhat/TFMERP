@@ -12,6 +12,13 @@ page_require_level(2);
 $all_Supplier = find_by_sql("call spSelectAllSuppliers();");
 $all_workflows = find_by_sql("call spSelectAllWorkFlow();");
 
+
+if (strtoupper($_SERVER['REQUEST_METHOD']) == 'GET' && !$flashMessages->hasErrors() && !$flashMessages->hasWarnings())
+{
+    unset($_SESSION['details']);
+    unset($_SESSION['header']);
+}
+
 $arr_item = array();
 
 if($_SESSION['details'] != null) $arr_item = $_SESSION['details'];
@@ -35,7 +42,8 @@ if(isset($_POST["ProductCode"]))
 
         if(!$prod_count)
         {
-            $session->msg("d", "This product code not exist in the system.");
+            $flashMessages->warning('This product code not exist in the system.');
+
             return include('_partial_podetails.php');  
         }
 
@@ -44,6 +52,7 @@ if(isset($_POST["ProductCode"]))
         {
             $arr_item[]  = array($p_ProductCode,$p_ProductDesc,$p_CostPrice,$p_Qty);
             $_SESSION['details'] = $arr_item; 
+
             return include('_partial_podetails.php'); 
         }
         else
@@ -54,11 +63,13 @@ if(isset($_POST["ProductCode"]))
             {
                 $arr_item[] = array($p_ProductCode,$p_ProductDesc,$p_CostPrice,$p_Qty);
                 $_SESSION['details'] = $arr_item;
+
                 return include('_partial_podetails.php'); 
             }
             else
             {
-                $session->msg("w", "This product exist in the table.");
+                $flashMessages->warning('This product exist in the list.');
+
                 return include('_partial_podetails.php');  
             }
 
@@ -101,8 +112,7 @@ if(isset($_POST['edit_po'])){
 
                     if(!$Po_count)
                     {
-                        $session->msg("d", "This purchase order number not exist in the system.");
-                        redirect('edit_po.php',false);
+                        $flashMessages->warning('This purchase order number not exist in the system.','edit_po.php');
                     }
 
                     //Update purchase order header details
@@ -123,31 +133,25 @@ if(isset($_POST['edit_po'])){
 
                     $db->commit();
                     
-                    unset($_SESSION['details']);
-
-                    $session->msg('s',"Purchase order has been successfully updated");
-                    redirect('edit_po.php', false);
+                    $flashMessages->warning('Purchase order has been successfully updated.','edit_po.php');
 
                 }
                 catch(Exception $ex)
                 {
                     $db->rollback();
+                    $flashMessages->error('Sorry failed to update purchase order. '.$ex->getMessage(),'edit_po.php');
 
-                    $session->msg('d',' Sorry failed to update!');
-                    redirect('edit_po.php', false);
                 }
 
             }
             else
             {
-                $session->msg("w",' Purchase order item(s) not found!');
-                redirect('edit_po.php',false);
+                $flashMessages->warning('Purchase order item(s) not found!','edit_po.php');
             }
         }
         else
         {
-            $session->msg("d", $errors);
-            redirect('edit_po.php',false);
+            $flashMessages->warning($errors,'edit_po.php');
         }
 
     }

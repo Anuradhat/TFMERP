@@ -20,6 +20,13 @@ $all_locations = find_by_sql("call spSelectAllLocations();");
 $all_salesrep = find_by_sql("call spSelectEmployeeFromDesignationCode('{$default_salesrepDesig}');");
 $Customer = find_by_sql("call spSelectCustomerFromSalesmanCode('{$current_user["EmployeeCode"]}');");
 
+
+if (strtoupper($_SERVER['REQUEST_METHOD']) == 'GET' && !$flashMessages->hasErrors() && !$flashMessages->hasWarnings())
+{
+    unset($_SESSION['details']);
+    unset($_SESSION['header']);
+}
+
 $arr_item = array();
 
 if($_SESSION['details'] != null) $arr_item = $_SESSION['details'];
@@ -62,8 +69,8 @@ if(isset($_POST['edit_salesorder'])){
 
                     if(!$So_count)
                     {
-                        $session->msg("d", "This quotation not exist in the system.");
-                        redirect('edit_salesorder.php',false);
+                        $flashMessages->warning('This quotation number not exist in the system.','edit_salesorder.php');
+
                     }
 
                     //Update sales quotation header details
@@ -83,31 +90,26 @@ if(isset($_POST['edit_salesorder'])){
 
                     $db->commit();
                     
-                    unset($_SESSION['details']);
-
-                    $session->msg('s',"Quotation has been successfully updated");
-                    redirect('edit_salesorder.php', false);
+                    $flashMessages->success('Quotation has been successfully updated.','edit_salesorder.php');
 
                 }
                 catch(Exception $ex)
                 {
                     $db->rollback();
 
-                    $session->msg('d',' Sorry failed to update!');
-                    redirect('edit_salesorder.php', false);
+                    $flashMessages->error('Sorry failed to update quotation. '.$ex->getMessage(),'edit_salesorder.php');
                 }
 
             }
             else
             {
-                $session->msg("w",' Quotation item(s) not found!');
-                redirect('edit_salesorder.php',false);
+                $flashMessages->warning('Quotation item(s) not found!','edit_salesorder.php');
+
             }
         }
         else
         {
-            $session->msg("d", $errors);
-            redirect('edit_salesorder.php',false);
+            $flashMessages->warning($errors,'edit_salesorder.php');
         }
 
     }
@@ -144,22 +146,22 @@ if (isset($_POST['Add'])) {
     
     if($ProductCode == "")
     {
-        $session->msg('d',"Product code is not found!");
+        $flashMessages->warning('Product code is not found!');
     }
     else if($SalePrice == "" || $SalePrice <= 0)
     {
-        $session->msg('d',"Invalid sales price.");
+        $flashMessages->warning('Invalid sales price.');
     }
     else if($Qty <= 0)
     {
-        $session->msg('d',"Invalid item qty.");
+        $flashMessages->warning('Invalid item qty.');
     }
     else
     {
 
         if(ExistInArray($arr_item,$ProductCode))
         {
-            $session->msg('d',"This item exist in the list.");
+            $flashMessages->warning('This item exist in the list.');
         }
         else
         {

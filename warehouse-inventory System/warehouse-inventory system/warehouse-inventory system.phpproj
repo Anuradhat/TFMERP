@@ -22,6 +22,7 @@
     <Compile Include="add_employee_department.php" />
     <Compile Include="add_location_bin.php" />
     <Compile Include="approval_task.php" />
+    <Compile Include="customer_payment.php" />
     <Compile Include="create_invoice.php" />
     <Compile Include="includes\FlashMessages.php" />
     <Compile Include="invoice_payment.php" />
@@ -43,6 +44,8 @@
     <Compile Include="_partial_addbanktransfer.php" />
     <Compile Include="_partial_addcheque.php" />
     <Compile Include="_partial_addcreditcard.php" />
+    <Compile Include="_partial_paymentitem.php" />
+    <Compile Include="_partial_paymentdetails.php" />
     <Compile Include="_partial_invoiceitem.php" />
     <Compile Include="_partial_invoicedetails.php" />
     <Compile Include="_partial_cuspodetails.php" />

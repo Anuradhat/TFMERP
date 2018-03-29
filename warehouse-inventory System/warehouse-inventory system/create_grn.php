@@ -13,10 +13,15 @@ $all_Supplier = find_by_sql("call spSelectAllSuppliers();");
 $all_locations = find_by_sql("call spSelectAllLocations();");
 
 //$default_flow = ReadSystemConfig('DefaultPOWorkFlow');
-  $default_location = ReadSystemConfig('DefaultGRNLocation');
+$default_location = ReadSystemConfig('DefaultGRNLocation');
+
+ if (strtoupper($_SERVER['REQUEST_METHOD']) == 'GET' && !$flashMessages->hasErrors() && !$flashMessages->hasWarnings())
+ {
+   unset($_SESSION['details']);
+   unset($_SESSION['header']);
+ }
 
 $arr_item = array();
-
 
 
 if($_SESSION['details'] != null) $arr_item = $_SESSION['details'];
@@ -53,10 +58,7 @@ if(isset($_POST['create_grn'])){
             if($po_select < $po_process)
             {
 
-                $session->msg("d", "This transaction cannot process.");
-                unset($_SESSION['details']);
-                redirect('create_grn.php',false);
-                exit;
+                $flashMessages->error('This transaction cannot process.','create_grn.php');
             }
 
 
@@ -87,19 +89,13 @@ if(isset($_POST['create_grn'])){
 
                     if($default_stock_bin == null)
                     {
-                        $session->msg("d", "Default stock bin not found for this selected location.");
-                        unset($_SESSION['details']);
-                        redirect('create_grn.php',false);
-                        exit;
+                        $flashMessages->warning('Default stock bin not found for this selected location.','create_grn.php');
                     }
 
 
                     if($Grn_count)
                     {
-                        $session->msg("d", "This grn number exist in the system.");
-                        unset($_SESSION['details']);
-                        redirect('create_grn.php',false);
-                        exit;
+                        $flashMessages->warning('This good received note number exist in the system.','create_grn.php');
                     }
 
                     $IsQtyExist = false;
@@ -110,10 +106,7 @@ if(isset($_POST['create_grn'])){
 
                     if(!$IsQtyExist)
                     {
-                        $session->msg("d", "Good received item(s) details not found.");
-                        unset($_SESSION['details']);
-                        redirect('create_grn.php',false);
-                        exit;
+                        $flashMessages->warning('Good received item(s) details not found.','create_grn.php');
                     }
 
                     //Insert good received note header details
@@ -209,7 +202,7 @@ if(isset($_POST['create_grn'])){
 
                             //Insert stock movement
                             $query  = "call spStockMovement('{$value[0]}','{$p_LocationCode}','{$default_stock_bin}',
-                                       '{$value[1]}','{$p_SupplierCode}','002',{$value[3]},{$Sale_Price},0,{$AverageCost},0,{$value[5]},'{$value[6]}',
+                                       '{$value[1]}','','{$p_GRNCode}','{$p_SupplierCode}','002',{$value[3]},{$Sale_Price},0,{$AverageCost},0,{$value[5]},'{$value[6]}',
                                          '{$date}','{$user}');";
                             $db->query($query);
 
@@ -241,32 +234,26 @@ if(isset($_POST['create_grn'])){
 
                     $db->commit();
                     
-                    unset($_SESSION['header']);
-                    unset($_SESSION['details']);
-
-                    $session->msg('s',"Good received note has been saved successfully,\n   Your good received note No: ".$p_GRNCode);
-                    redirect('create_grn.php', false);
+                    $flashMessages->success('Good received note has been saved successfully,\n   Your good received note No: '.$p_GRNCode,'create_grn.php');
 
                 }
                 catch(Exception $ex)
                 {
                     $db->rollback();
 
-                    $session->msg('d',' Sorry failed to added!');
-                    redirect('create_grn.php', false);
+                    $flashMessages->error('Sorry failed to create good received note. '.$ex->getMessage(),'create_grn.php');
+
                 }
 
             }
             else
             {
-                $session->msg("w",' Good received note item(s) not found!');
-                redirect('create_grn.php',false);
+                $flashMessages->warning('Good received note item(s) not found!','create_grn.php');
             }
         }
         else
         {
-            $session->msg("d", $errors);
-            redirect('create_grn.php',false);
+            $flashMessages->warning($errors,'create_grn.php');
         }
 
     }

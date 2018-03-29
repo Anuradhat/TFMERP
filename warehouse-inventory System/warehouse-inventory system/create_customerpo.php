@@ -17,9 +17,10 @@ $all_workflows = find_by_sql("call spSelectAllWorkFlow();");
 //$all_locations = find_by_sql("call spSelectAllLocations();");
 
 
-if (strtoupper($_SERVER['REQUEST_METHOD']) == 'GET')
+if (strtoupper($_SERVER['REQUEST_METHOD']) == 'GET' && !$flashMessages->hasErrors() && !$flashMessages->hasWarnings())
 {
-    $_SESSION['details']  = null;
+    unset($_SESSION['details']);
+    unset($_SESSION['header']);
 }
 
 $arr_item = array();
@@ -64,8 +65,7 @@ if(isset($_POST['create_customerpo'])){
 
                     if($CusPo_count)
                     {
-                        $session->msg("d", "This customer purchase order exist in the system.");
-                        redirect('create_customerpo.php',false);
+                        $flashMessages->warning('This customer purchase order exist in the system.','create_customerpo.php');
                     }
 
                     //Insert customer purchase order header details
@@ -82,31 +82,25 @@ if(isset($_POST['create_customerpo'])){
 
                     $db->commit();
                     
-                    unset($_SESSION['details']);
-
-                    $session->msg('s',"Customer purchase order has been saved successfully,\n   Your customer purchase order No: ".$p_CusPoCode);
-                    redirect('create_customerpo.php', false);
+                    $flashMessages->success('Customer purchase order has been saved successfully,\n   Your customer purchase order No: '.$p_CusPoCode,'create_customerpo.php');
 
                 }
                 catch(Exception $ex)
                 {
                     $db->rollback();
 
-                    $session->msg('d',' Sorry failed to added!');
-                    redirect('create_customerpo.php', false);
+                    $flashMessages->error('Sorry failed to create customer purchase order. '.$ex->getMessage(),'create_customerpo.php');
                 }
 
             }
             else
             {
-                $session->msg("w",' Customer purchase order item(s) not found!');
-                redirect('create_customerpo.php',false);
+                $flashMessages->warning('Customer purchase order item(s) not found!','create_customerpo.php');
             }
         }
         else
         {
-            $session->msg("d", $errors);
-            redirect('create_customerpo.php',false);
+            $flashMessages->warning($errors,'create_customerpo.php');
         }
 
     }
@@ -135,22 +129,22 @@ if (isset($_POST['Add'])) {
     
     if($ProductCode == "")
     {
-        $session->msg('d',"Product code is not found!");
+        $flashMessages->warning('Product code is not found!');
     }
     else if($SalePrice == "" || $SalePrice <=0 )
     {
-        $session->msg('d',"Invalid sales price.");
+        $flashMessages->warning('Invalid sales price.');
     }
     else if($Qty <= 0)
     {
-        $session->msg('d',"Invalid item qty.");
+        $flashMessages->warning('Invalid item qty.');
     }
     else
     {
 
         if(ExistInArray($arr_item,$ProductCode))
         {
-            $session->msg('d',"This item exist in the list.");
+            $flashMessages->warning('This item exist in the list.');
         }
         else
         {
