@@ -220,15 +220,15 @@ if (isset($_POST['Add'])) {
 
     if($LocationCode == "" || $StockCode == "")
     {
-        $session->msg('d',"Location or stock code is not found!");
+        $flashMessages->warning('Location or stock code is not found!');
     }
     else if($SalePrice == "")
     {
-        $session->msg('d',"Invalid sales price.");
+        $flashMessages->warning('Invalid sales price.');
     }
     else if($Qty <= 0)
     {
-        $session->msg('d',"Invalid item qty.");
+        $flashMessages->warning('Invalid item qty.');
     }
     else
     {
@@ -245,7 +245,7 @@ if (isset($_POST['Add'])) {
             //Check serial is exist
             if (ExistInArray($serial_item,$SerialCode))
             {
-               $session->msg('d',"This item exist in the list.");
+                $flashMessages->warning('This item exist in the list.');
             }
             else
             {
@@ -264,7 +264,7 @@ if (isset($_POST['Add'])) {
         }
         else
         {
-            $arr_serial = array($SerialCode);
+            $arr_serial[] = array($SerialCode);
             $arr_item[] = array($StockCode,$ProductDesc,$CostPrice,$SalePrice,$Qty,$Qty * $SalePrice,$arr_serial);
             $_SESSION['details'] = $arr_item;
         }

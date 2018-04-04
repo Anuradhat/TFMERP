@@ -7,6 +7,14 @@ page_require_level(2);
 
 preventGetAction('customer.php');
 
+
+if (strtoupper($_SERVER['REQUEST_METHOD']) == 'GET' && !$flashMessages->hasErrors() && !$flashMessages->hasWarnings()) // $session->msg == null
+{
+    unset($_SESSION['details']);
+    unset($_SESSION['header']);
+}
+
+
 $default_salesrepDesig = ReadSystemConfig('DefaultSalesRepDesigCode');
 $all_salesrep = find_by_sql("call spSelectEmployeeFromDesignationCode('{$default_salesrepDesig}');");
 
@@ -17,16 +25,14 @@ if(isset($_POST['customer'])){
    $p_cuscode = remove_junk($db->escape($_POST['CustomerCode']));
 
    if(!$p_cuscode){
-        $session->msg("d","Missing customer identification.");
-        redirect('customer.php');
+        $flashMessages->warning('Missing customer identification.','customer.php');
     }
    else
    {
        $customer = find_by_sp("call spSelectCustomerFromCode('{$p_cuscode}');");
 
        if(!$customer){
-        $session->msg("d","Missing customer details.");
-        redirect('customer.php');
+          $flashMessages->warning('Missing customer details.','customer.php');
        }
    }
 }
@@ -71,16 +77,14 @@ if(isset($_POST['edit_customer'])){
                    '{$date}','{$user}');";
 
         if($db->query($query)){
-            $session->msg('s',"Customer updated");
-            redirect('customer.php', false);
+            $flashMessages->success('Customer has been successfully updated.','customer.php');
+
         } else {
-            $session->msg('d',' Sorry failed to updated!');
-            redirect('customer.php', false);
+            $flashMessages->error('Sorry failed to update customer.','customer.php');
         }
 
     } else{
-        $session->msg("d", $errors);
-        redirect('customer.php',false);
+        $flashMessages->warning($errors,'customer.php');
     }
 }
 

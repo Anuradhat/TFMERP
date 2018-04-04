@@ -72,6 +72,18 @@ function ExistInArray($array,$search) {
     return false;
 }
 
+function ExistInArray_New($array,$search) {
+    if(is_array($array)){
+        if(array_search($search, $array,true) !== false)
+            {
+                return true;
+            }
+        return false;
+    }
+    return false;
+}
+
+
 
 function ArraySearch($array,$search) {
     $count = 0;

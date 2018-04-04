@@ -160,6 +160,22 @@ function SelectStockSIHFormProduct($ProductCode,$LocationCode)
 
 
 /*--------------------------------------------------------------*/
+/*  Function check serial code avalable to return
+/*--------------------------------------------------------------*/
+
+function CheckSerialAbalableToReturn($InvoiceNo,$SerialCode)
+{
+    global $db;
+    $query = "call spSelectProductDetailsFromInvoiceFromSerialCode('{$InvoiceNo}','{$SerialCode}');";
+    if($result = $db->query($query))
+    {
+        return  true;
+    }
+    return false;
+}
+
+
+/*--------------------------------------------------------------*/
 /*  Function for read po last process date-time from stored procedure
 /*--------------------------------------------------------------*/
 

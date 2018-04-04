@@ -6,6 +6,13 @@ require_once('includes/load.php');
 page_require_level(2);
 
 
+
+if (strtoupper($_SERVER['REQUEST_METHOD']) == 'GET' && !$flashMessages->hasErrors() && !$flashMessages->hasWarnings()) // $session->msg == null
+{
+    unset($_SESSION['details']);
+    unset($_SESSION['header']);
+}
+
 $default_salesrepDesig = ReadSystemConfig('DefaultSalesRepDesigCode');
 $all_salesrep = find_by_sql("call spSelectEmployeeFromDesignationCode('{$default_salesrepDesig}');");
 
@@ -55,8 +62,7 @@ if(isset($_POST['add_customer'])){
 
             if($cus_count)
             {
-                $session->msg("d", "This customer code exist in the system.");
-                redirect('add_customer.php',false);
+                $flashMessages->warning('This customer code exist in the system.','add_customer.php');
             }
 
             $query  = "call spInsertCustomer('{$p_CustomerCode}','{$p_CustomerName}','{$p_NIC}','{$p_CustomerAddress1}','{$p_CustomerAddress2}',
@@ -66,25 +72,21 @@ if(isset($_POST['add_customer'])){
 
             if($db->query($query)){
                 $db->commit();
-                $session->msg('s',"Customer added ");
-                redirect('add_customer.php', false);
+                $flashMessages->success('Customer code has been saved successfully.','add_customer.php');
+
             } else {
                 $db->rollback();
-                $session->msg('d',' Sorry failed to added!');
-                redirect('customer.php', false);
+                $flashMessages->warning('Sorry failed to create customer.','add_customer.php');
             }
         }
         catch(Exception $ex)
         {
             $db->rollback();
-
-            $session->msg('d',' Sorry failed to added!');
-            redirect('supplier.php', false);
+            $flashMessages->error('Sorry failed to create customer. '.$ex->getMessage(),'add_customer.php');
         } 
     } 
     else{
-        $session->msg("d", $errors);
-        redirect('add_customer.php',false);
+        $flashMessages->warning($errors,'add_customer.php');
     }
 }
 
@@ -131,7 +133,7 @@ if(isset($_POST['add_customer'])){
             </div>
         </div>
         <div class="row">
-            <div class="col-md-12"><?php echo display_msg($msg); ?>
+            <div class="col-md-12"><?php $flashMessages->display(); ?>
             </div>
         </div>
 

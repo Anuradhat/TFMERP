@@ -206,11 +206,11 @@ if(isset($_POST['invoice_payment'])){
                             $StockDetails = find_by_sp("call spSelectStock('{$SerialDetails['StockCode']}','{$SerialDetails['LocationCode']}','{$SerialDetails['BinCode']}');");
 
                             //Update serial flag
-                            $query  = "call spUpdateSaleFlagGRNSerialFromSerialCode('{$Serial}');";
+                            $query  = "call spUpdateSaleFlagGRNSerialFromSerialCode('{$Serial}','{$p_InvoiceCode}');";
                             $db->query($query);
 
                             //Insert Invoice Serials
-                            $query  = "call spInsertInvoiceSerialD('{$p_InvoiceCode}','{$p_LocationCode}','{$SerialDetails['StockCode']}','{$Serial}');";
+                            $query  = "call spInsertInvoiceSerialD('{$p_InvoiceCode}','{$p_LocationCode}','{$SerialDetails['StockCode']}','{$Serial}',7);";
                             $db->query($query);
 
                             //Update Stock

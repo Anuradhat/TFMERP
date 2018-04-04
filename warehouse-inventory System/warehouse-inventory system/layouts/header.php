@@ -402,17 +402,27 @@ desired effect
                                 </ul>
                             </li>
                             <!--End Invoice Menu-->
+
+                            <!--Credit Note Menu-->
+                            <li class="treeview">
+                                <a href="#">
+                                    <i class="fa fa-undo"></i> <span>Credit Note</span>
+                                    <span class="pull-right-container">
+                                        <i class="fa fa-angle-left pull-right"></i>
+                                    </span>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <li><a href="create_creditnote.php"><i class="fa fa-plus-square-o"></i>Create</a></li>
+                                </ul>
+                            </li>
+                            <!--End Credit Note Menu-->
+
+
+
+
                         </ul>
                     </li>
                     <!--End Transaction Menu-->
-
-
-
-
-
-
-
-
 
 
                     <li class="treeview">
@@ -430,7 +440,20 @@ desired effect
                             </ul>
                         </li>
 
+                    <li class="treeview">
+                        <a href="#">
 
+                            <i class="fa fa-folder"></i> <span>Other</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="create_barcode.php"><i class="fa fa-barcode"></i>Barcode</a></li>
+
+
+                        </ul>
+                    </li>
 
 
 

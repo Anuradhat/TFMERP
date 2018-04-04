@@ -47,7 +47,7 @@ $all_customers = find_by_sql("call spSelectAllCustomers();")
     </div>
     <div class="row">
         <div class="col-md-12">
-            <?php echo display_msg($msg); ?>
+            <?php $flashMessages->display(); ?>
         </div>
     </div>
 

@@ -19,13 +19,11 @@
             <td></td>
             <td></td>
             <td></td>
-            <td></td>
-            <td>
-                <b>Total Trn. Qty:</b>
-            </td>
+            <td><b>Total Trn. Qty:</b></td>
             <td>
                 <?php $TotalTrnQty = 0;foreach($arr_item  as &$value){ $TotalTrnQty += $value[6];} echo '<b>'.$TotalTrnQty.'</b>'; ?>
             </td>
+            <td></td>
         </tr>
     </tfoot>
 

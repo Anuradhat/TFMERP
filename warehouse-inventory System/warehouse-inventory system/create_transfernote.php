@@ -77,11 +77,11 @@ if(isset($_POST['create_transfernote'])){
                        $flashMessages->warning('This transfer note number exist in the system','create_transfernote.php');
                     }
 
-                    $IsQtyExist = true;
+                    $IsQtyExist = false;
 
                     foreach($arr_item as $row => $value)
-                        if ($value[6] <= 0)
-                            $IsQtyExist = false;
+                        if ($value[6] > 0)
+                            $IsQtyExist = true;
 
                     if(!$IsQtyExist)
                     {

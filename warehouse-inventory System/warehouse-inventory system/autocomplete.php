@@ -41,6 +41,26 @@ if (isset($_POST['PRNo'])) {
     echo json_encode ($array);
 }
 
+
+//Invoice auto complete for invoice no
+if (isset($_POST['InvoiceNo'])) {
+    $query = $_POST['InvoiceNo'];
+    $result = $db->query ("call spInvoiceAutoComplete({$query})");
+    $array = array();
+    while ($row = $db->fetch_assoc($result)) {
+        $array[] = array (
+            'text' => $row['InvoiceNo'],
+            'value' => $row['InvoiceNo'],
+            'LocationCode' => $row['LocationCode'],
+            'InvDate' => $row['InvDate'],
+            'CustomerCode' => $row['CustomerCode']);
+    }
+    //RETURN JSON ARRAY
+    echo json_encode ($array);
+}
+
+
+
  //Purchase requisition auto generate for PO creation form
 if (isset($_POST['PRNoForPO'])) {
     $query = $_POST['PRNoForPO'];
@@ -279,6 +299,28 @@ if (isset($_POST['banktranarr'])) {
     }
 
     echo ($ToatlBankTrnPayment);
+}
+
+//Get Product details from serial no (for credit note purpose)
+if (isset($_POST['CreditNoteInvoiceNo'])) {
+    $InvoiceNo= $_POST['CreditNoteInvoiceNo'];
+    $SerialCode= $_POST['SerialCode'];
+
+    $result = $db->query ("call spSelectProductDetailsFromInvoiceFromSerialCode('{$InvoiceNo}','{$SerialCode}')");
+    $array = array();
+    while ($row = $db->fetch_assoc($result)) {
+        $array = array (
+            'SerialNo' => $row['SerialNo'],
+            'StockCode' => $row['StockCode'],
+            'ProductCode' => $row['ProductCode'],
+            'Description' => $row['Description'],
+            'SalePrice' =>   $row['SalePrice']
+            );
+    }
+
+    //RETURN JSON ARRAY
+    echo json_encode($array);
+
 }
 
 ?>
