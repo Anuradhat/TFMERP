@@ -82,7 +82,7 @@ if (isset($_POST['Transaction'])) {
 
         <div class="box box-default">
             <div class="box-header with-border">
-                <h3 class="box-title">Barcode Printing Details</h3>
+                <h3 class="box-title">Barcode Process</h3>
 
                 <div class="box-tools pull-right">
                     <button type="button" class="btn btn-box-tool" data-widget="collapse">
@@ -116,7 +116,7 @@ if (isset($_POST['Transaction'])) {
                     <div class="col-md-4">
                         <div class="form-group pull-right">
                             <label>&nbsp;</label><br>
-                            <button type="submit" class="btn btn-info" name="create_po" onclick="AddItem(this, event);" value="print">&nbsp;&nbsp;&nbsp;Print&nbsp;&nbsp;&nbsp;</button>
+                            <button type="submit" class="btn btn-info" name="create_po" onclick="AddItem(this, event);" value="print">&nbsp;&nbsp;&nbsp;Process&nbsp;&nbsp;&nbsp;</button>
                             <a href="barcode.php" class="btn btn-info" id="printbarcode" style="display:none" mce_href="barcode.php" >Download Text File</a>
                         
                         </div>
