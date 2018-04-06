@@ -196,8 +196,7 @@ if(isset($_POST['create_grn'])){
 
                             //Update product
                             $query  = "call spUpdateProductDetailsFromGRN('{$value[1]}','{$p_SupplierCode}',{$value[3]},
-                                       {$Sale_Price},0,{$StockLotNumber},'{$value[6]}',
-                                         '{$date}','{$user}');";
+                                       {$Sale_Price},0,{$AverageCost},{$StockLotNumber},'{$value[6]}','{$date}','{$user}');";
                             $db->query($query);
 
                             //Insert stock movement

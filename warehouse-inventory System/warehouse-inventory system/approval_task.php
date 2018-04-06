@@ -24,6 +24,16 @@ else
 ?>
 
 <?php
+if(isset($_POST['ReferenceNo']))
+{
+    $ReferenceNo = remove_junk($db->escape($_POST['ReferenceNo']));
+
+    $_SESSION['SalesOrder'] = $ReferenceNo;
+    $_SESSION['redirect'] = true;
+
+    echo 'redirect';
+}
+
 if (isset($_POST['Approved']) && isset($_POST['TransactionCode']) && isset($_POST['RefNo']) && isset($_POST['Level'])) {
     $Approved = remove_junk($db->escape($_POST['Approved']));
     $TransactionCode = remove_junk($db->escape($_POST['TransactionCode']));
@@ -86,8 +96,8 @@ if (isset($_POST['Approved']) && isset($_POST['TransactionCode']) && isset($_POS
     </div>
 
     <div class="row">
-        <div class="col-md-12">
-            <?php echo display_msg($msg); ?>
+        <div id="message" class="col-md-12">
+            <?php include('_partial_message.php'); ?>
         </div>
     </div>
 
@@ -129,6 +139,7 @@ if (isset($_POST['Approved']) && isset($_POST['TransactionCode']) && isset($_POS
                                     <tr>
                                         <td>
                                             <button type="submit" name="Approved" class="btn  btn-primary btn-sm glyphicon glyphicon-list-alt"></button>
+                                            <button type="button" class="EditBtn btn btn-warning btn-sm glyphicon glyphicon-edit" <?php if($approvals['TrnsactionCode'] != '004') echo "disabled" ?>></button>
                                         </td>
                                         <td>
                                             <?php echo remove_junk($approvals['TransactionName']); ?>
@@ -241,4 +252,29 @@ if (isset($_POST['Approved']) && isset($_POST['TransactionCode']) && isset($_POS
            });
        });
    });
+
+
+   $(document).ready(function () {
+       $(".EditBtn").click(function () {
+           $('.loader').show();
+           var $row = $(this).closest("tr");
+           var RefNo = $row.find(".clsRefNo").text();
+
+           $.ajax({
+               url: "approval_task.php",
+               type: "POST",
+               data: 'ReferenceNo=' + RefNo.trim(),
+               success: function (result) {
+                   window.location = 'edit_salesorder_.php';
+
+                   $('.loader').fadeOut();
+               }
+           });
+
+
+       });
+   });
+
+
+
 </script>

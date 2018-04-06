@@ -31,6 +31,7 @@ if(isset($_POST['add_product'])){
         $p_CostPrice  = 0;        //remove_junk(string2Value($db->escape($_POST['CostPrice'])));
         $p_SalePrice  = 0;       //remove_junk(string2Value($db->escape($_POST['SalePrice'])));
         $p_WholeSalePrice  = 0; //remove_junk(string2Value($db->escape($_POST['WholeSalePrice'])));
+        $p_AvgCostPrice = 0;
         $p_DiscountAmount  = 0;//remove_junk(string2Value($db->escape($_POST['DiscountAmount'])));
         $p_SalesComPer  = remove_junk(string2Value($db->escape($_POST['SalesComPer'])));
         $p_DiscountPer  = 0; //remove_junk(string2Value($db->escape($_POST['DiscountPer'])));
@@ -60,10 +61,10 @@ if(isset($_POST['add_product'])){
         try
         {
              $db->begin();
-            //$db->query("start transaction");
+            //$db->query("start transaction");$p_AvgCostPrice
 
            $query  = "call spInsertProduct('{$prod_code}','{$p_ProductDesc}','{$p_OtherDesc}','{$p_DepartmentCode}','{$p_CategoryCode}','{$p_SubcategoryCode}',
-                   '{$p_SupplierCode}',{$p_CostPrice},{$p_SalePrice},{$p_WholeSalePrice},{$p_DiscountAmount},{$p_SalesComPer},{$p_DiscountPer},{$p_ReorderLevel},
+                   '{$p_SupplierCode}',{$p_CostPrice},{$p_SalePrice},{$p_WholeSalePrice},{$p_AvgCostPrice},{$p_DiscountAmount},{$p_SalesComPer},{$p_DiscountPer},{$p_ReorderLevel},
                     {$p_Warranty},{$Tax_Selected},{$p_SalesPer},'{$date}','{$user}');";
 
            $db->query($query);

@@ -29,6 +29,7 @@
         <tr>
             <td>
                 <div> 
+                    <button type="button" class="EditBtn btn btn-warning btn-xs glyphicon glyphicon-edit" data-toggle="modal" data-target="#myModal" contenteditable="false"></button>
                     <button type="button" class="btn btn-danger btn-xs glyphicon glyphicon-trash DeleteBtn" id="btnDelete"></button>
                 </div>
             </td>
@@ -64,6 +65,29 @@
                 data: { "_productcode": prodcode },
                 success: function (result) {
                     $('#table').html(result);
+                }
+            });
+
+
+        });
+    });
+
+
+    $(document).ready(function () {
+        $(".EditBtn").click(function () {
+
+            var $row = $(this).closest("tr");
+            var RowNo = $row.find(".clsRowId").text();
+
+            $.ajax({
+                url: "edit_salesorder_.php",
+                type: "POST",
+                data: '_RowNo=' + RowNo.trim(),
+                success: function (result) {
+                    var modalBody = $('<div id="modalContent"></div>');
+                    modalBody.append(result);
+                    $("#myModalLabel").text('Quotation Item');
+                    $('.modal-body').html(modalBody);
                 }
             });
 

@@ -26,6 +26,7 @@
     <Compile Include="create_creditnote.php" />
     <Compile Include="customer_payment.php" />
     <Compile Include="create_invoice.php" />
+    <Compile Include="edit_salesorder_.php" />
     <Compile Include="includes\FlashMessages.php" />
     <Compile Include="invoice_payment.php" />
     <Compile Include="edit_customerpo.php" />
@@ -55,6 +56,7 @@
     <Compile Include="_partial_cuspodetails.php" />
     <Compile Include="_partial_cuspoitem.php" />
     <Compile Include="_partial_invoiceserial.php" />
+    <Compile Include="_partial_soitem.php" />
     <Compile Include="_partial_sodetails.php" />
     <Compile Include="_partial_stockdetails.php" />
     <Compile Include="_partial_bindetails.php" />

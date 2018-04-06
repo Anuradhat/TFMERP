@@ -364,7 +364,7 @@ desired effect
                             <!--Sales Order Menu-->
                             <li class="treeview">
                                 <a href="#">
-                                    <i class="fa fa-file-text-o"></i> <span>Sales Order</span>
+                                    <i class="fa fa-file-text-o"></i> <span>Quotation</span>
                                     <span class="pull-right-container">
                                         <i class="fa fa-angle-left pull-right"></i>
                                     </span>
