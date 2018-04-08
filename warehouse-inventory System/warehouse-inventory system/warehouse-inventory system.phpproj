@@ -7341,6 +7341,7 @@
     <Content Include="libs\dist\js\demo.js" />
     <Content Include="libs\dist\js\pages\dashboard.js" />
     <Content Include="libs\dist\js\pages\dashboard2.js" />
+    <Content Include="libs\ico\tfm_xs.ico" />
     <Content Include="libs\images\fade-spinner.gif" />
     <Content Include="libs\images\loader.gif" />
     <Content Include="libs\images\pageload.gif" />
@@ -7984,6 +7985,7 @@
     <Folder Include="libs\dist\iCheck\" />
     <Folder Include="libs\images\" />
     <Folder Include="libs\js\" />
+    <Folder Include="libs\ico\" />
     <Folder Include="libs\video\" />
   </ItemGroup>
 </Project>
