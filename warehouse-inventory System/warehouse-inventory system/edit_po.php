@@ -423,21 +423,26 @@ if (isset($_POST['Supplier'])) {
 
     function AddItem(ctrl, event) {
         event.preventDefault();
+        $('.loader').show();
 
         if ($('#ProductCode').val() == "") {
             $("#ProductCode").focus();
+            $('.loader').fadeOut();
             bootbox.alert('Please select a product code.');
         }
         else if ($('#ProductDesc').val() == "") {
             $("#ProductCode").focus();
+            $('.loader').fadeOut();
             bootbox.alert('Please select a product code.');
         }
         else if ($('#CostPrice').val() <= 0) {
             $("#CostPrice").focus();
+            $('.loader').fadeOut();
             bootbox.alert('Please enter valid cost price.');
         }
         else if ($('#Qty').val() <= 0) {
             $("#Qty").focus();
+            $('.loader').fadeOut();
             bootbox.alert('Please enter valid purchase qty.');
         }
         else {
@@ -448,6 +453,17 @@ if (isset($_POST['Supplier'])) {
                 success: function (result) {
                     $("#table").html(result);
                     $('#message').load('_partial_message.php');
+                },
+                complete: function (result) {
+                    $('#ProductCode').val('');
+                    $('#ProductDesc').val('');
+                    $('#CostPrice').val('');
+                    $('#Qty').val('');
+
+                    $('.loader').fadeOut();
+                    $('#ProductCode').focus();
+
+                    $('.loader').fadeOut();
                 }
             });
         }
@@ -494,6 +510,8 @@ if (isset($_POST['Supplier'])) {
         var Supplier = $('#SupplierCode').val();
         var Remarks = $('#Remarks').val();
 
+        $('.loader').show();
+
         $.ajax({
             url: "edit_po.php",
             type: "POST",
@@ -501,6 +519,9 @@ if (isset($_POST['Supplier'])) {
             success: function (result) {
                 $("#PONo").html(""); // clear before appending new list
                 $("#PONo").html(result);
+            },
+            complete: function (result) {
+                $('.loader').fadeOut();
             }
         });
 
@@ -509,6 +530,7 @@ if (isset($_POST['Supplier'])) {
     function FillDetails() {
         var PONo = $('#PONo').val();
 
+        $('.loader').show();
 
         $.ajax({
             url: "autocomplete.php",
@@ -532,6 +554,9 @@ if (isset($_POST['Supplier'])) {
             data: { "_PONo": PONo },
             success: function (result) {
                 $("#table").html(result);
+            },
+            complete: function (result) {
+                $('.loader').fadeOut();
             }
         });
 

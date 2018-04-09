@@ -52,6 +52,8 @@ $arr_serial =  ArraySearch($arr_item,$StockCode)[7];
     function EditItem(ctrl, event) {
         event.preventDefault();
         
+        $('.loader').show();
+
         var i = 0;
         
         var AllSerailsAreFilled = true;
@@ -92,6 +94,7 @@ $arr_serial =  ArraySearch($arr_item,$StockCode)[7];
             
             if (value == "") {
                 AllSerailsAreFilled = false;
+                $('.loader').fadeOut();
                 bootbox.alert('Some serial details are missing.');
                 break;
             }
@@ -100,6 +103,7 @@ $arr_serial =  ArraySearch($arr_item,$StockCode)[7];
         if (AllSerailsAreFilled && arrHasDupes(arr))
         {
             AllSerailsAreFilled = false;
+            $('.loader').fadeOut();
             bootbox.alert('Duplicate serial numbers found!');
         }
 
@@ -131,19 +135,23 @@ $arr_serial =  ArraySearch($arr_item,$StockCode)[7];
 
     function competeAjax()
     {
-        if (!AllSerailsAreValid)
+        if (!AllSerailsAreValid) {
+            $('.loader').fadeOut();
             bootbox.alert('Some serials detail(s) are invalid.');
-        else
-        {
+        }
+        else {
             //bootbox.alert('Sucesss.');
             //var JSONArray = JSON.stringify(arr);
 
             $.ajax({
                 url: 'create_transfernote.php',
                 type: 'POST',
-                data: { StockCode: StockCode,'arr': arr },
+                data: { StockCode: StockCode, 'arr': arr },
                 success: function (data) {
                     $('#myModal').modal('toggle');
+                },
+                complete: function (result) {
+                    $('.loader').fadeOut();
                 }
             });
         }

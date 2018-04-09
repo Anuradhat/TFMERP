@@ -40,6 +40,7 @@
 <script type="text/javascript">
     function EditItem(ctrl, event) {
         event.preventDefault();
+        $('.loader').show();
 
         var CostPrice = parseInt($("#pCostPrice").val());
         var Qty = parseInt($("#pQty").val());
@@ -47,6 +48,7 @@
 
         if (Qty <= 0) {
             $("#pQty").focus();
+            $('.loader').fadeOut();
             bootbox.alert('You enter qty is invalid.');
         }
         else {
@@ -57,7 +59,9 @@
                 success: function (result) {
                     $("#table").html(result);
                     $('#myModal').modal('toggle');
-                    //$('#modal-container').modal('hide');
+                },
+                complete: function (result) {
+                    $('.loader').fadeOut();
                 }
             });
         }

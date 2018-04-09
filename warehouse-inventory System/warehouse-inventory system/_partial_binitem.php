@@ -43,6 +43,8 @@
 <script type="text/javascript">
     function EditItem(ctrl, event) {
         event.preventDefault();
+        
+        $('.loader').show();
 
         var SIH = parseInt($("#pSIH").val());
         var TrnQty = $("#pTrnQty").val();
@@ -50,10 +52,12 @@
 
         if (TrnQty <= 0) {
             $("#pTrnQty").focus();
+            $('.loader').fadeOut();
             bootbox.alert('Transfer qty is invalid.');
         }
         else if (SIH < TrnQty) {
             $("#pTrnQty").focus();
+            $('.loader').fadeOut();
             bootbox.alert('You cannot exceed stock in hand qty.');
         }
         else {
@@ -65,6 +69,9 @@
                     $("#tblBinDetails").html(result);
                     $('#myModal').modal('toggle');
                     //$('#modal-container').modal('hide');
+                },
+                complete: function (result) {
+                    $('.loader').fadeOut();
                 }
             });
         }

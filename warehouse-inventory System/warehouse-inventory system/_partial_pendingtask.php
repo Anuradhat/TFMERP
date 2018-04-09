@@ -43,7 +43,7 @@
             <li>
                 <!-- PO Task item -->
                 <a href="approval_task.php?TransactionCode=004">
-                    <i class="glyphicon glyphicon-check"></i>&nbsp;Need approval for <?php echo count($pendingPoJobs); ?> sales order(s)
+                    <i class="glyphicon glyphicon-check"></i>&nbsp;Need approval for <?php echo count($pendingPoJobs); ?> quotation(s)
                 </a>
             </li>
             <?php } ?>

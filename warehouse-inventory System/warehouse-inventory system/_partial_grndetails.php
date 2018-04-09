@@ -72,6 +72,8 @@
 
     $(document).ready(function () {
         $(".EditBtn").click(function () {
+             
+            $('.loader').show();
 
             var $row = $(this).closest("tr");
             var RowNo = $row.find(".clsRowId").text();
@@ -87,6 +89,7 @@
                     modalBody.append(result);
                     $("#myModalLabel").text('Good Received Item');
                     $('.modal-body').html(modalBody);
+                    $('.loader').fadeOut();
                 }
             });
 

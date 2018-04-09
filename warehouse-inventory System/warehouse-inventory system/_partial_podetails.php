@@ -59,14 +59,20 @@
 //Item Delete
     $(document).ready(function () {
         $(".DeleteBtn").click(function () {
+            $('.loader').show();
             var $row = $(this).closest("tr");
             var prodcode = $row.find(".clsRowId").text().trim();
+
+
             $.ajax({
                 url: "create_po.php",
                 type: "POST",
                 data: { "_prodcode": prodcode },
                 success: function (result) {
                     $('#table').html(result);
+                },
+                complete: function (result) {
+                    $('.loader').fadeOut();
                 }
             });
 
@@ -77,6 +83,7 @@
 
     $(document).ready(function () {
         $(".EditBtn").click(function () {
+            $('.loader').show();
 
             var $row = $(this).closest("tr");
             var RowNo = $row.find(".clsRowId").text();
@@ -90,6 +97,9 @@
                     modalBody.append(result);
                     $("#myModalLabel").text('Purchase Order Item');
                     $('.modal-body').html(modalBody);
+                },
+                complete: function (result) {
+                    $('.loader').fadeOut();
                 }
             });
 

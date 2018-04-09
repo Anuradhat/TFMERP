@@ -348,18 +348,22 @@ if (isset($_POST['_prodcode'])) {
         if ($('#ProductCode').val() == "")
         {
             $("#ProductCode").focus();
+            $('.loader').fadeOut();
             bootbox.alert('Please select a product code.');
         }
         else if ($('#ProductDesc').val() == "") {
             $("#ProductCode").focus();
+            $('.loader').fadeOut();
             bootbox.alert('Please select a product code.');
         }
         else if ($('#LastPurchasePrice').val() <= 0) {
             $("#LastPurchasePrice").focus();
+            $('.loader').fadeOut();
             bootbox.alert('Please enter valid purchase price.');
         }
         else if ($('#Qty').val() <= 0) {
             $("#Qty").focus();
+            $('.loader').fadeOut();
             bootbox.alert('Please enter valid purchase qty.');
         }
         else

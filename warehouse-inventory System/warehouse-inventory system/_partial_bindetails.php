@@ -90,6 +90,8 @@
     $(document).ready(function () {
         $(".EditBtn").click(function () {
 
+            $('.loader').show();
+
             var $row = $(this).closest("tr");
             var RowNo = $row.find(".clsRowId").text();
 
@@ -104,6 +106,9 @@
                     modalBody.append(result);
                     $("#myModalLabel").text('Transfer Note Item');
                     $('.modal-body').html(modalBody);
+                },
+                complete: function (result) {
+                    $('.loader').fadeOut();
                 }
             });
 
@@ -114,6 +119,7 @@
 
     $(document).ready(function () {
         $(".SerialBtn").click(function () {
+            $('.loader').show();
 
             var $row = $(this).closest("tr");
             var RowNo = $row.find(".clsRowId").text();
@@ -124,6 +130,7 @@
 
             if (TrnQty == 0) {
                 $('#myModal').modal('toggle');
+                $('.loader').fadeOut();
                 bootbox.alert('Transfer qty not found.');
             }
             else {
@@ -137,6 +144,9 @@
                         modalBody.append(result);
                         $("#myModalLabel").text('Serial Details');
                         $('.modal-body').html(modalBody);
+                    },
+                    complete: function (result) {
+                        $('.loader').fadeOut();
                     }
                 });
             }

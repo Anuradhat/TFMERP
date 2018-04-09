@@ -43,10 +43,15 @@ if(isset($_POST['create_grn'])){
             $p_SupplierCode  = remove_junk($db->escape($_POST['SupplierCode']));
             $p_PurchaseOrderNo  = remove_junk($db->escape($_POST['PoNo']));
             $p_LocationCode  = remove_junk($db->escape($_POST['LocationCode']));
+            $p_ReferenceNo = remove_junk($db->escape($_POST['ReferenceNo']));
             $p_Remarks  = remove_junk($db->escape($_POST['Remarks']));
+            
             $date    = make_date();
             $datetime    = make_datetime();
             $user = "anush";
+
+            $SerialForNewStock = false;
+            $LastSerial = 0;
 
             //Get Po last process date time
             $po_last_process_dt = getLastPoProcessDateTime($p_PurchaseOrderNo);
@@ -110,7 +115,7 @@ if(isset($_POST['create_grn'])){
                     }
 
                     //Insert good received note header details
-                    $query  = "call spInsertGoodReceivedH('{$p_GRNCode}','{$p_LocationCode}','{$p_PurchaseOrderNo}','{$p_SupplierCode}','{$date}','{$p_Remarks}','{$datetime}','{$date}','{$user}');";
+                    $query  = "call spInsertGoodReceivedH('{$p_GRNCode}','{$p_LocationCode}','{$p_PurchaseOrderNo}','{$p_SupplierCode}','{$date}','{$p_ReferenceNo}','{$p_Remarks}','{$datetime}','{$date}','{$user}');";
                     $db->query($query);
                    
                     //Update purchase order process date
@@ -141,9 +146,21 @@ if(isset($_POST['create_grn'])){
                                 $productdetails = ReadProductDatails($value[1]);
 
                                 if ($productdetails["CostPrice"] != $value[3])
-                                    $arr_item = ChangValueFromListOfArray( $arr_item,$ProductCode,0,$productdetails["ProductCode"]."-".($productdetails["StockNo"] + 1));
+                                {
+                                    $arr_item = ChangValueFromListOfArray( $arr_item,$productdetails["ProductCode"],0,$productdetails["ProductCode"]."-".($productdetails["StockNo"] + 1));
+                                    $SerialForNewStock = true;
+                                    $arr_item = ChangValueFromListOfArray($arr_item,$productdetails["ProductCode"],7,0);
+
+                                }
                                 else
-                                    $arr_item = ChangValueFromListOfArray( $arr_item,$ProductCode,0,$productdetails["ProductCode"]."-".($productdetails["StockNo"]==0?1:$productdetails["StockNo"]));
+                                {
+                                    $arr_item = ChangValueFromListOfArray( $arr_item,$productdetails["ProductCode"],0,$productdetails["ProductCode"]."-".($productdetails["StockNo"]==0?1:$productdetails["StockNo"]));
+                                    $SerialForNewStock = false;
+
+                                    //Get Last genarated serial number for same stock code
+                                    $product = find_by_sp("call spSelectProductFromCode('{$productdetails["ProductCode"]}');");
+                                    $arr_item = ChangValueFromListOfArray($arr_item,$productdetails["ProductCode"],7,$product['LastSerial']);
+                                }
                             }
                         }
               
@@ -163,9 +180,20 @@ if(isset($_POST['create_grn'])){
                                 $productdetails = ReadProductDatails($value[1]);
 
                                 if ($productdetails["ExpireDate"] != $value[6])
-                                    $arr_item = ChangValueFromListOfArray( $arr_item,$ProductCode,0,$productdetails["ProductCode"]."-".($productdetails["StockNo"] + 1));
+                                {
+                                    $arr_item = ChangValueFromListOfArray( $arr_item,$productdetails["ProductCode"],0,$productdetails["ProductCode"]."-".($productdetails["StockNo"] + 1));
+                                    $SerialForNewStock = true;
+                                    $arr_item = ChangValueFromListOfArray($arr_item,$productdetails["ProductCode"],7,0);
+                                }
                                 else
-                                    $arr_item = ChangValueFromListOfArray( $arr_item,$ProductCode,0,$productdetails["ProductCode"]."-".($productdetails["StockNo"]==0?1:$productdetails["StockNo"]));
+                                {
+                                    $arr_item = ChangValueFromListOfArray( $arr_item,$productdetails["ProductCode"],0,$productdetails["ProductCode"]."-".($productdetails["StockNo"]==0?1:$productdetails["StockNo"]));
+                                    $SerialForNewStock = false;
+
+                                    //Get Last genarated serial number for same stock code
+                                    $product = find_by_sp("call spSelectProductFromCode('{$productdetails["ProductCode"]}');");
+                                    $arr_item = ChangValueFromListOfArray($arr_item,$productdetails["ProductCode"],7,$product['LastSerial']);
+                                }
                             }
                         }
                     }
@@ -213,15 +241,28 @@ if(isset($_POST['create_grn'])){
                               $db->query($query);
                             }
 
+                            //Get Last Serial
+                            $LastSerial = $value[7];
 
                             //Save Serial 
                             for($i = 1;$i<= $value[5] ;$i++)
                             {
-                                $SerialNo  = autoGenerateSerialNumber();
+                                //$SerialNo  = autoGenerateSerialNumber();
+                                
+                                $SerialNo = $value[0].'-'.(++$LastSerial);
+
+
                                 $query  = "call spGrnSerialT('{$p_GRNCode}','{$value[0]}','{$value[1]}','{$SerialNo}','{$p_LocationCode}','{$default_stock_bin}','{$value[6]}','{$date}');";
 
                                 $db->query($query);
                             }
+
+
+                            //Change product last GRN serial
+                            $query  = "call spUpdateLastGRNSerial('{$value[1]}',{$LastSerial});";
+                            $db->query($query);
+
+
                             
                         }
                     }
@@ -325,16 +366,16 @@ if (isset($_POST['_PoNo'])) {
                 $productdetails = ReadProductDatails($value["ProductCode"]);
 
                 if ($productdetails["CostPrice"] != $value["CostPrice"])
-                    $arr_item[]  = array($productdetails["ProductCode"]."-".($productdetails["StockNo"] + 1),$value["ProductCode"],$value["ProductDesc"],$value["CostPrice"],($value["Qty"]-$value["RecivedQty"]),0,'');
+                    $arr_item[]  = array($productdetails["ProductCode"]."-".($productdetails["StockNo"] + 1),$value["ProductCode"],$value["ProductDesc"],$value["CostPrice"],($value["Qty"]-$value["RecivedQty"]),0,'',0);
                 else
-                    $arr_item[]  = array($productdetails["ProductCode"]."-".($productdetails["StockNo"]==0?1:$productdetails["StockNo"]),$value["ProductCode"],$value["ProductDesc"],$value["CostPrice"],($value["Qty"]-$value["RecivedQty"]),0,'');
+                    $arr_item[]  = array($productdetails["ProductCode"]."-".($productdetails["StockNo"]==0?1:$productdetails["StockNo"]),$value["ProductCode"],$value["ProductDesc"],$value["CostPrice"],($value["Qty"]-$value["RecivedQty"]),0,'',0);
             }
         }
         else
         {
             foreach($all_PoDetsils as $row => $value)
             {
-                $arr_item[]  = array($value["ProductCode"],$value["ProductCode"],$value["ProductDesc"],$value["CostPrice"],($value["Qty"]-$value["RecivedQty"]),0,'');
+                $arr_item[]  = array($value["ProductCode"],$value["ProductCode"],$value["ProductDesc"],$value["CostPrice"],($value["Qty"]-$value["RecivedQty"]),0,'',0);
             }
         }
     }
@@ -342,7 +383,7 @@ if (isset($_POST['_PoNo'])) {
     {
         foreach($all_PoDetsils as $row => $value)
         {
-            $arr_item[]  = array($value["ProductCode"],$value["ProductCode"],$value["ProductDesc"],$value["CostPrice"],($value["Qty"]-$value["RecivedQty"]),0,'');
+            $arr_item[]  = array($value["ProductCode"],$value["ProductCode"],$value["ProductDesc"],$value["CostPrice"],($value["Qty"]-$value["RecivedQty"]),0,'',0);
         }
     }
 
@@ -451,6 +492,13 @@ if (isset($_POST['Supplier'])) {
                                 <option value="">Select Purchase Order</option>
                             </select>
                         </div>
+
+                        <div class="form-group">
+                            <div class="form-group">
+                                <label>Remarks</label>
+                                <textarea name="Remarks" id="Remarks" class="form-control" placeholder="Enter remarks here.."><?php echo remove_junk($arr_header['Remarks']) ?></textarea>
+                            </div>
+                        </div>
                        
                     </div>
 
@@ -486,12 +534,10 @@ if (isset($_POST['Supplier'])) {
 
                         <div class="form-group">
                             <div class="form-group">
-                                <label>Remarks</label>
-                                <textarea name="Remarks" id="Remarks" class="form-control" placeholder="Enter remarks here.."><?php echo remove_junk($arr_header['Remarks']) ?></textarea>
+                                <label>Reference No</label>
+                                <input type="text" class="form-control" name="ReferenceNo" placeholder="Reference No" id="ReferenceNo" autocomplete="off"/>
                             </div>
                         </div>
-                       
-
 
                     </div>
 
@@ -529,21 +575,26 @@ if (isset($_POST['Supplier'])) {
 <script type="text/javascript">
     function AddItem(ctrl, event) {
         event.preventDefault();
+        $('.loader').show();
 
         if ($('#ProductCode').val() == "") {
             $("#ProductCode").focus();
+            $('.loader').fadeOut();
             bootbox.alert('Please select a product code.');
         }
         else if ($('#ProductDesc').val() == "") {
             $("#ProductCode").focus();
+            $('.loader').fadeOut();
             bootbox.alert('Please select a product code.');
         }
         else if ($('#CostPrice').val() <= 0) {
             $("#CostPrice").focus();
+            $('.loader').fadeOut();
             bootbox.alert('Please enter valid cost price.');
         }
         else if ($('#Qty').val() <= 0) {
             $("#Qty").focus();
+            $('.loader').fadeOut();
             bootbox.alert('Please enter valid purchase qty.');
         }
         else {
@@ -554,6 +605,17 @@ if (isset($_POST['Supplier'])) {
                 success: function (result) {
                     $("#table").html(result);
                     $('#message').load('_partial_message.php');
+                },
+                complete: function (result) {
+                    $('#ProductCode').val('');
+                    $('#ProductDesc').val('');
+                    $('#CostPrice').val('');
+                    $('#Qty').val('');
+
+                    $('.loader').fadeOut();
+                    $('#ProductCode').focus();
+
+                    $('.loader').fadeOut();
                 }
             });
         }
@@ -598,6 +660,8 @@ if (isset($_POST['Supplier'])) {
 
     function FillPO() {
         var Supplier = $('#SupplierCode').val();
+        $('.loader').show();
+
         $.ajax({
             url: "create_grn.php",
             type: "POST",
@@ -605,6 +669,7 @@ if (isset($_POST['Supplier'])) {
             success: function (result) {
                 $("#PoNo").html(""); // clear before appending new list
                 $("#PoNo").html(result);
+                $('.loader').fadeOut();
             }
         });
 
@@ -613,6 +678,7 @@ if (isset($_POST['Supplier'])) {
 
     function FillDetails() {
         var PrnNo = $('#PoNo').val();
+        $('.loader').show();
 
         $.ajax({
             type: "POST",
@@ -620,6 +686,7 @@ if (isset($_POST['Supplier'])) {
             data: { "_PoNo": PrnNo },
             success: function (result) {
                 $("#table").html(result);
+                $('.loader').fadeOut();
             }
         });
 

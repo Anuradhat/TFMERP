@@ -61,7 +61,7 @@ if(isset($_POST['create_salesorder'])){
                 //save quotation 
                 try
                 {
-                   
+                    
                     $p_SOCode  = autoGenerateNumber('tfmSalesOrderHT',1);
 
                     $db->begin();
@@ -122,7 +122,7 @@ if (isset($_POST['_stockcode'])) {
 
 if (isset($_POST['SalesmanCodeSelection'])) {
     $SalesmanCode = remove_junk($db->escape($_POST['SalesmanCodeSelection']));
-   
+    
     $Customer = find_by_sql("call spSelectCustomerFromSalesmanCode('{$SalesmanCode}');");
     echo "<option value=''>Select Customer</option>";
 
@@ -132,6 +132,21 @@ if (isset($_POST['SalesmanCodeSelection'])) {
     return;
 }
 
+if (isset($_POST['SalePriceValidate'])) {
+    $SalesPrice = remove_junk($db->escape($_POST['SalePriceValidate']));
+    $ProductCode = remove_junk($db->escape($_POST['ProductCode']));
+    
+    $product = find_by_sp("call spSelectProductFromCode('{$ProductCode}');");
+
+    //Read system settings
+    $Sales_Profit = ReadSystemConfig('SalesMarginPercentage');
+
+    $AvgCostPrice = $product['AvgCostPrice'];
+
+
+}
+
+
 
 if (isset($_POST['Add'])) {
     $ProductCode = remove_junk($db->escape($_POST['ProductCode']));
@@ -139,7 +154,7 @@ if (isset($_POST['Add'])) {
     $SalePrice = remove_junk($db->escape($_POST['SalePrice']));
     $Qty = remove_junk($db->escape($_POST['Qty']));
 
-   
+    
     $arr_item = $_SESSION['details'];
     
     if($SalePrice == "" || $SalePrice <= 0)
@@ -336,7 +351,7 @@ if (isset($_POST['CustomerCode'])) {
                     <div class="col-md-3">
                         <div class="form-group">
                             <label>Sale Price</label>
-                            <input type="text" class="form-control decimal" name="SalePrice" id="SalePrice" pattern="([0-9]+\.)?[0-9]+" placeholder="Sale Price" required="required" />
+                            <input type="text" class="form-control decimal" name="SalePrice" id="SalePrice" pattern="([0-9]+\.)?[0-9]+" placeholder="Sale Price" required="required" onchange="ValidateSalePrice();" />
                         </div>
 
                     </div>
@@ -508,6 +523,35 @@ if (isset($_POST['CustomerCode'])) {
 
         return ((a >= 0) && (a <= 365));
     }
+
+
+    function ValidateSalePrice()
+    {
+        var ProductCode = $('#ProductCode').val();
+        var SalePrice = $('#SalePrice').val();
+
+        if (ProductCode != "") {
+            $('.loader').show();
+
+            $.ajax({
+                type: "POST",
+                url: "create_salesorder.php", // Name of the php files
+                data: { "SalePriceValidate": SalePrice, "ProductCode": ProductCode },
+                success: function (result) {
+                    if (result == "red")
+                        ("#SalePrice").css('background-color', 'red');
+                    else
+                  ("#SalePrice").css('background-color', '');
+
+                    $('.loader').fadeOut();
+                }
+            });
+        }
+    }
+
+
+ 
+
 
   //  function FillSalesRep() {
   //      $('.loader').show();

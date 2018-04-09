@@ -370,18 +370,22 @@ if (isset($_POST['_PRNo'])) {
         if ($('#ProductCode').val() == "")
         {
             $("#ProductCode").focus();
+            $('#ProductCode').focus();
             bootbox.alert('Please select a product code.');
         }
         else if ($('#ProductDesc').val() == "") {
             $("#ProductCode").focus();
+            $('#ProductCode').focus();
             bootbox.alert('Please select a product code.');
         }
         else if ($('#LastPurchasePrice').val() <= 0) {
             $("#LastPurchasePrice").focus();
+            $('#ProductCode').focus();
             bootbox.alert('Please enter valid purchase price.');
         }
         else if ($('#Qty').val() <= 0) {
             $("#Qty").focus();
+            $('#ProductCode').focus();
             bootbox.alert('Please enter valid purchase qty.');
         }
         else
@@ -454,6 +458,8 @@ if (isset($_POST['_PRNo'])) {
             highlight: true,
             minLength: 1,
             source: function (request, response) {
+                $('.loader').show();
+
                 $.ajax({
                     url: "autocomplete.php",
                     data: 'PRNo=' + request,
@@ -476,6 +482,7 @@ if (isset($_POST['_PRNo'])) {
                         });
                         response(items);
                         $(".dropdown-menu").css("height", "auto");
+                        $('.loader').fadeOut();
                     }
                 });
             },

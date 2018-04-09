@@ -57,6 +57,7 @@
 <script type="text/javascript">
     function EditItem(ctrl, event) {
         event.preventDefault();
+        $('.loader').show();
 
         var Qty = parseInt($("#pQty").val());
         var GrnQty = $("#pGrnQty").val();
@@ -64,10 +65,12 @@
 
         if (GrnQty <= 0) {
             $("#pGrnQty").focus();
+            $('.loader').fadeOut();
             bootbox.alert('GRN qty is invalid.');
         }
         else if (Qty < GrnQty) {
             $("#pGrnQty").focus();
+            $('.loader').fadeOut();
             bootbox.alert('You cannot exceed original PO qty.');
         }
         else {
@@ -78,6 +81,7 @@
                 success: function (result) {
                     $("#table").html(result);
                     $('#myModal').modal('toggle');
+                    $('.loader').fadeOut();
                     //$('#modal-container').modal('hide');
                 }
             });

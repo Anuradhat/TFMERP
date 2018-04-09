@@ -39,12 +39,18 @@
         $(".DeleteBtn").click(function () {
             var $row = $(this).closest("tr");
             var prodcode = $row.find(".clsRowId").text().trim();
+
+            $('.loader').show();
+
             $.ajax({
                 url: "create_pr.php",
                 type: "POST",
                 data: { "_prodcode": prodcode },
                 success: function (result) {
                     $('#table').html(result);
+                },
+                complete: function (result) {
+                    $('.loader').fadeOut();
                 }
             });
 

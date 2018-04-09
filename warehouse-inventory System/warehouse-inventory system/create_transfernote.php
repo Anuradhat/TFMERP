@@ -457,40 +457,11 @@ if (isset($_POST['ToLocationCode'])) {
 
 
 <script type="text/javascript">
-    function AddItem(ctrl, event) {
-        event.preventDefault();
-
-        if ($('#ProductCode').val() == "") {
-            $("#ProductCode").focus();
-            bootbox.alert('Please select a product code.');
-        }
-        else if ($('#ProductDesc').val() == "") {
-            $("#ProductCode").focus();
-            bootbox.alert('Please select a product code.');
-        }
-        else if ($('#CostPrice').val() <= 0) {
-            $("#CostPrice").focus();
-            bootbox.alert('Please enter valid cost price.');
-        }
-        else if ($('#Qty').val() <= 0) {
-            $("#Qty").focus();
-            bootbox.alert('Please enter valid purchase qty.');
-        }
-        else {
-            $.ajax({
-                url: 'create_grn.php',
-                type: "POST",
-                data: $("form").serialize(),
-                success: function (result) {
-                    $("#table").html(result);
-                    $('#message').load('_partial_message.php');
-                }
-            });
-        }
-    }
   
     function FillFromBin() {
         var FromLocationCode = $('#FromLocationCode').val();
+        $('.loader').show();
+
         $.ajax({
             url: "create_transfernote.php",
             type: "POST",
@@ -498,6 +469,9 @@ if (isset($_POST['ToLocationCode'])) {
             success: function (result) {
                 $("#FromBinCode").html(""); // clear before appending new list
                 $("#FromBinCode").html(result);
+            },
+            complete: function (result) {
+                $('.loader').fadeOut();
             }
         });
 
@@ -506,6 +480,7 @@ if (isset($_POST['ToLocationCode'])) {
 
     function FillToBin() {
         var ToLocationCode = $('#ToLocationCode').val();
+        $('.loader').show();
 
         $.ajax({
             url: "create_transfernote.php",
@@ -514,6 +489,9 @@ if (isset($_POST['ToLocationCode'])) {
             success: function (result) {
                 $("#ToBinCode").html(""); // clear before appending new list
                 $("#ToBinCode").html(result);
+            },
+            complete: function (result) {
+                $('.loader').fadeOut();
             }
         });
 
@@ -524,6 +502,8 @@ if (isset($_POST['ToLocationCode'])) {
     function FillDetails() {
         var FromLocationCode = $('#FromLocationCode').val();
         var FromBinCode = $('#FromBinCode').val();
+        $('.loader').show();
+
         //var table = $('table').DataTable({ destroy: true });
 
         $.ajax({
@@ -536,6 +516,9 @@ if (isset($_POST['ToLocationCode'])) {
                 $('table').DataTable();
                 //$('.table').DataTable();
                 //table.ajax.reload();
+            },
+            complete: function (result) {
+                $('.loader').fadeOut();
             }
         });
      }

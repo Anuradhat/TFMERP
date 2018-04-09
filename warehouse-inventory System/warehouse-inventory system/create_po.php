@@ -425,21 +425,26 @@ if (isset($_POST['Supplier'])) {
 <script type="text/javascript">
     function AddItem(ctrl, event) {
         event.preventDefault();
+        $('.loader').show();
 
         if ($('#ProductCode').val() == "") {
             $("#ProductCode").focus();
+            $('.loader').fadeOut();
             bootbox.alert('Please select a product code.');
         }
         else if ($('#ProductDesc').val() == "") {
             $("#ProductCode").focus();
+            $('.loader').fadeOut();
             bootbox.alert('Please select a product code.');
         }
         else if ($('#CostPrice').val() <= 0) {
             $("#CostPrice").focus();
+            $('.loader').fadeOut();
             bootbox.alert('Please enter valid cost price.');
         }
         else if ($('#Qty').val() <= 0) {
             $("#Qty").focus();
+            $('.loader').fadeOut();
             bootbox.alert('Please enter valid purchase qty.');
         }
         else {
@@ -450,6 +455,17 @@ if (isset($_POST['Supplier'])) {
                 success: function (result) {
                     $("#table").html(result);
                     $('#message').load('_partial_message.php');
+                },
+                complete: function (result) {
+                    $('#ProductCode').val('');
+                    $('#ProductDesc').val('');
+                    $('#CostPrice').val('');
+                    $('#Qty').val('');
+
+                    $('.loader').fadeOut();
+                    $('#ProductCode').focus();
+
+                    $('.loader').fadeOut();
                 }
             });
         }
@@ -496,18 +512,19 @@ if (isset($_POST['Supplier'])) {
         var Supplier = $('#SupplierCode').val();
         var Remarks = $('#Remarks').val();
 
+        $('.loader').show();
+
         $.ajax({
             url: "create_po.php",
             type: "POST",
             data: { Supplier: Supplier, Remarks: Remarks},
             success: function (result) {
                 $("#PRNo").html(""); // clear before appending new list
-                //$("#PRNo").append($('<option></option>').val(null).html("Select Purchase Requisition"));
                 $("#PRNo").html(result);
-                //$.each(result, function (i, item) {
-                //    $("#PRNo").append(
-                //        $('<option></option>').val(item.value).html(item.text));
-                //});
+            },
+            complete: function (result)
+            {
+                $('.loader').fadeOut();
             }
         });
 
@@ -515,6 +532,7 @@ if (isset($_POST['Supplier'])) {
 
     function FillDetails() {
         var PrnNo = $('#PRNo').val();
+        $('.loader').show();
 
         $.ajax({
             type: "POST",
@@ -522,6 +540,9 @@ if (isset($_POST['Supplier'])) {
             data: { "_PRNo": PrnNo },
             success: function (result) {
                 $("#table").html(result);
+            },
+            complete: function (result) {
+                $('.loader').fadeOut();
             }
         });
 
