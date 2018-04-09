@@ -39,9 +39,9 @@ if(isset($_POST['edit_tax'])){
         $p_TaxRate  = remove_junk($db->escape($_POST['TaxRate']));
 
         $date    = make_date();
-        $user = "anush";
+        $user =  current_user();
 
-        $query  = "call spUpdateTaxRates('{$p_TaxCode}','{$p_TaxDesc}',{$p_TaxRate},'{$date}','{$user}');";
+        $query  = "call spUpdateTaxRates('{$p_TaxCode}','{$p_TaxDesc}',{$p_TaxRate},'{$date}','{$user["username"]}');";
 
         if($db->query($query)){
             $session->msg('s',"Tax updated");

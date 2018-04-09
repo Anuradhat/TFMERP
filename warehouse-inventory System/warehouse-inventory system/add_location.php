@@ -17,7 +17,7 @@ if(isset($_POST['add_location'])){
         $p_LocationOutlet  = remove_junk(string2Boolean($db->escape($_POST['LocationOutlet'])));
 
         $date    = make_date();
-        $user = "anush";
+        $user =  current_user();
 
 
         $p_LocationCode  = autoGenerateNumber('tfmLocationM',1);
@@ -34,7 +34,7 @@ if(isset($_POST['add_location'])){
                 redirect('add_location.php',false);
             }
 
-            $query  = "call spInsertLocation('{$p_LocationCode}','{$p_LocationName}',{$p_LocationOutlet},'{$date}','{$user}');";
+            $query  = "call spInsertLocation('{$p_LocationCode}','{$p_LocationName}',{$p_LocationOutlet},'{$date}','{$user["username"]}');";
 
             if($db->query($query)){
                 $db->commit();
@@ -93,7 +93,7 @@ if(isset($_POST['add_location'])){
                 <div class="row">
                     <div class="col-md-12 ">
                         <div class="btn-group">
-                            <button type="submit" name="add_location" class="btn btn-primary">&nbsp;Save&nbsp;&nbsp;</button>
+                            <button type="submit" name="add_location" class="btn btn-primary" value="add_location">&nbsp;Save&nbsp;&nbsp;</button>
                             <button type="reset" class="btn btn-success">&nbsp;Reset&nbsp;&nbsp;</button>
                             <button type="button" class="btn btn-warning" onclick="window.location = 'location.php'">Cancel  </button>
                         </div>

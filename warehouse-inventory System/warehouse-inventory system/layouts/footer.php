@@ -185,18 +185,13 @@ immediately after the control sidebar -->
   });
 
 
-  $(document).on('submit', 'form', function () {
-      var buttons = $(this).find('[type="submit"]');
-      if ($(this).valid()) {
-          buttons.each(function (btn) {
-              $(buttons[btn]).prop('disabled', true);
-          });
-      } else {
-          buttons.each(function (btn) {
-              $(buttons[btn]).prop('disabled', false);
-          });
-      }
-  });
+  //$(document).on('submit', 'form', function () {
+
+  //    var buttons = $(this).find('[type="submit"]');
+  //    buttons.each(function (btn) {
+  //        $(buttons[btn]).prop('disabled', true);
+  //    });
+  //});
 
 </script>
  <a href="javascript:" id="return-to-top"><i class="fa fa-chevron-up"></i></a>

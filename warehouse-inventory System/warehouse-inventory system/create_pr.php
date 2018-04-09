@@ -94,7 +94,7 @@ if(isset($_POST['create_pr'])){
             $p_SupplierCode  = remove_junk($db->escape($_POST['SupplierCode']));
             $p_Remarks  = remove_junk($db->escape($_POST['Remarks']));
             $date    = make_date();
-            $user = "anush";
+            $user =  current_user();
 
             //Get all sessions values
             $arr_item= $_SESSION['details'];
@@ -118,7 +118,7 @@ if(isset($_POST['create_pr'])){
                     }
 
                     //Insert purchase requisition header details
-                    $query  = "call spInsertPurchaseRequisitionH('{$p_PRCode}','{$date}','{$p_SupplierCode}','{$p_Remarks}','{$date}','{$user}');";
+                    $query  = "call spInsertPurchaseRequisitionH('{$p_PRCode}','{$date}','{$p_SupplierCode}','{$p_Remarks}','{$date}','{$user["username"]}');";
                     $db->query($query);
 
                     //Insert purchase requisition item details

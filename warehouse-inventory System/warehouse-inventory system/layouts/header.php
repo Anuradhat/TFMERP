@@ -457,26 +457,9 @@ desired effect
                     </li>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                         </ul>
                         <!-- /.sidebar-menu -->
-</section>
+           </section>
             <!-- /.sidebar -->
         </aside>
         <?php endif;?>

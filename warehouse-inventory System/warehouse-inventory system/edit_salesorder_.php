@@ -52,7 +52,7 @@ if(isset($_POST['edit_salesorder_'])){
         {
             $p_SalesOrderCode  = remove_junk($db->escape($_SESSION['SalesOrder']));
             $date    = make_date();
-            $user = "anush";
+            $user =  current_user();
 
             //Get all sessions values
             $arr_item= $_SESSION['details'];
@@ -77,7 +77,7 @@ if(isset($_POST['edit_salesorder_'])){
                     //Update quotation item details
                     foreach($arr_item as $row => $value)
                     {
-                        $query  = "call spUpdateSalesOrderFromCode('{$p_SalesOrderCode}','{$value[0]}',{$value[2]},{$value[3]},{$value[4]},'{$date}','{$user}');";
+                        $query  = "call spUpdateSalesOrderFromCode('{$p_SalesOrderCode}','{$value[0]}',{$value[2]},{$value[3]},{$value[4]},'{$date}','{$user["username"]}');";
                         $db->query($query);
                     }
 

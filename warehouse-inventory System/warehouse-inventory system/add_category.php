@@ -23,7 +23,7 @@ if(isset($_POST['add_category'])){
         $catcode = $p_CategoryCode;
 
         $date    = make_date();
-        $user = "anush";
+        $user =  current_user();
 
         $cat_count = find_by_sp("call spSelectCategoryFromCode('{$catcode}');");
 
@@ -33,7 +33,7 @@ if(isset($_POST['add_category'])){
             redirect('add_category.php',false);
         }
 
-        $query  = "call spInsertCategory('{$p_DepartmentCode}','{$catcode}','{$p_CategoryDesc}','{$date}','{$user}');";
+        $query  = "call spInsertCategory('{$p_DepartmentCode}','{$catcode}','{$p_CategoryDesc}','{$date}','{$user["username"]}');";
 
         if($db->query($query)){
             $session->msg('s',"Category added ");

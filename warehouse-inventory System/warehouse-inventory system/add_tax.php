@@ -18,7 +18,7 @@ if(isset($_POST['add_tax'])){
         $p_TaxRate  = remove_junk($db->escape($_POST['TaxRate']));
 
         $date    = make_date();
-        $user = "anush";
+        $user =  current_user();
 
         $tax_count = find_by_sp("call spSelectTaxRatesFromCode('{$p_TaxCode}');");
 
@@ -28,7 +28,7 @@ if(isset($_POST['add_tax'])){
             redirect('add_tax.php',false);
         }
 
-        $query  = "call spInsertTaxRates('{$p_TaxCode}','{$p_TaxDesc}',{$p_TaxRate},'{$date}','{$user}');";
+        $query  = "call spInsertTaxRates('{$p_TaxCode}','{$p_TaxDesc}',{$p_TaxRate},'{$date}','{$user["username"]}');";
 
         if($db->query($query)){
             $session->msg('s',"Tax added ");

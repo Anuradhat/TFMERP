@@ -50,7 +50,7 @@ if(isset($_POST['create_salesorder'])){
             $p_Remarks  = remove_junk($db->escape($_POST['Remarks']));
             $p_ValidThru  = remove_junk($db->escape($_POST['ValidThru']));
             $date    = make_date();
-            $user = "anush";
+            $user =  current_user();
 
             //Get all sessions values
             $arr_item= $_SESSION['details'];
@@ -74,7 +74,7 @@ if(isset($_POST['create_salesorder'])){
                     }
 
                     //Insert quotation header details
-                    $query  = "call spInsertSalesOrderH('{$p_SOCode}','','{$p_CustomerCode}','{$p_SalesmanCode}','{$date}','{$p_WorkFlowCode}','{$p_Remarks}',{$p_ValidThru},'{$date}','{$user}');";
+                    $query  = "call spInsertSalesOrderH('{$p_SOCode}','','{$p_CustomerCode}','{$p_SalesmanCode}','{$date}','{$p_WorkFlowCode}','{$p_Remarks}',{$p_ValidThru},'{$date}','{$user["username"]}');";
                     $db->query($query);
 
                     //Insert quotation item details

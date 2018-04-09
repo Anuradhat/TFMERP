@@ -51,7 +51,7 @@ if(isset($_POST['edit_salesorder'])){
             $p_Remarks  = remove_junk($db->escape($_POST['Remarks']));
             $p_ValidThru  = remove_junk($db->escape($_POST['ValidThru']));
             $date    = make_date();
-            $user = "anush";
+            $user =  current_user();
 
             //Get all sessions values
             $arr_item= $_SESSION['details'];
@@ -74,7 +74,7 @@ if(isset($_POST['edit_salesorder'])){
                     }
 
                     //Update sales quotation header details
-                    $query  = "call spUpdateSalesOrderH('{$p_SalesOrderCode}','{$p_SalesmanCode}','{$p_WorkFlowCode}','{$p_Remarks}',{$p_ValidThru},'{$date}','{$user}');";
+                    $query  = "call spUpdateSalesOrderH('{$p_SalesOrderCode}','{$p_SalesmanCode}','{$p_WorkFlowCode}','{$p_Remarks}',{$p_ValidThru},'{$date}','{$user["username"]}');";
                     $db->query($query);
 
                     //Delete sales order details

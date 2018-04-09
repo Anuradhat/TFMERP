@@ -21,7 +21,7 @@ if(isset($_POST['add_subcategory'])){
         $scatcode = $p_CategoryCode.$p_SubcategoryCode;
 
         $date    = make_date();
-        $user = "anush";
+        $user =  current_user();
 
         $scat_count = find_by_sp("call spSelectSubcategoryFromCode('{$scatcode}');");
 
@@ -32,7 +32,7 @@ if(isset($_POST['add_subcategory'])){
         }
 
  
-        $query  = "call spInsertSubcategory('{$p_CategoryCode}','{$scatcode}','{$p_SubcategoryDesc}',{$p_Commission},'{$date}','{$user}');";
+        $query  = "call spInsertSubcategory('{$p_CategoryCode}','{$scatcode}','{$p_SubcategoryDesc}',{$p_Commission},'{$date}','{$user["username"]}');";
 
         if($db->query($query)){
             $session->msg('s',"Subcategory added ");

@@ -42,9 +42,9 @@ if(isset($_POST['edit_category'])){
         $p_CategoryDesc  = remove_junk($db->escape($_POST['CategoryDesc']));
 
         $date    = make_date();
-        $user = "anush";
+        $user =  current_user();
 
-        $query  = "call spUpdateCategory('{$p_CategoryCode}','{$p_CategoryDesc}','{$date}','{$user}');";
+        $query  = "call spUpdateCategory('{$p_CategoryCode}','{$p_CategoryDesc}','{$date}','{$user["username"]}');";
 
         if($db->query($query)){
             $session->msg('s',"Category updated");

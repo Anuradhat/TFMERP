@@ -68,7 +68,7 @@ if(isset($_POST['edit_product'])){
         $p_Warranty = string2Boolean($p_Warranty);
         $Tax_Selected = string2Boolean(count($p_Tax) > 0);
         $date    = make_date();
-        $user = "anush";
+        $user =  current_user();
 
   
         try
@@ -77,7 +77,7 @@ if(isset($_POST['edit_product'])){
             //$db->query("start transaction");
 
             $query  = "call spUpdateProduct('{$p_ProductCode}','{$p_ProductDesc}','{$p_OtherDesc}','{$p_SupplierCode}',{$p_DiscountAmount},
-                       {$p_SalesComPer},{$p_DiscountPer},{$p_ReorderLevel},{$p_Warranty},{$Tax_Selected},{$p_SalesPer},'{$date}','{$user}');";
+                       {$p_SalesComPer},{$p_DiscountPer},{$p_ReorderLevel},{$p_Warranty},{$Tax_Selected},{$p_SalesPer},'{$date}','{$user["username"]}');";
 
             $db->query($query);
 
@@ -89,7 +89,7 @@ if(isset($_POST['edit_product'])){
 
             foreach ($p_Tax as &$value) 
             {
-                $query  = "call spInsertProductTax('{$p_ProductCode}','{$value}','{$date}','{$user}');";
+                $query  = "call spInsertProductTax('{$p_ProductCode}','{$value}','{$date}','{$user["username"]}');";
                 $db->query($query);
             }
 

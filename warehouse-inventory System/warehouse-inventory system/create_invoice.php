@@ -57,7 +57,7 @@ if(isset($_POST['create_invoice'])){
             $p_SalesmanCode = remove_junk($db->escape($_POST['SalesmanCode']));
             $p_Remarks  = remove_junk($db->escape($_POST['Remarks']));
             $date    = make_date();
-            $user = "anush";
+            $user =  current_user();
 
 
             $arr_header = array('LocationCode'=>$p_LocationCode,'CustomerCode'=>$p_CustomerCode,

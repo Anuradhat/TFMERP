@@ -20,9 +20,9 @@ if(isset($_POST['WorkFlowCode'])){
     }
 
     $date    = make_date();
-    $user = "anush";
+    $user =  current_user();
 
-    $delete_id = delete_by_sp("call spDeleteWorkFlowH('{$p_WorkFlowCode}','{$date}','{$user}');");
+    $delete_id = delete_by_sp("call spDeleteWorkFlowH('{$p_WorkFlowCode}','{$date}','{$user["username"]}');");
 
     if($delete_id){
         $session->msg("s","Work-Flow deleted.");

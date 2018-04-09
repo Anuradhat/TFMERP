@@ -52,7 +52,7 @@ if(isset($_POST['edit_employee'])){
         $user = current_user();
 
         $query  = "call spUpdateEmployee('{$p_EpfNumber}','{$p_EmployeeName}','{$p_EmployeeAddress1}','{$p_EmployeeAddress2}',
-'{$p_EmployeeAddress3}','{$p_TelephoneNo}','{$p_Email}','{$p_DepartmentCode}','{$p_DesignationCode}','{$user}');";
+'{$p_EmployeeAddress3}','{$p_TelephoneNo}','{$p_Email}','{$p_DepartmentCode}','{$p_DesignationCode}','{$user["username"]}');";
 
         if($db->query($query)){
             $session->msg('s',"Employee updated");

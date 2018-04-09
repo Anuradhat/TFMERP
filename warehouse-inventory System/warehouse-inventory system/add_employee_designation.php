@@ -20,7 +20,7 @@ if(isset($_POST['add_designation'])){
         $desigcode = $p_DesignationCode;
 
         $date    = make_date();
-        $user = "anush";
+        $user =  current_user();
 
         $desig_count = find_by_sp("call spSelectEmployeeDesignationFromCode('{$desigcode}');");
 
@@ -30,7 +30,7 @@ if(isset($_POST['add_designation'])){
             redirect('add_employee_designation.php',false);
         }
 
-        $query  = "call spInsertEmployeeDesignation('{$desigcode}','{$p_DesignationName}','{$date}','{$user}');";
+        $query  = "call spInsertEmployeeDesignation('{$desigcode}','{$p_DesignationName}','{$date}','{$user["username"]}');";
 
         if($db->query($query)){
             $session->msg('s',"Designation added ");

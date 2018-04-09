@@ -17,7 +17,7 @@ if(isset($_POST['add_department'])){
         $p_DepartmentDesc  = remove_junk($db->escape($_POST['DepartmentDesc']));
 
         $date    = make_date();
-        $user = "anush";
+        $user =  current_user();
 
         $dep_count = find_by_sp("call spSelectDepartmentFromCode('{$p_DepartmentCode}');");
 
@@ -28,7 +28,7 @@ if(isset($_POST['add_department'])){
         }
 
 
-        $query  = "call spInsertDepartment('{$p_DepartmentCode}','{$p_DepartmentDesc}','{$date}','{$user}');";
+        $query  = "call spInsertDepartment('{$p_DepartmentCode}','{$p_DepartmentDesc}','{$date}','{$user["username"]}');";
 
         if($db->query($query)){
             $session->msg('s',"Department added ");

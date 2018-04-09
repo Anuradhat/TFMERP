@@ -29,7 +29,7 @@ if(isset($_POST['add_workflow'])){
         $p_EmployeeCode5  = remove_junk($db->escape($_POST['EmployeeCode5']));
 
         $date    = make_date();
-        $user = "anush";
+        $user =  current_user();
 
 
         $p_WorkFlowCode  = autoGenerateNumber('tfmWorkFlowHU',1);
@@ -46,7 +46,7 @@ if(isset($_POST['add_workflow'])){
                 redirect('add_workflow.php',false);
             }
 
-            $query  = "call spInsertWorkFlowH('{$p_WorkFlowCode}','{$p_Description}','{$date}','{$user}');";
+            $query  = "call spInsertWorkFlowH('{$p_WorkFlowCode}','{$p_Description}','{$date}','{$user["username"]}');";
             $db->query($query);
 
             //Level 01

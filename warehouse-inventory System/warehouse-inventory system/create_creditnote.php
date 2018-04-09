@@ -41,7 +41,7 @@ if(isset($_POST['create_creditnote'])){
         {
             $p_InvoiceNo  = remove_junk($db->escape($_POST['hInvoiceNo']));
             $date    = make_date();
-            $user = "anush";
+            $user =  current_user();
 
             //Get all sessions values
             $arr_item= $_SESSION['details'];
@@ -85,7 +85,7 @@ if(isset($_POST['create_creditnote'])){
 
 
                     //Insert credit note header details
-                    $query  = "call spInsertCreditNoteH('{$p_CreditNoteNo}','{$InvoiceHed['spSelectInvoiceHFromCode']}','{$p_InvoiceNo}',{$TotalAmount},'{$date}','{$p_Remarks}','{$date}','{$user}');";
+                    $query  = "call spInsertCreditNoteH('{$p_CreditNoteNo}','{$InvoiceHed['spSelectInvoiceHFromCode']}','{$p_InvoiceNo}',{$TotalAmount},'{$date}','{$p_Remarks}','{$date}','{$user["username"]}');";
                     $db->query($query);
 
 
@@ -117,7 +117,7 @@ if(isset($_POST['create_creditnote'])){
 
                         //Insert stock movement
                         $query  = "call spStockMovement('{$SerialDetails['StockCode']}','{$SerialDetails['LocationCode']}','{$SerialDetails['BinCode']}',
-                                       '{$StockDetails['ProductCode']}','{$value[0]}','{$p_CreditNoteNo}','{$StockDetails['SupplierCode']}','008',0,{$value[3]},0,0,0,-1,'{$StockDetails['ExpireDate']}','{$date}','{$user}');";
+                                       '{$StockDetails['ProductCode']}','{$value[0]}','{$p_CreditNoteNo}','{$StockDetails['SupplierCode']}','008',0,{$value[3]},0,0,0,-1,'{$StockDetails['ExpireDate']}','{$date}','{$user["username"]}');";
                         $db->query($query);
 
 

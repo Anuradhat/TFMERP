@@ -42,9 +42,9 @@ if(isset($_POST['edit_location'])){
         $p_LocationOutlet  = remove_junk(string2Boolean($db->escape($_POST['LocationOutlet'])));
 
         $date    = make_date();
-        $user = "anush";
+        $user =  current_user();
 
-        $query  = "call spUpdateLocation('{$p_LocationCode}','{$p_LocationName}',{$p_LocationOutlet},'{$date}','{$user}');";
+        $query  = "call spUpdateLocation('{$p_LocationCode}','{$p_LocationName}',{$p_LocationOutlet},'{$date}','{$user["username"]}');";
 
         if($db->query($query)){
             $session->msg('s',"Location updated");
@@ -93,7 +93,7 @@ if(isset($_POST['edit_location'])){
                 <div class="row">
                     <div class="col-md-12 ">
                         <div class="btn-group">
-                            <button type="submit" name="edit_location" class="btn btn-primary">&nbsp;Save&nbsp;&nbsp;</button>
+                            <button type="submit" name="edit_location" class="btn btn-primary" value="edit_location">&nbsp;Save&nbsp;&nbsp;</button>
                             <button type="button" class="btn btn-warning" onclick="window.location = 'location.php'">Cancel  </button>
                         </div>
                     </div>

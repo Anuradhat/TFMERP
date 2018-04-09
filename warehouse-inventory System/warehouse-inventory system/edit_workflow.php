@@ -60,7 +60,7 @@ if(isset($_POST['edit_workflow'])){
         $p_EmployeeCode5  = remove_junk($db->escape($_POST['EmployeeCode5']));
 
         $date    = make_date();
-        $user = "anush";
+        $user =  current_user();
 
         try
         {
@@ -74,7 +74,7 @@ if(isset($_POST['edit_workflow'])){
                 redirect('workflow.php',false);
             }
             //Update Workflow header
-            $query  = "call spUpdateWorkFlowH('{$p_WorkFlowCode}','{$p_Description}','{$date}','{$user}');";
+            $query  = "call spUpdateWorkFlowH('{$p_WorkFlowCode}','{$p_Description}','{$date}','{$user["username"]}');";
             $db->query($query);
 
             //Delete records from work-flow details

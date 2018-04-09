@@ -43,9 +43,9 @@ if(isset($_POST['edit_subcategory'])){
         $p_Commission   = remove_junk(string2Value($db->escape($_POST['Commission'])));
 
         $date    = make_date();
-        $user = "anush";
+        $user =  current_user();
 
-        $query  = "call spUpdateSubcategory('{$p_SubcategoryCode}','{$p_SubcategoryDesc}',{$p_Commission},'{$date}','{$user}');";
+        $query  = "call spUpdateSubcategory('{$p_SubcategoryCode}','{$p_SubcategoryDesc}',{$p_Commission},'{$date}','{$user["username"]}');";
 
         if($db->query($query)){
             $session->msg('s',"Subcategory updated");

@@ -69,12 +69,12 @@ if(isset($_POST['edit_customer'])){
         $p_SalesPersonCode = remove_junk($db->escape($_POST['SalesmanCode']));
 
         $date    = make_date();
-        $user = "anush";
+        $user =  current_user();
 
         $query  = "call spUpdateCustomer('{$p_CustomerCode}','{$p_CustomerName}','{$p_NIC}','{$p_CustomerAddress1}','{$p_CustomerAddress2}',
                    '{$p_CustomerAddress3}','{$p_DeliveryAddress1}','{$p_DeliveryAddress2}','{$p_DeliveryAddress3}','{$p_DeliveryTo}','{$p_Tel}',
                    '{$p_Fax}','{$p_Email}','{$p_ContactPerson}','{$p_VATNo}','{$p_SVATNo}',{$p_CreditPeriod},'{$p_SalesPersonCode}',
-                   '{$date}','{$user}');";
+                   '{$date}','{$user["username"]}');";
 
         if($db->query($query)){
             $flashMessages->success('Customer has been successfully updated.','customer.php');

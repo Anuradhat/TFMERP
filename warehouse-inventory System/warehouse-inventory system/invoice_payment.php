@@ -58,7 +58,7 @@ if(isset($_POST['invoice_payment'])){
 
             $date    = make_date();
             $datetime = make_datetime();
-            $user = "anush";
+            $user =  current_user();
 
 
             //Get all sessions values
@@ -138,7 +138,7 @@ if(isset($_POST['invoice_payment'])){
                     $PaidAmount = $_cash + $TotalCardValue + $TotalChequeValue + $ToatlBankTrnPayment;
 
                     //Insert invoice header details
-                    $query  = "call spInsertInvoiceH('{$p_InvoiceCode}','{$p_LocationCode}','{$date}','{$datetime}','{$p_CustomerPoCode}','{$p_CustomerCode}',{$p_GrossAmount},0,{$p_DiscountAmount},{$p_NetAmount},{$Credit},{$PaidAmount},{$Credit},'{$p_SalesmanCode}',0,'','{$date}','{$user}');";
+                    $query  = "call spInsertInvoiceH('{$p_InvoiceCode}','{$p_LocationCode}','{$date}','{$datetime}','{$p_CustomerPoCode}','{$p_CustomerCode}',{$p_GrossAmount},0,{$p_DiscountAmount},{$p_NetAmount},{$Credit},{$PaidAmount},{$Credit},'{$p_SalesmanCode}',0,'','{$date}','{$user["username"]}');";
                     $db->query($query);
 
 
@@ -163,7 +163,7 @@ if(isset($_POST['invoice_payment'])){
 
 
                     //Cash
-                    $query  = "call spInsertInvoicePaymentD('{$p_InvoiceCode}','{$p_LocationCode}','P001','006','','','','',{$_cash},{$p_NetAmount},'{$date}','{$user}');";
+                    $query  = "call spInsertInvoicePaymentD('{$p_InvoiceCode}','{$p_LocationCode}','P001','006','','','','',{$_cash},{$p_NetAmount},'{$date}','{$user["username"]}');";
                     $db->query($query);
 
 
@@ -171,7 +171,7 @@ if(isset($_POST['invoice_payment'])){
                     //Credit/Debit Card
                     foreach($arr_card  as $row => $value)
                     {
-                        $query  = "call spInsertInvoicePaymentD('{$p_InvoiceCode}','{$p_LocationCode}','P002','006','','{$value['key']}','','',{$value['value']},{$p_NetAmount},'{$date}','{$user}');";
+                        $query  = "call spInsertInvoicePaymentD('{$p_InvoiceCode}','{$p_LocationCode}','P002','006','','{$value['key']}','','',{$value['value']},{$p_NetAmount},'{$date}','{$user["username"]}');";
                         $db->query($query);
                     }
 
@@ -180,7 +180,7 @@ if(isset($_POST['invoice_payment'])){
                     //Cheque
                     foreach($arr_cheque  as $row => $value)
                     {
-                        $query  = "call spInsertInvoicePaymentD('{$p_InvoiceCode}','{$p_LocationCode}','P004','006','{$value['bank']}','{$value['key']}','{$value['date']}','',{$value['value']},{$p_NetAmount},'{$date}','{$user}');";
+                        $query  = "call spInsertInvoicePaymentD('{$p_InvoiceCode}','{$p_LocationCode}','P004','006','{$value['bank']}','{$value['key']}','{$value['date']}','',{$value['value']},{$p_NetAmount},'{$date}','{$user["username"]}');";
                         $db->query($query);
                     }
 
@@ -190,7 +190,7 @@ if(isset($_POST['invoice_payment'])){
                     //Bank Transfer
                     foreach($arr_banktrn  as $row => $value)
                     {
-                        $query  = "call spInsertInvoicePaymentD('{$p_InvoiceCode}','{$p_LocationCode}','P005','006','{$value['bank']}','{$value['key']}','{$value['date']}','{$value['name']}',{$value['value']},{$p_NetAmount},'{$date}','{$user}');";
+                        $query  = "call spInsertInvoicePaymentD('{$p_InvoiceCode}','{$p_LocationCode}','P005','006','{$value['bank']}','{$value['key']}','{$value['date']}','{$value['name']}',{$value['value']},{$p_NetAmount},'{$date}','{$user["username"]}');";
                         $db->query($query);
                     }
 
@@ -219,7 +219,7 @@ if(isset($_POST['invoice_payment'])){
 
                             //Insert stock movement
                             $query  = "call spStockMovement('{$SerialDetails['StockCode']}','{$SerialDetails['LocationCode']}','{$SerialDetails['BinCode']}',
-                                       '{$StockDetails['ProductCode']}','{$Serial}','{$p_InvoiceCode}','{$StockDetails['SupplierCode']}','006',{$value[2]},{$value[3]},0,{$StockDetails['AvgCostPrice']},0,-1,'{$StockDetails['ExpireDate']}','{$date}','{$user}');";
+                                       '{$StockDetails['ProductCode']}','{$Serial}','{$p_InvoiceCode}','{$StockDetails['SupplierCode']}','006',{$value[2]},{$value[3]},0,{$StockDetails['AvgCostPrice']},0,-1,'{$StockDetails['ExpireDate']}','{$date}','{$user["username"]}');";
                             $db->query($query);
                         }
                     }

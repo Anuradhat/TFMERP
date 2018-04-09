@@ -96,7 +96,7 @@ if(isset($_POST['edit_location_bin'])){
                 <div class="row">
                     <div class="col-md-12 ">
                         <div class="btn-group">
-                            <button type="submit" name="edit_location_bin" class="btn btn-primary">&nbsp;Save&nbsp;&nbsp;</button>
+                            <button type="submit" name="edit_location_bin" class="btn btn-primary" value="edit_location_bin">&nbsp;Save&nbsp;&nbsp;</button>
                             <button type="button" class="btn btn-warning" onclick="window.location = 'location_bin.php'">Cancel  </button>
                         </div>
                     </div>

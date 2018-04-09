@@ -22,7 +22,7 @@ if(isset($_POST['add_department'])){
         $depcode = $p_DepartmentCode;
 
         $date    = make_date();
-        $user = "anush";
+        $user =  current_user();
 
         $dep_count = find_by_sp("call spSelectEmployeeDepartmentFromCode('{$depcode}');");
 
@@ -32,7 +32,7 @@ if(isset($_POST['add_department'])){
             redirect('add_employee_department.php',false);
         }
 
-        $query  = "call spInsertEmployeeDepartment('{$depcode}','{$p_DepartmentName}','{$date}','{$user}');";
+        $query  = "call spInsertEmployeeDepartment('{$depcode}','{$p_DepartmentName}','{$date}','{$user["username"]}');";
 
         if($db->query($query)){
             $session->msg('s',"Department added ");

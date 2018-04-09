@@ -96,7 +96,7 @@ if(isset($_POST['edit_pr'])){
             $p_SupplierCode  = remove_junk($db->escape($_POST['SupplierCode']));
             $p_Remarks  = remove_junk($db->escape($_POST['Remarks']));
             $date    = make_date();
-            $user = "anush";
+            $user =  current_user();
 
             //Get all sessions values
             $arr_header = array("Supplier"=>$p_SupplierCode, "Remarks"=> $p_Remarks);
@@ -122,7 +122,7 @@ if(isset($_POST['edit_pr'])){
                     }
 
                     //Update purchase requisition header details
-                    $query  = "call spUpdatePurchaseRequisitionH('{$p_PRNo}','{$p_SupplierCode}','{$p_Remarks}','{$date}','{$user}');";
+                    $query  = "call spUpdatePurchaseRequisitionH('{$p_PRNo}','{$p_SupplierCode}','{$p_Remarks}','{$date}','{$user["username"]}');";
                     $db->query($query);
 
                     //Delete purchase requisition item details

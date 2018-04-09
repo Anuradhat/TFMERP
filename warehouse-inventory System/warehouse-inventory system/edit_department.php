@@ -41,9 +41,9 @@ if(isset($_POST['edit_department'])){
         $p_DepartmentDesc  = remove_junk($db->escape($_POST['DepartmentDesc']));
 
         $date    = make_date();
-        $user = "anush";
+        $user =  current_user();
 
-        $query  = "call spUpdateDepartment('{$p_DepartmentCode}','{$p_DepartmentDesc}','{$date}','{$user}');";
+        $query  = "call spUpdateDepartment('{$p_DepartmentCode}','{$p_DepartmentDesc}','{$date}','{$user["username"]}');";
 
         if($db->query($query)){
             $session->msg('s',"Department updated");

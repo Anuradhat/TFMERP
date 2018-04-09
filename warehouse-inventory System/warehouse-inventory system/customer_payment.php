@@ -73,7 +73,7 @@ if(isset($_POST['customer_payment'])){
             $p_LocationCode  = remove_junk($db->escape($_POST['LocationCode']));
             $p_CustomerCode  = remove_junk($db->escape($_POST['CustomerCode']));
             $date    = make_date();
-            $user = "anush";
+            $user =  current_user();
 
 
             $arr_header = array('LocationCode'=>$p_LocationCode,'CustomerCode'=>$p_CustomerCode);
@@ -121,7 +121,7 @@ if(isset($_POST['customer_payment'])){
 
 
                         //Insert Customer Payment Header
-                        $query  = "call spInsertCusPaymentH('{$p_CusPaymentCode}','{$p_LocationCode}','{$date}',{$TotalPayment},'{$date}','{$user}');";
+                        $query  = "call spInsertCusPaymentH('{$p_CusPaymentCode}','{$p_LocationCode}','{$date}',{$TotalPayment},'{$date}','{$user["username"]}');";
                         $db->query($query);
 
 
@@ -150,7 +150,7 @@ if(isset($_POST['customer_payment'])){
                         //***************************** Insert Payment Details ************************************************************
 
                         //Cash
-                        $query  = "call spInsertInvoicePaymentD('{$p_CusPaymentCode}','{$p_LocationCode}','P001','007','','','','',{$_cash},0,'{$date}','{$user}');";
+                        $query  = "call spInsertInvoicePaymentD('{$p_CusPaymentCode}','{$p_LocationCode}','P001','007','','','','',{$_cash},0,'{$date}','{$user["username"]}');";
                         $db->query($query);
 
 
@@ -158,7 +158,7 @@ if(isset($_POST['customer_payment'])){
                         //Credit/Debit Card
                         foreach($arr_card  as $row => $value)
                         {
-                            $query  = "call spInsertInvoicePaymentD('{$p_CusPaymentCode}','{$p_LocationCode}','P002','007','','{$value['key']}','','',{$value['value']},0,'{$date}','{$user}');";
+                            $query  = "call spInsertInvoicePaymentD('{$p_CusPaymentCode}','{$p_LocationCode}','P002','007','','{$value['key']}','','',{$value['value']},0,'{$date}','{$user["username"]}');";
                             $db->query($query);
                         }
 
@@ -166,7 +166,7 @@ if(isset($_POST['customer_payment'])){
                         //Cheque
                         foreach($arr_cheque  as $row => $value)
                         {
-                            $query  = "call spInsertInvoicePaymentD('{$p_CusPaymentCode}','{$p_LocationCode}','P004','007','{$value['bank']}','{$value['key']}','{$value['date']}','',{$value['value']},0,'{$date}','{$user}');";
+                            $query  = "call spInsertInvoicePaymentD('{$p_CusPaymentCode}','{$p_LocationCode}','P004','007','{$value['bank']}','{$value['key']}','{$value['date']}','',{$value['value']},0,'{$date}','{$user["username"]}');";
                             $db->query($query);
                         }
 
@@ -174,7 +174,7 @@ if(isset($_POST['customer_payment'])){
                         //Bank Transfer
                         foreach($arr_banktrn  as $row => $value)
                         {
-                            $query  = "call spInsertInvoicePaymentD('{$p_CusPaymentCode}','{$p_LocationCode}','P005','007','{$value['bank']}','{$value['key']}','{$value['date']}','{$value['name']}',{$value['value']},0,'{$date}','{$user}');";
+                            $query  = "call spInsertInvoicePaymentD('{$p_CusPaymentCode}','{$p_LocationCode}','P005','007','{$value['bank']}','{$value['key']}','{$value['date']}','{$value['name']}',{$value['value']},0,'{$date}','{$user["username"]}');";
                             $db->query($query);
                         }
 

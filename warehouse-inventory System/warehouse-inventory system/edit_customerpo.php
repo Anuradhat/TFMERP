@@ -45,7 +45,7 @@ if(isset($_POST['edit_customerpo'])){
             $p_WorkFlowCode  = remove_junk($db->escape($_POST['WorkFlowCode']));
             $p_Remarks  = remove_junk($db->escape($_POST['Remarks']));
             $date    = make_date();
-            $user = "anush";
+            $user =  current_user();
 
             //Get all sessions values
             $arr_item= $_SESSION['details'];
@@ -67,7 +67,7 @@ if(isset($_POST['edit_customerpo'])){
                     }
 
                     //Update customer purchase order header details
-                    $query  = "call spUpdateCusPurchaseOrderH('{$p_CustomerPoCode}','{$p_ReferenceNo}','{$p_WorkFlowCode}','{$p_Remarks}','{$date}','{$user}');";
+                    $query  = "call spUpdateCusPurchaseOrderH('{$p_CustomerPoCode}','{$p_ReferenceNo}','{$p_WorkFlowCode}','{$p_Remarks}','{$date}','{$user["username"]}');";
                     $db->query($query);
 
 

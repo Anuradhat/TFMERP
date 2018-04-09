@@ -48,7 +48,7 @@ if(isset($_POST['create_transfernote'])){
             $p_Remarks  = remove_junk($db->escape($_POST['Remarks']));
             $date    = make_date();
             $datetime    = make_datetime();
-            $user = "anush";
+            $user =  current_user();
 
             $arr_header = array('FromLocation'=>$p_FromLocationCode,'ToLocation'=>$p_ToLocationCode,
                                 'FromBin'=>$p_FromBinCode,'ToBin'=>$p_ToBinCode,'Remarks'=>$p_Remarks);
@@ -105,7 +105,7 @@ if(isset($_POST['create_transfernote'])){
 
 
                     //Insert transfer note header details
-                    $query  = "call spInsertTransferNoteH('{$p_TransferNoteNo}','{$p_FromLocationCode}','{$p_FromBinCode}','{$p_ToLocationCode}','{$p_ToBinCode}','{$date}','{$p_Remarks}',7,'{$date}','{$user}');";
+                    $query  = "call spInsertTransferNoteH('{$p_TransferNoteNo}','{$p_FromLocationCode}','{$p_FromBinCode}','{$p_ToLocationCode}','{$p_ToBinCode}','{$date}','{$p_Remarks}',7,'{$date}','{$user["username"]}');";
                     $db->query($query);
                    
 
@@ -144,14 +144,14 @@ if(isset($_POST['create_transfernote'])){
                             $Qty = -1 * $value[6];
                             $query  = "call spStockMovement('{$stock["StockCode"]}','{$p_FromLocationCode}','{$p_FromBinCode}',
                                        '{$stock["ProductCode"]}','{$stock["SupplierCode"]}','003',{$stock["CostPrice"]},{$stock["SalePrice"]},0,{$stock["AvgCostPrice"]},{$stock["AvgSalePrice"]},{$Qty},'{$stock["ExpireDate"]}',
-                                         '{$date}','{$user}');";
+                                         '{$date}','{$user["username"]}');";
                             $db->query($query);
 
 
                             //Insert stock movement (+)
                             $query  = "call spStockMovement('{$stock["StockCode"]}','{$p_ToLocationCode}','{$p_ToBinCode}',
                                        '{$stock["ProductCode"]}','','{$p_TransferNoteNo}','{$stock["SupplierCode"]}','003',{$stock["CostPrice"]},{$stock["SalePrice"]},0,{$stock["AvgCostPrice"]},{$stock["AvgSalePrice"]},{$value[6]},'{$stock["ExpireDate"]}',
-                                         '{$date}','{$user}');";
+                                         '{$date}','{$user["username"]}');";
                             $db->query($query);
 
                         }

@@ -43,7 +43,7 @@ if(isset($_POST['add_product'])){
         $p_Warranty = string2Boolean($p_Warranty);
         $Tax_Selected = string2Boolean(count($p_Tax) > 0);
         $date    = make_date();
-        $user = "anush";
+        $user =  current_user();
 
         $p_ProductCode  = autoGenerateNumber('tfmProductM',1);
 
@@ -65,14 +65,14 @@ if(isset($_POST['add_product'])){
 
            $query  = "call spInsertProduct('{$prod_code}','{$p_ProductDesc}','{$p_OtherDesc}','{$p_DepartmentCode}','{$p_CategoryCode}','{$p_SubcategoryCode}',
                    '{$p_SupplierCode}',{$p_CostPrice},{$p_SalePrice},{$p_WholeSalePrice},{$p_AvgCostPrice},{$p_DiscountAmount},{$p_SalesComPer},{$p_DiscountPer},{$p_ReorderLevel},
-                    {$p_Warranty},{$Tax_Selected},{$p_SalesPer},'{$date}','{$user}');";
+                    {$p_Warranty},{$Tax_Selected},{$p_SalesPer},'{$date}','{$user["username"]}');";
 
            $db->query($query);
 
 
            foreach ($p_Tax as &$value) 
            {
-               $query  = "call spInsertProductTax('{$prod_code}','{$value}','{$date}','{$user}');";
+               $query  = "call spInsertProductTax('{$prod_code}','{$value}','{$date}','{$user["username"]}');";
               $db->query($query);
            }
 

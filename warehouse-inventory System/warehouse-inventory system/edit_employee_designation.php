@@ -41,9 +41,9 @@ if(isset($_POST['edit_designation'])){
         $p_DesignationName = remove_junk($db->escape($_POST['DesignationName']));
 
         $date    = make_date();
-        $user = "anush";
+        $user =  current_user();
 
-        $query  = "call spUpdateEmployeeDesignation('{$p_DesignationCode}','{$p_DesignationName}','{$date}','{$user}');";
+        $query  = "call spUpdateEmployeeDesignation('{$p_DesignationCode}','{$p_DesignationName}','{$date}','{$user["username"]}');";
 
         if($db->query($query)){
             $session->msg('s',"Designation updated");

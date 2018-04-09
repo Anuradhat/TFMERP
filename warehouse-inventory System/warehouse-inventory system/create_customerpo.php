@@ -46,7 +46,7 @@ if(isset($_POST['create_customerpo'])){
             $p_WorkFlowCode  = remove_junk($db->escape($_POST['WorkFlowCode']));
             $p_Remarks  = remove_junk($db->escape($_POST['Remarks']));
             $date    = make_date();
-            $user = "anush";
+            $user =  current_user();
 
             //Get all sessions values
             $arr_item= $_SESSION['details'];
@@ -69,7 +69,7 @@ if(isset($_POST['create_customerpo'])){
                     }
 
                     //Insert customer purchase order header details
-                    $query  = "call spInsertCusPurchaseOrderH('{$p_CusPoCode}','{$p_SalesOrderCode}','{$p_CustomerCode}','{$date}','{$p_ReferenceNo}','{$p_WorkFlowCode}','{$p_Remarks}','{$date}','{$user}');";
+                    $query  = "call spInsertCusPurchaseOrderH('{$p_CusPoCode}','{$p_SalesOrderCode}','{$p_CustomerCode}','{$date}','{$p_ReferenceNo}','{$p_WorkFlowCode}','{$p_Remarks}','{$date}','{$user["username"]}');";
                     $db->query($query);
 
 

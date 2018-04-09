@@ -48,7 +48,7 @@ if(isset($_POST['create_grn'])){
             
             $date    = make_date();
             $datetime    = make_datetime();
-            $user = "anush";
+            $user =  current_user();
 
             $SerialForNewStock = false;
             $LastSerial = 0;
@@ -115,7 +115,7 @@ if(isset($_POST['create_grn'])){
                     }
 
                     //Insert good received note header details
-                    $query  = "call spInsertGoodReceivedH('{$p_GRNCode}','{$p_LocationCode}','{$p_PurchaseOrderNo}','{$p_SupplierCode}','{$date}','{$p_ReferenceNo}','{$p_Remarks}','{$datetime}','{$date}','{$user}');";
+                    $query  = "call spInsertGoodReceivedH('{$p_GRNCode}','{$p_LocationCode}','{$p_PurchaseOrderNo}','{$p_SupplierCode}','{$date}','{$p_ReferenceNo}','{$p_Remarks}','{$datetime}','{$date}','{$user["username"]}');";
                     $db->query($query);
                    
                     //Update purchase order process date
@@ -224,13 +224,13 @@ if(isset($_POST['create_grn'])){
 
                             //Update product
                             $query  = "call spUpdateProductDetailsFromGRN('{$value[1]}','{$p_SupplierCode}',{$value[3]},
-                                       {$Sale_Price},0,{$AverageCost},{$StockLotNumber},'{$value[6]}','{$date}','{$user}');";
+                                       {$Sale_Price},0,{$AverageCost},{$StockLotNumber},'{$value[6]}','{$date}','{$user["username"]}');";
                             $db->query($query);
 
                             //Insert stock movement
                             $query  = "call spStockMovement('{$value[0]}','{$p_LocationCode}','{$default_stock_bin}',
                                        '{$value[1]}','','{$p_GRNCode}','{$p_SupplierCode}','002',{$value[3]},{$Sale_Price},0,{$AverageCost},0,{$value[5]},'{$value[6]}',
-                                         '{$date}','{$user}');";
+                                         '{$date}','{$user["username"]}');";
                             $db->query($query);
 
 
