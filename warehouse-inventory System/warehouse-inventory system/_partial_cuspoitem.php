@@ -21,7 +21,7 @@
         <div class="col-xs-3">
             <div class="form-group">
                 <label>Sale Price</label>
-                <input type="text" class="integer form-control decimal" name="CostPrice" id="pCostPrice" placeholder="Cost Price" required="required" value="<?php echo $serchitem[2]; ?>" disabled readonly="readonly" />
+                <input type="text" class="integer form-control decimal" name="SalePrice" id="pSalePrice" placeholder="Sale Price" required="required" value="<?php echo $serchitem[2]; ?>" disabled readonly="readonly" />
             </div>
         </div>
 
@@ -40,7 +40,8 @@
 <script type="text/javascript">
     function EditItem(ctrl, event) {
         event.preventDefault();
-
+        
+        var SalePrice = $("#pSalePrice").val();
         var Qty = parseInt($("#pQty").val());
         var ProductCode = $("#hProductCode").val();
 
@@ -52,7 +53,7 @@
             $.ajax({
                 url: "create_customerpo.php",
                 type: "POST",
-                data: { Edit: 'Edit', ProductCode: ProductCode, Qty: Qty },
+                data: { Edit: 'Edit', ProductCode: ProductCode, Qty: Qty, SalePrice: SalePrice },
                 success: function (result) {
                     $("#table").html(result);
                     $('#myModal').modal('toggle');

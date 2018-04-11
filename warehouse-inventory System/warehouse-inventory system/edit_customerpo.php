@@ -78,7 +78,7 @@ if(isset($_POST['edit_customerpo'])){
                     //Insert customer purchase order details
                     foreach($arr_item as $row => $value)
                     {
-                        $query  = "call spInsertCusPurchaseOrderD('{$p_CustomerPoCode}','{$value[0]}','{$value[1]}',0,{$value[2]},{$value[3]},{$value[4]});";
+                        $query  = "call spInsertCusPurchaseOrderD('{$p_CustomerPoCode}','{$value[0]}','{$value[1]}',0,{$value[2]},{$value[3]},{($value[2]*$value[3])});";
                         $db->query($query);
                     }
 
@@ -207,19 +207,19 @@ if (isset($_POST['_RowNo'])) {
     return include('_partial_cuspoitem.php'); 
 }
 
-if (isset($_POST['Edit'])) {
-    $StockCode = remove_junk($db->escape($_POST['StockCode']));
-    $Qty = remove_junk($db->escape($_POST['Qty']));
+//if (isset($_POST['Edit'])) {
+//    $StockCode = remove_junk($db->escape($_POST['StockCode']));
+//    $Qty = remove_junk($db->escape($_POST['Qty']));
 
-    $arr_item = $_SESSION['details'];
+//    $arr_item = $_SESSION['details'];
 
-    //Change Qty
-    $arr_item = ChangValueFromListOfArray( $arr_item,$StockCode,4,$Qty);
+//    //Change Qty
+//    $arr_item = ChangValueFromListOfArray( $arr_item,$StockCode,4,$Qty);
 
-    $_SESSION['details'] = $arr_item;
+//    $_SESSION['details'] = $arr_item;
 
-    return include('_partial_cuspodetails.php');  
-}
+//    return include('_partial_cuspodetails.php');  
+//}
 ?>
 
 <?php include_once('layouts/header.php'); ?>

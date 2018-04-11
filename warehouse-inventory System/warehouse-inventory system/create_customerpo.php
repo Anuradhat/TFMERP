@@ -34,7 +34,7 @@ if(isset($_POST['create_customerpo'])){
 
     if($_POST['create_customerpo'] == "save")
     {
-        $req_fields = array('CustomerCode','CustomerPoNo','SalesOrderCode','WorkFlowCode');
+        $req_fields = array('CustomerCode','ReferencePoNo','SalesOrderCode','WorkFlowCode');
 
         validate_fields($req_fields);
 
@@ -225,11 +225,15 @@ if (isset($_POST['_RowNo'])) {
 if (isset($_POST['Edit'])) {
     $ProductCode = remove_junk($db->escape($_POST['ProductCode']));
     $Qty = remove_junk($db->escape($_POST['Qty']));
+    $SalePrice = remove_junk($db->escape($_POST['SalePrice']));
 
     $arr_item = $_SESSION['details'];
 
     //Change Qty
     $arr_item = ChangValueFromListOfArray( $arr_item,$ProductCode,3,$Qty);
+
+    //Change Amount
+    $arr_item = ChangValueFromListOfArray( $arr_item,$ProductCode,4,($Qty*$SalePrice));
 
     $_SESSION['details'] = $arr_item;
 

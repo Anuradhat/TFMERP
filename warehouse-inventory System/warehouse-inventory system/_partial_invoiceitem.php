@@ -8,6 +8,13 @@
                 <input type="text" class="form-control" id="StockCode" name="ProductCode" placeholder="Product Code" required="required" autocomplete="off" value="<?php echo $serchitem[0]; ?>" readonly="readonly" disabled="disabled" />
                 <input type="hidden" name="hProductCode" id="hProductCode" value="<?php echo $serchitem[0]; ?>" />
             </div>
+
+            <div class="form-group checkbox">
+                <label class="form-check-label">
+                    <input type="checkbox" name="ExcludeTax" id="ExcludeTax" class="form-check-input" />
+                    Exclude Tax
+                </label>
+            </div>
         </div>
 
         <div class="col-xs-3">
@@ -21,7 +28,7 @@
         <div class="col-xs-3">
             <div class="form-group">
                 <label>Sale Price</label>
-                <input type="text" class="integer form-control decimal" name="SalePrice" id="SalePrices" placeholder="Sale Price" required="required" value="<?php echo $serchitem[3]; ?>" disabled readonly="readonly" />
+                <input type="text" class="integer form-control decimal" name="SalePrice" id="pSalePrice" placeholder="Sale Price" required="required" value="<?php echo $serchitem[3]; ?>" disabled readonly="readonly" />
             </div>
         </div>
 
@@ -45,7 +52,8 @@
 
         var Qty = parseInt($("#pQty").val());
         var ProductCode = $("#hProductCode").val();
-        //var SalePrice = $("#SalePrices").val();
+        var SalePrice = $("#pSalePrice").val();
+        var ExcludeTax = $("#ExcludeTax").prop('checked');
 
 
         //if (SalePrice <= 0) {
@@ -61,7 +69,7 @@
             $.ajax({
                 url: "create_invoice.php",
                 type: "POST",
-                data: { Edit: 'Edit', ProductCode: ProductCode, Qty: Qty },
+                data: { Edit: 'Edit', ProductCode: ProductCode, Qty: Qty, SalePrice: SalePrice, ExcludeTax: ExcludeTax },
                 success: function (result) {
                     $("#table").html(result);
                     $('#myModal').modal('toggle');

@@ -209,63 +209,111 @@ if (isset($_POST['ProductCode']) && isset($_POST['arr'])) {
 if (isset($_POST['Add'])) {
     $LocationCode = remove_junk($db->escape($_POST['LocationCode']));
     $StockCode = remove_junk($db->escape($_POST['StockCode']));
+    $ProductCode = remove_junk($db->escape($_POST['ProductCode']));
     $SerialCode = remove_junk($db->escape($_POST['SerialCode']));
     $ProductDesc = remove_junk($db->escape($_POST['ProductDesc']));
     $CostPrice = remove_junk($db->escape($_POST['CostPrice']));
     $SalePrice = remove_junk($db->escape($_POST['SalePrice']));
-    $Qty = remove_junk($db->escape($_POST['Qty']));
+    //$Qty = remove_junk($db->escape($_POST['Qty']));
 
 
     $arr_item = $_SESSION['details'];
 
-    if($LocationCode == "" || $StockCode == "")
+    if($LocationCode == "" || $StockCode == "" || $ProductCode == "")
     {
-        $flashMessages->warning('Location or stock code is not found!');
+        $flashMessages->warning('Location or product code is not found!');
     }
     else if($SalePrice == "")
     {
         $flashMessages->warning('Invalid sales price.');
     }
-    else if($Qty <= 0)
-    {
-        $flashMessages->warning('Invalid item qty.');
-    }
     else
     {
 
-        if(ExistInArray($arr_item,$StockCode))
+        if(ExistInArray($arr_item,$ProductCode))
         {
             $search_item = array();
             $serial_item = array();
 
             //Get Result
-            $search_item = ArraySearch($arr_item,$StockCode);
+            $search_item = ArraySearch($arr_item,$ProductCode);
             $serial_item = $search_item[6];
 
             //Check serial is exist
             if (ExistInArray($serial_item,$SerialCode))
             {
-                $flashMessages->warning('This item exist in the list.');
+                $flashMessages->warning('This item exist in the invoice.');
             }
             else
             {
-                $serial_item = array($SerialCode);
-
+                //Add new serial to array
+                array_push($serial_item,$SerialCode);
+                
                 //Change qty
-                $arr_item =  ChangValueFromListOfArray($arr_item,$StockCode,4,($Qty+1));
-                //Change amount
-                $arr_item =  ChangValueFromListOfArray($arr_item,$StockCode,5,(($Qty+1)*$SalePrice));
-                //Chnage serial
-                $arr_item =  ChangValueFromListOfArray($arr_item,$StockCode,6,$serial_item);
+                $Qty = $search_item[4] + 1;
+                $SalePrice = $search_item[3];
 
-                //$arr_item[] = array($StockCode,$ProductDesc,$CostPrice,$SalePrice,++$Qty,$Qty * $SalePrice,$serial_item);
+                $ToatlTax = 0;
+
+                $product = find_by_sp("call spSelectProductFromCode('{$ProductCode}');");
+
+                if(filter_var($product["Tax"],FILTER_VALIDATE_BOOLEAN))
+                {
+                    $ProductTax = find_by_sql("call spSelectProductTaxFromProductCode('{$ProductCode}');");  
+                    foreach($ProductTax as &$pTax)
+                    {
+                        $TaxRatesM = find_by_sql("call spSelectTaxRatesFromCode('{$pTax["TaxCode"]}');");
+                        foreach($TaxRatesM as &$TaxRt)
+                        {
+                            $ToatlTax += $TaxRt["TaxRate"];
+                        }
+                    }
+                }
+
+                $Amount = $SalePrice * $Qty;
+                $TaxAmount = round((($Amount * $ToatlTax)/100));
+                $ToatlAmount = $TaxAmount + $Amount;
+
+                //Change Qty
+                $arr_item =  ChangValueFromListOfArray($arr_item,$ProductCode,4,$Qty);
+
+                //Change Tax Amount
+                $arr_item = ChangValueFromListOfArray( $arr_item,$ProductCode,7,$TaxAmount);
+
+                //Change amount
+                $arr_item =  ChangValueFromListOfArray($arr_item,$ProductCode,5,$ToatlAmount);
+
+                //Chnage serial
+                $arr_item =  ChangValueFromListOfArray($arr_item,$ProductCode,6,$serial_item);
+
                 $_SESSION['details'] = $arr_item;
             }
         }
         else
         {
             $arr_serial[] = array($SerialCode);
-            $arr_item[] = array($StockCode,$ProductDesc,$CostPrice,$SalePrice,$Qty,$Qty * $SalePrice,$arr_serial);
+            $ToatlTax = 0;
+
+            $product = find_by_sp("call spSelectProductFromCode('{$ProductCode}');");
+
+            if(filter_var($product["Tax"],FILTER_VALIDATE_BOOLEAN))
+            {
+                $ProductTax = find_by_sql("call spSelectProductTaxFromProductCode('{$ProductCode}');");  
+                foreach($ProductTax as &$pTax)
+                {
+                    $TaxRatesM = find_by_sql("call spSelectTaxRatesFromCode('{$pTax["TaxCode"]}');");
+                    foreach($TaxRatesM as &$TaxRt)
+                    {
+                        $ToatlTax += $TaxRt["TaxRate"];
+                    }
+                }
+            }
+
+            
+            $TaxAmount = round((($SalePrice * $ToatlTax)/100));
+            $ToatlAmount = $TaxAmount + $SalePrice;
+
+            $arr_item[] = array($ProductCode,$ProductDesc,$CostPrice,$SalePrice,1,$ToatlAmount,$arr_serial,$TaxAmount);
             $_SESSION['details'] = $arr_item;
         }
     }
@@ -325,7 +373,28 @@ if (isset($_POST['FillTable']) &&  isset($_POST['CustomerPoCode'])) {
     $arr_serial = array();
 
     foreach($CPO_Details as &$value){
-        $arr_item[]  = array($value["ProductCode"],$value["ProductDesc"],$value["CostPrice"],$value["SellingPrice"],$value["Qty"],$value["Amount"],$arr_serial);
+        $product = find_by_sp("call spSelectProductFromCode('{$value["ProductCode"]}');");
+
+        $ToatlTax = 0;
+
+        if(filter_var($product["Tax"],FILTER_VALIDATE_BOOLEAN))
+        {
+            $ProductTax = find_by_sql("call spSelectProductTaxFromProductCode('{$value["ProductCode"]}');");  
+            foreach($ProductTax as &$pTax)
+            {
+
+                $TaxRatesM = find_by_sql("call spSelectTaxRatesFromCode('{$pTax["TaxCode"]}');");
+                foreach($TaxRatesM as &$TaxRt)
+                {
+                    $ToatlTax += $TaxRt["TaxRate"];
+                }
+            }
+        }
+
+        $TaxAmount = round((($value["Amount"] * $ToatlTax)/100));
+        $ToatlAmount = $TaxAmount + $value["Amount"];
+
+        $arr_item[]  = array($value["ProductCode"],$value["ProductDesc"],$value["CostPrice"],$value["SellingPrice"],$value["Qty"],$ToatlAmount,$arr_serial,$TaxAmount);
     }
     $_SESSION['details'] = $arr_item;
 
@@ -343,15 +412,47 @@ if (isset($_POST['_RowNo'])) {
 if (isset($_POST['Edit'])) {
 
     $ProductCode = remove_junk($db->escape($_POST['ProductCode']));
-    //$SalePrice = remove_junk($db->escape($_POST['SalePrice']));
+    $SalePrice = remove_junk($db->escape($_POST['SalePrice']));
+    $ExcludeTax = remove_junk($db->escape($_POST['ExcludeTax']));
     $Qty = remove_junk($db->escape($_POST['Qty']));
 
     $arr_item = $_SESSION['details'];
 
-    //Change Sale price
-    //$arr_item = ChangValueFromListOfArray( $arr_item,$StockCode,3,$SalePrice);
+
+    $product = find_by_sp("call spSelectProductFromCode('{$ProductCode}');");
+
+    $ToatlTax = 0;
+    $TaxAmount = 0;
+    $Amount = 0;
+
+    if(!filter_var($ExcludeTax,FILTER_VALIDATE_BOOLEAN)){
+        if(filter_var($product["Tax"],FILTER_VALIDATE_BOOLEAN))
+        {
+            $ProductTax = find_by_sql("call spSelectProductTaxFromProductCode('{$ProductCode}');");  
+            foreach($ProductTax as &$pTax)
+            {
+
+                $TaxRatesM = find_by_sql("call spSelectTaxRatesFromCode('{$pTax["TaxCode"]}');");
+                foreach($TaxRatesM as &$TaxRt)
+                {
+                    $ToatlTax += $TaxRt["TaxRate"];
+                }
+            }
+        }
+    }
+
+    $Amount = $Qty * $SalePrice;
+    $TaxAmount = round((($Amount * $ToatlTax)/100));
+    $ToatlAmount = $TaxAmount + $Amount;
+
     //Change Qty
     $arr_item = ChangValueFromListOfArray( $arr_item,$ProductCode,4,$Qty);
+
+    //Change Tax Amount
+    $arr_item = ChangValueFromListOfArray( $arr_item,$ProductCode,7,$TaxAmount);
+
+    //Change Total Amount
+    $arr_item = ChangValueFromListOfArray( $arr_item,$ProductCode,5,$ToatlAmount);
 
     $_SESSION['details'] = $arr_item;
 
@@ -496,6 +597,7 @@ if (isset($_POST['Edit'])) {
                         <div class="form-group">
                             <label>Serial Code</label>
                             <input type="text" class="form-control" name="SerialCode" id="SerialCode" placeholder="Serial Code" required="required" autocomplete="off" />
+                            <input type="hidden" name="ProductCode" id="ProductCode" />
                             <input type="hidden" name="StockCode" id="StockCode" />
                         </div>
 
@@ -573,6 +675,7 @@ if (isset($_POST['Edit'])) {
         //event.preventDefault();
         var LocationCode = $('#LocationCode').val();
         var StockCode = $('#StockCode').val();
+        var ProductCode = $('#ProductCode').val();
         var SerialCode = $('#SerialCode').val();
         var ProductDesc = $('#ProductDesc').val();
         var CostPrice = $('#CostPrice').val()
@@ -601,7 +704,7 @@ if (isset($_POST['Edit'])) {
             $.ajax({
                 url: 'create_invoice.php',
                 type: "POST",
-                data: { Add: 'Add', LocationCode: LocationCode, StockCode: StockCode,SerialCode: SerialCode,ProductDesc: ProductDesc,CostPrice: CostPrice,SalePrice: SalePrice, Qty: Qty },
+                data: { Add: 'Add', LocationCode: LocationCode, StockCode: StockCode, SerialCode: SerialCode, ProductCode: ProductCode, ProductDesc: ProductDesc, CostPrice: CostPrice, SalePrice: SalePrice, Qty: Qty },
                 success: function (result) {
                     $("#table").html(result);
                     $('#message').load('_partial_message.php');
@@ -609,6 +712,7 @@ if (isset($_POST['Edit'])) {
                 complete: function (result)
                 {
                     $('#StockCode').val('');
+                    $('#ProductCode').val('');
                     $('#SerialCode').val('');
                     $('#ProductDesc').val('');
                     $('#SalePrice').val('');
@@ -679,23 +783,27 @@ if (isset($_POST['Edit'])) {
 
 
     $("#SerialCode").on('keyup', function (e) {
-        $('.loader').show();
+        
 
         var SerialCode = $('#SerialCode').val();
         var LocationCode = $('#LocationCode').val();
 
         if (e.keyCode == 13) {
+            $('.loader').show();
 
             if (LocationCode == "") {
+                $('.loader').fadeOut();
                 bootbox.alert('Please select stock location.');
             }
             else if (SerialCode == "") {
+                $('.loader').fadeOut();
                 bootbox.alert('Please enter serial code.');
             }
             else
             {
                 var StockCode = "";
                 var SerialNo = "";
+                var ProductCode = "";
                 var ProductDesc = "";
                 var CostPrice = 0.00;
                 var SalePrice = 0.00;
@@ -709,6 +817,7 @@ if (isset($_POST['Edit'])) {
                     success: function (data) {
                         jQuery(data).each(function (i, item) {
                             StockCode = item.StockCode;
+                            ProductCode = item.ProductCode;
                             SerialNo = item.SerialNo;
                             ProductDesc = item.ProductDesc;
                             CostPrice = item.CostPrice;
@@ -721,6 +830,7 @@ if (isset($_POST['Edit'])) {
                             bootbox.alert('Invalid serial code.');
 
                             $('#StockCode').val('');
+                            $('#ProductCode').val('');
                             $('#ProductDesc').val('');
                             $('#SalePrice').val(0.00);
                             $('#CostPrice').val(0.00);
@@ -731,6 +841,7 @@ if (isset($_POST['Edit'])) {
                         else
                         {
                             $('#StockCode').val(StockCode);
+                            $('#ProductCode').val(ProductCode);
                             $('#ProductDesc').val(ProductDesc);
                             $('#CostPrice').val(parseFloat(CostPrice).toFixed(2));
                             $('#SalePrice').val(parseFloat(SalePrice).toFixed(2));

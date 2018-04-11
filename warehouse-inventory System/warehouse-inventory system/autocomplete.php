@@ -160,6 +160,7 @@ if (isset($_POST['SerialCode']) && isset($_POST['LocationCode'])) {
     while ($row = $db->fetch_assoc($result)) {
         $array = array (
             'StockCode' => $row['StockCode'],
+            'ProductCode' => $row['ProductCode'],
             'SerialNo' => $row['SerialNo'],
             'ProductDesc' => $row['ProductDesc'],
             'CostPrice' => $row['CostPrice'],

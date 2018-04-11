@@ -7,6 +7,7 @@
             <th>Product Description</th>
             <th>Sale Price</th>
             <th>Qty</th>
+            <th>Tax Amount</th>
             <th>Amount</th>
             <th>Serial</th>
         </tr>
@@ -20,12 +21,14 @@
             <td></td>
             <td></td>
             <td></td>
+            <td></td>
         </tr>
         <tr>
             <td></td>
+            <td></td>
             <td style="vertical-align: middle;">Gross Amount:</td>
             <td style="vertical-align: middle;">
-                <input type="text" class="form-control text-right" name="GrossAmount" id="GrossAmount" placeholder="Gross Amount" value="<?php $TotalAmount = 0;foreach($arr_item  as &$value){ $TotalAmount += $value[3] * $value[4];} echo number_format((float)$TotalAmount, 2, '.', ''); ?>" required="required" readonly="readonly" disabled /></td>
+                <input type="text" class="form-control text-right" name="GrossAmount" id="GrossAmount" placeholder="Gross Amount" value="<?php $TotalAmount = 0;foreach($arr_item  as &$value){ $TotalAmount += $value[5];} echo number_format((float)$TotalAmount, 2, '.', ''); ?>" required="required" readonly="readonly" disabled /></td>
             <td></td>
             <td style="vertical-align: middle;">Discount:</td>
             <td>
@@ -37,11 +40,12 @@
             <td></td>
             <td></td>
             <td></td>
+            <td></td>
             <td style="vertical-align: middle;">
                 <label>Net Amount:</label>
             </td>
             <td>
-                <input type="text" class="form-control text-right" name="NetAmount" id="NetAmount" placeholder="Net Amount" value="<?php $TotalAmount = 0;foreach($arr_item  as &$value){ $TotalAmount += $value[3] * $value[4];} echo number_format((float)$TotalAmount - ($_SESSION['DiscountAmount'] == null ? 0:$_SESSION['DiscountAmount']), 2, '.', ''); ?>" required="required" readonly="readonly" disabled />
+                <input type="text" class="form-control text-right" name="NetAmount" id="NetAmount" placeholder="Net Amount" value="<?php $TotalAmount = 0;foreach($arr_item  as &$value){ $TotalAmount += $value[5];} echo number_format((float)$TotalAmount - ($_SESSION['DiscountAmount'] == null ? 0:$_SESSION['DiscountAmount']), 2, '.', ''); ?>" required="required" readonly="readonly" disabled />
             </td>
             <td></td>
         </tr>
@@ -69,8 +73,11 @@
             <td class="clsInvQty">
                 <?php echo $value[4] ?>
             </td>
+            <td>
+                <?php echo number_format(($value[7] == null ? 0 : $value[7]),2) ?>
+            </td>
             <td >
-                <?php  echo number_format(($value[5] == null ? 0 : $value[3] * $value[4]),2) ?>
+                <?php  echo number_format(($value[5] == null ? 0 : $value[5]),2) ?>
             </td>
             <td>
                 <div>
