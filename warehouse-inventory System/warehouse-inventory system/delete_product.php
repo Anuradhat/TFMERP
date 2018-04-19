@@ -14,18 +14,15 @@ if(isset($_POST['product'])){
     $p_procode = remove_junk($db->escape($_POST['ProductCode']));
 
     if(!$p_procode){
-        $session->msg("d","Missing product identification.");
-        redirect('product.php');
+        $flashMessages->error('Missing product identification.','product.php');
     }
 
     $delete_id = delete_by_sp("call spDeleteProduct('{$p_procode}');");
 
     if($delete_id){
-        $session->msg("s","product deleted.");
-        redirect('product.php');
+        $flashMessages->success('product deleted','product.php');
     } else {
-        $session->msg("d","product deletion failed.");
-        redirect('product.php');
+        $flashMessages->warning('Product deletion failed.','product.php');
     }
 }
 ?>

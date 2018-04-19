@@ -141,6 +141,10 @@ immediately after the control sidebar -->
         $('.select2').select2();
 
         //$("#tblBinDetails").DataTable({ destroy: true });
+
+        $('.datatable').DataTable({
+            responsive: true
+        });
     });
 
 

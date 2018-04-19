@@ -24,8 +24,7 @@ if(isset($_POST['product'])){
 
 
     if(!$p_productcode){
-        $session->msg("d","Missing product identification.");
-        redirect('product.php');
+        $flashMessages->error('Missing product identification.','product.php');
     }
     else
     {
@@ -35,8 +34,7 @@ if(isset($_POST['product'])){
         $Product_taxs =  find_by_sql("call spSelectProductTaxFromProductCode('{$p_productcode}');");
 
         if(!$product){
-            $session->msg("d","Missing product details.");
-            redirect('product.php');
+            $flashMessages->error('Missing product details','product.php');
         }
     }
 }
@@ -96,23 +94,19 @@ if(isset($_POST['edit_product'])){
 
             $db->commit();
 
-
-            $session->msg('s',"Product updated ");
-            redirect('product.php', false);
+            $flashMessages->success('Product updated ','product.php');
 
         }
         catch(Exception $ex)
         {
             $db->rollback();
 
-            $session->msg('d',' Sorry failed to updated!');
-            redirect('edit_product.php', false);
+            $flashMessages->error('Sorry failed to updated product. '.$ex->getMessage(),'product.php');
         }
 
 
     } else{
-        $session->msg("d", $errors);
-        redirect('edit_product.php',false);
+        $flashMessages->warning($errors,'edit_product.php');
     }
 }
 
@@ -160,8 +154,7 @@ if(isset($_POST['edit_product'])){
         </div>
 
         <div class="row">
-            <div class="col-md-12"><?php echo display_msg($msg); ?>
-            </div>
+            <div id="message" class="col-md-12"> <?php include('_partial_message.php'); ?> </div>
         </div>
 
         <div class="box box-default">

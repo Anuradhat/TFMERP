@@ -417,10 +417,6 @@ desired effect
                                 </ul>
                             </li>
                             <!--End Credit Note Menu-->
-
-
-
-
                         </ul>
                     </li>
                     <!--End Transaction Menu-->
@@ -451,6 +447,21 @@ desired effect
                         </a>
                         <ul class="treeview-menu">
                             <li><a href="create_barcode.php"><i class="fa fa-barcode"></i>Barcode</a></li>
+
+
+                        </ul>
+                    </li>
+
+                    <li class="treeview">
+                        <a href="#">
+
+                            <i class="fa fa-folder"></i> <span>Reports</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="reports/index.php"><i class="fa fa-file-text-o"></i>View Reports</a></li>
 
 
                         </ul>

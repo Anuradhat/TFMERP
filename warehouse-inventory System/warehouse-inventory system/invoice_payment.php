@@ -147,12 +147,31 @@ if(isset($_POST['invoice_payment'])){
                     $db->query($query);
 
 
-                    //Insert invoice details
+                    //Insert invoice details and TAX
                     foreach($arr_item as $row => $value)
                     {
                         $LineAmount = $value[4] * $value[3];
-                        $query  = "call spInsertInvoiceD('{$p_InvoiceCode}','{$p_LocationCode}','{$value[0]}','{$value[1]}',{$value[2]},{$value[3]},{$value[4]},0,{$LineAmount});";
+                        $query  = "call spInsertInvoiceD('{$p_InvoiceCode}','{$p_LocationCode}','{$value[0]}','{$value[1]}',{$value[2]},{$value[3]},{$value[4]},0,{$value[7]},{$LineAmount});";
                         $db->query($query);
+
+                        //Tax
+                        $ToatlTax = 0;
+
+                        if($value[7] != 0){
+                          $ProductTax = find_by_sql("call spSelectProductTaxFromProductCode('{$value[0]}');");
+                          foreach($ProductTax as &$pTax)
+                          {
+                             $TaxRatesM = find_by_sql("call spSelectTaxRatesFromCode('{$pTax["TaxCode"]}');");
+                             foreach($TaxRatesM as &$TaxRt)
+                             {
+                                $ToatlTax += $TaxRt["TaxRate"];
+                             }
+                          }
+
+                          $query  = "call spInsertInvoiceTax('{$p_InvoiceCode}','{$p_LocationCode}','{$value[0]}',{$ToatlTax},{$value[7]});";
+                          $db->query($query);
+                        }
+
                     }
 
                     //Update Customer Due

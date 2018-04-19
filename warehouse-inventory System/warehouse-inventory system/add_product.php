@@ -53,8 +53,7 @@ if(isset($_POST['add_product'])){
 
         if($prod_count)
         {
-            $session->msg("d", "This product code exist in the system.");
-            redirect('add_product.php',false);
+            $flashMessages->warning('This product code exist in the system.','add_product.php');
         }
 
 
@@ -78,16 +77,14 @@ if(isset($_POST['add_product'])){
 
              $db->commit();
 
-            $session->msg('s',"Product added ");
-            redirect('add_product.php', false);
+            $flashMessages->success('Product added ','add_product.php');
 
         }
         catch(Exception $ex)
         {
            $db->rollback();
 
-           $session->msg('d',' Sorry failed to added!');
-           redirect('product.php', false);
+           $flashMessages->error('Sorry failed to added product. '.$ex->getMessage(),'product.php');
         }
 
 
@@ -101,8 +98,7 @@ if(isset($_POST['add_product'])){
         //}
 
     } else{
-        $session->msg("d", $errors);
-        redirect('add_product.php',false);
+        $flashMessages->warning($errors,'add_product.php');
     }
 }
 
@@ -154,8 +150,7 @@ if(isset($_POST['add_product'])){
         </div>
 
         <div class="row">
-            <div class="col-md-12"><?php echo display_msg($msg); ?>
-            </div>
+            <div id="message" class="col-md-12"> <?php include('_partial_message.php'); ?> </div>
         </div>
  
         <div class="box box-default">
