@@ -1,5 +1,5 @@
 <?php
-$page_title = 'Subcategory Master - New Subcategory';
+$page_title = 'Sub-category Master - New Sub-category';
 require_once('includes/load.php');
 page_require_level(2);
 
@@ -27,24 +27,20 @@ if(isset($_POST['add_subcategory'])){
 
         if($scat_count)
         {
-            $session->msg("d", "This subcategory code exist in the system.");
-            redirect('add_subcategory.php',false);
+            $flashMessages->warning('This subcategory code exist in the system.','add_subcategory.php');
         }
 
  
         $query  = "call spInsertSubcategory('{$p_CategoryCode}','{$scatcode}','{$p_SubcategoryDesc}',{$p_Commission},'{$date}','{$user["username"]}');";
 
         if($db->query($query)){
-            $session->msg('s',"Subcategory added ");
-            redirect('add_subcategory.php', false);
+            $flashMessages->success('Subcategory added','add_subcategory.php');
         } else {
-            $session->msg('d',' Sorry failed to added!');
-            redirect('subcategory.php', false);
+            $flashMessages->error('Sorry failed to added!','subcategory.php');
         }
 
     } else{
-        $session->msg("d", $errors);
-        redirect('add_subcategory.php',false);
+        $flashMessages->error($errors,'add_subcategory.php');
     }
 }
 
@@ -91,8 +87,7 @@ if(isset($_POST['add_subcategory'])){
         </div>
 
         <div class="row">
-            <div class="col-md-12"><?php echo display_msg($msg); ?>
-            </div>
+            <div id="message" class="col-md-12"><?php include('_partial_message.php'); ?></div>
         </div>
 
         <div class="box box-default">

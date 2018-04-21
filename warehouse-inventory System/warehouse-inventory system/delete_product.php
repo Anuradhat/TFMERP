@@ -10,7 +10,7 @@ preventGetAction('product.php');
 
 
 <?php
-if(isset($_POST['product'])){
+if(isset($_POST['ProductCode'])){
     $p_procode = remove_junk($db->escape($_POST['ProductCode']));
 
     if(!$p_procode){

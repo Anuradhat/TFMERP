@@ -16,16 +16,14 @@ if(isset($_POST['category'])){
     $p_catcode = remove_junk($db->escape($_POST['CategoryCode']));
 
     if(!$p_catcode){
-        $session->msg("d","Missing category identification.");
-        redirect('category.php');
+        $flashMessages->warning('Missing category identification.','category.php');
     }
     else
     {
         $category = find_by_sp("call spSelectCategoryFromCode('{$p_catcode}');");
 
         if(!$category){
-            $session->msg("d","Missing category details.");
-            redirect('category.php');
+            $flashMessages->warning('Missing category details.','category.php');
         }
     }
 }
@@ -47,16 +45,13 @@ if(isset($_POST['edit_category'])){
         $query  = "call spUpdateCategory('{$p_CategoryCode}','{$p_CategoryDesc}','{$date}','{$user["username"]}');";
 
         if($db->query($query)){
-            $session->msg('s',"Category updated");
-            redirect('category.php', false);
+            $flashMessages->success('Category updated','category.php');
         } else {
-            $session->msg('d',' Sorry failed to updated!');
-            //redirect('customer.php', false);
+            $flashMessages->error('Sorry failed to updated!','category.php');
         }
 
     } else{
-        $session->msg("d", $errors);
-        redirect('edit_category.php',false);
+        $flashMessages->warning($errors,'edit_category.php');
     }
 }
 

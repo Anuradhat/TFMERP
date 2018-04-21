@@ -16,16 +16,14 @@ if(isset($_POST['bincode'])){
 
 
     if(!$p_loccode && !$p_bincode){
-        $session->msg("d","Missing location or bin identification.");
-        redirect('location_bin.php');
+        $flashMessages->warning('Missing location or bin identification.','location_bin.php');
     }
     else
     {
         $bin = find_by_sp("call spSelectBinFromLocationAndBinCode('{$p_loccode}','{$p_bincode}');");
 
         if(!$bin){
-            $session->msg("d","Missing bin details.");
-            redirect('location_bin.php');
+            $flashMessages->warning('Missing bin details.','location_bin.php');
         }
     }
 }
@@ -50,16 +48,14 @@ if(isset($_POST['edit_location_bin'])){
         $query  = "call spUpdateBin('{$p_LocationCode}','{$p_BinCode}','{$p_BinName}',{$p_DefaultBin},'{$user['username']}');";
 
         if($db->query($query)){
-            $session->msg('s',"Bin updated");
-            redirect('location_bin.php', false);
+            $flashMessages->success('Bin updated.','location_bin.php');
+
         } else {
-            $session->msg('d',' Sorry failed to update!');
-            redirect('location_bin.php', false);
+            $flashMessages->error('Sorry failed to update!','location_bin.php');
         }
 
     } else{
-        $session->msg("d", $errors);
-        redirect('location_bin.php',false);
+        $flashMessages->warning($errors,'location_bin.php');
     }
 }
 

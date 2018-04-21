@@ -16,31 +16,31 @@ if (isset($_POST['Location'])) {
     foreach($all_Bins as &$value){
         
         echo '<tr>
-                                        <td>
-                                            <div class="form-group">
-                                                <form method="post" action="edit_location_bin.php">
-                                                    <button type="submit" name="Bin" class="btn  btn-warning btn-xs glyphicon glyphicon-edit"></button>
-                                                    <input type="hidden" name="bincode" value='.remove_junk(ucfirst($value["BinCode"])).' />
-                                                    <input type="hidden" name="locationcode" value='.remove_junk(ucfirst($value["LocationCode"])).' />
-                                                </form>
-                                                <form method="post" action="delete_location_bin.php">
-                                                    <button type="submit" name="Bin" class="btn btn-danger btn-xs glyphicon glyphicon-trash"></button>
-                                                    <input type="hidden" name="bincode" value='.remove_junk(ucfirst($value["BinCode"])).' />
-                                                    <input type="hidden" name="locationcode" value='.remove_junk(ucfirst($value["LocationCode"])).' />
-                                                    <input type="hidden" name="defaultbin" value='.remove_junk(ucfirst($value["DefaultBin"])).' />
-                                                </form>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            '.remove_junk(ucfirst($value["BinCode"])).'
-                                        </td>
-                                        <td>
-                                            '.remove_junk($value['BinDesc']).'
-                                        </td>
-                                        <td>
-                                            '.remove_junk($value['DefaultBin']).'
-                                        </td>                                        
-                                    </tr>';
+            <td>
+                <div class="form-group">
+                    <form method="post" action="edit_location_bin.php">
+                        <button type="submit" name="Bin" class="btn  btn-warning btn-xs glyphicon glyphicon-edit"></button>
+                        <input type="hidden" name="bincode" value='.remove_junk(ucfirst($value["BinCode"])).' />
+                        <input type="hidden" name="locationcode" value='.remove_junk(ucfirst($value["LocationCode"])).' />
+                    </form>
+                    <form method="post" action="delete_location_bin.php">
+                        <button type="submit" name="Bin" class="btn btn-danger btn-xs glyphicon glyphicon-trash"></button>
+                        <input type="hidden" name="bincode" value='.remove_junk(ucfirst($value["BinCode"])).' />
+                        <input type="hidden" name="locationcode" value='.remove_junk(ucfirst($value["LocationCode"])).' />
+                        <input type="hidden" name="defaultbin" value='.remove_junk(ucfirst($value["DefaultBin"])).' />
+                    </form>
+                </div>
+            </td>
+            <td>
+                '.remove_junk(ucfirst($value["BinCode"])).'
+            </td>
+            <td>
+                '.remove_junk($value['BinDesc']).'
+            </td>
+            <td>
+                '.remove_junk($value['DefaultBin']).'
+            </td>                                        
+        </tr>';
     }
 
     return;
@@ -89,8 +89,7 @@ if (isset($_POST['Location'])) {
     </div>
 
     <div class="row">
-        <div class="col-md-12">
-            <?php echo display_msg($msg); ?>
+        <div id="message" class="col-md-12"><?php include('_partial_message.php'); ?>
         </div>
     </div>
 
@@ -128,7 +127,7 @@ if (isset($_POST['Location'])) {
                             </div>
                             </div>
                             </div>
-                            <table id="tblBins" class="table table-bordered table-striped">
+                            <table id="tblBins" class="table table-bordered table-striped datatable">
                                 <thead>
                                     <tr>
                                         <th>Action</th>

@@ -1,7 +1,7 @@
 <?php
 ob_start();
 
-$page_title = 'Subcategory Master - Edit Subcategory';
+$page_title = 'Sub-category Master - Edit Sub-category';
 require_once('includes/load.php');
 page_require_level(2);
 
@@ -16,16 +16,14 @@ if(isset($_POST['subcategory'])){
     $p_scatcode = remove_junk($db->escape($_POST['SubcategoryCode']));
 
     if(!$p_scatcode){
-        $session->msg("d","Missing subcategory identification.");
-        redirect('subcategory.php');
+        $flashMessages->warning('Missing subcategory identification.','subcategory.php');
     }
     else
     {
         $subcategory = find_by_sp("call spSelectSubcategoryFromCode('{$p_scatcode}');");
 
         if(!$subcategory){
-            $session->msg("d","Missing subcategory details.");
-            redirect('subcategory.php');
+            $flashMessages->warning('Missing subcategory details.','subcategory.php');
         }
     }
 }
@@ -48,16 +46,13 @@ if(isset($_POST['edit_subcategory'])){
         $query  = "call spUpdateSubcategory('{$p_SubcategoryCode}','{$p_SubcategoryDesc}',{$p_Commission},'{$date}','{$user["username"]}');";
 
         if($db->query($query)){
-            $session->msg('s',"Subcategory updated");
-            redirect('subcategory.php', false);
+            $flashMessages->success('Subcategory updated','subcategory.php');
         } else {
-            $session->msg('d',' Sorry failed to updated!');
-            //redirect('customer.php', false);
+            $flashMessages->error('Sorry failed to updated!','subcategory.php');
         }
 
     } else{
-        $session->msg("d", $errors);
-        redirect('edit_subcategory.php',false);
+        $flashMessages->warning($errors,'subcategory.php');
     }
 }
 

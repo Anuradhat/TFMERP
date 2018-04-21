@@ -31,33 +31,30 @@ if(isset($_POST['add_location_bin'])){
 
             if($bin_count)
             {
-                $session->msg("d", "This Bin code exists in the system.");
-                redirect('add_location_bin.php',false);
+                $flashMessages->warning('This Bin code exists in the system.','add_location_bin.php');
             }
 
             $query  = "call spInsertBin('{$p_LocationCode}','{$p_BinCode}','{$p_BinName}','{$user['username']}');";
 
             if($db->query($query)){
                 $db->commit();
-                $session->msg('s',"Bin Created ");
-                redirect('location_bin.php', false);
+
+                $flashMessages->success('Bin Created.','add_location_bin.php');
+
             } else {
                 $db->rollback();
-                $session->msg('d',' Sorry failed to create!');
-                redirect('location_bin.php', false);
+         
+                $flashMessages->error('Sorry failed to create!','add_location_bin.php');
             }
         }
         catch(Exception $ex)
         {
             $db->rollback();
-
-            $session->msg('d',' Sorry failed to create!');
-            redirect('location_bin.php', false);
+            $flashMessages->error('Sorry failed to create! '.$ex->getMessage(),'add_location_bin.php');
         }
     }
     else{
-        $session->msg("d", $errors);
-        redirect('add_location_bin.php',false);
+        $flashMessages->warning($errors,'add_location_bin.php');
     }
 }
 
@@ -102,11 +99,12 @@ if(isset($_POST['add_location_bin'])){
                 </div>
             </div>
         </div>
+
         <div class="row">
-            <div class="col-md-12">
-                <?php echo display_msg($msg); ?>
+            <div id="message" class="col-md-12"><?php include('_partial_message.php'); ?>
             </div>
         </div>
+
         <div class="box box-default">
             <div class="box-header with-border">
                 <h3 class="box-title">Basic Details</h3>

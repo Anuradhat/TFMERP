@@ -67,7 +67,7 @@ $all_suppliers = find_by_sql("call spSelectAllSuppliers();");
                 <div class="col-lg-12 col-md-12 col-sm-12">
                     <div class="box">
                         <div class="box-body">
-                            <table class="table table-condensed table-hover table-striped">
+                            <table class="table table-condensed table-hover table-striped datatable">
                                 <thead>
                                     <tr>
                                         <th>Action</th>
@@ -76,9 +76,7 @@ $all_suppliers = find_by_sql("call spSelectAllSuppliers();");
                                         <th>Tel</th>
                                         <th>Fax</th>
                                         <th>Email</th>
-                                        <th>Contact Person</th>
                                         <th>VAT No</th>
-                                        <th>SVAT No</th>
                                         <th>Credit Period</th>
                                         <th>Currency</th>
                                     </tr>
@@ -112,13 +110,7 @@ $all_suppliers = find_by_sql("call spSelectAllSuppliers();");
                                             <?php echo remove_junk($sup['SupplierEmail']); ?>
                                         </td>
                                         <td>
-                                            <?php echo remove_junk($sup['SupplierContactPerson']); ?>
-                                        </td>
-                                        <td>
                                             <?php echo remove_junk($sup['SupplierVatNo']); ?>
-                                        </td>
-                                        <td>
-                                            <?php echo remove_junk($sup['SupplierSVatNo']); ?>
                                         </td>
                                         <td>
                                             <?php echo remove_junk($sup['SupplierCreditPeriod']); ?>

@@ -47,8 +47,8 @@ $all_Category = find_by_sql("call spSelectAllCategory();")
     </div>
 
     <div class="row">
-        <div class="col-md-12">
-            <?php echo display_msg($msg); ?>
+        <div id="message" class="col-md-12">
+            <?php include('_partial_message.php'); ?>
         </div>
     </div>
 
@@ -72,7 +72,7 @@ $all_Category = find_by_sql("call spSelectAllCategory();")
                     <div class="box">
                         <!-- /.box-header -->
                         <div class="box-body">
-                            <table id="table" class="table table-bordered table-striped">
+                            <table id="table" class="table table-bordered table-striped datatable">
                                 <thead>
                                     <tr>
                                         <th>Action</th>
@@ -90,16 +90,14 @@ $all_Category = find_by_sql("call spSelectAllCategory();")
                                                     <button type="submit" name="category" class="btn  btn-warning btn-xs glyphicon glyphicon-edit"></button>
                                                     <input type="hidden" name="CategoryCode" value="<?php echo remove_junk($cat['CategoryCode']);?>" />
                                                 </form>
-                                                <form method="post" action="delete_category.php">
-                                                    <button type="submit" name="category" class="btn btn-danger btn-xs glyphicon glyphicon-trash"></button>
-                                                    <input type="hidden" name="CategoryCode" value="<?php echo remove_junk($cat['CategoryCode']);?>" />
-                                                </form>
+
+                                                <button type="button" name="category" class="DeleteBtn btn btn-danger btn-xs glyphicon glyphicon-trash"></button>      
                                             </div>
                                         </td>
                                         <!--<td>
                                             <?php //echo remove_junk(ucfirst($cat['DepartmentDesc'])); ?>
                                         </td>-->
-                                        <td>
+                                        <td id="RowId" class="clsRowId">
                                             <?php echo remove_junk($cat['CategoryCode']); ?>
                                         </td>
                                         <td>
@@ -119,5 +117,45 @@ $all_Category = find_by_sql("call spSelectAllCategory();")
     </div>
 
 </section>
+
+
+<script>
+   $(document).ready(function () {
+      $(".DeleteBtn").click(function () {
+          var $row = $(this).closest("tr");
+          var RowNo = $row.find(".clsRowId").text().trim();
+
+        bootbox.confirm({
+            title: "Delete Confirmation",
+            message: "Do you want to delete this category? This cannot be undone.",
+            buttons: {
+                cancel: {
+                    label: '<i class="fa fa-times"></i> Cancel'
+                },
+                confirm: {
+                    label: '<i class="fa fa-check"></i> Confirm'
+                }
+            },
+            callback: function (result) {
+                if (result === true) {
+                    $('.loader').show();
+
+                    $.ajax({
+                     url: 'delete_category.php',
+                     type: "POST",
+                     data: { CategoryCode: RowNo },
+                     success: function (result) {
+                        location.reload();
+                    },
+                    complete: function (result) {
+                        $('.loader').fadeOut();
+                    }
+                });
+               }
+            }
+        });
+    });
+  });
+</script>
 
 <?php include_once('layouts/footer.php'); ?>

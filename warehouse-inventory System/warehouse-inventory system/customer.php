@@ -69,7 +69,7 @@ $all_customers = find_by_sql("call spSelectAllCustomers();")
                     <div class="box">
                         <!-- /.box-header -->
                         <div class="box-body">
-                            <table id="table" class="table table-bordered table-striped">
+                            <table id="table" class="table table-bordered table-striped datatable">
                                 <thead>
                                     <tr>
                                         <th>Action</th>
@@ -83,26 +83,38 @@ $all_customers = find_by_sql("call spSelectAllCustomers();")
                                 </thead>
                                 <tbody>
                                     <?php foreach ($all_customers as $cus): ?>
-                                        <tr>
-                                            <td>
-                                                <div class="form-group">
-                                                    <form method="post" action="edit_customer.php" >
-                                                        <button type="submit" name="customer" class="btn  btn-warning btn-xs glyphicon glyphicon-edit"></button>
-                                                        <input type="hidden" name="CustomerCode" value="<?php echo remove_junk($cus['CustomerCode']);?>" />
-                                                    </form>
-                                                    <form method="post" action="delete_customer.php">
-                                                        <button type="submit" name="customer" class="btn btn-danger btn-xs glyphicon glyphicon-trash"></button>
-                                                        <input type="hidden" name="CustomerCode" value="<?php echo remove_junk($cus['CustomerCode']);?>" />
-                                                    </form>
-                                                </div>
-                                            </td>
-                                            <td><?php echo remove_junk($cus['CustomerCode']); ?></td>
-                                            <td><?php echo remove_junk(ucfirst($cus['CustomerName'])); ?></td>
-                                            <td><?php echo remove_junk($cus['Tel']); ?></td>
-                                            <td><?php echo remove_junk($cus['VATNo']); ?></td>
-                                            <td> <?php echo remove_junk($cus['SVATNo']); ?></td>
-                                            <td><?php echo remove_junk(ucfirst($cus['EmployeeName'])); ?></td>
-                                        </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="form-group">
+                                                <form method="post" action="edit_customer.php">
+                                                    <button type="submit" name="customer" class="btn  btn-warning btn-xs glyphicon glyphicon-edit"></button>
+                                                    <input type="hidden" name="CustomerCode" value="<?php echo remove_junk($cus['CustomerCode']);?>" />
+                                                </form>
+                                                <form method="post" action="delete_customer.php">
+                                                    <button type="submit" name="customer" class="btn btn-danger btn-xs glyphicon glyphicon-trash"></button>
+                                                    <input type="hidden" name="CustomerCode" value="<?php echo remove_junk($cus['CustomerCode']);?>" />
+                                                </form>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <?php echo remove_junk($cus['CustomerCode']); ?>
+                                        </td>
+                                        <td>
+                                            <?php echo remove_junk(ucfirst($cus['CustomerName'])); ?>
+                                        </td>
+                                        <td>
+                                            <?php echo remove_junk($cus['Tel']); ?>
+                                        </td>
+                                        <td>
+                                            <?php echo remove_junk($cus['VATNo']); ?>
+                                        </td>
+                                        <td>
+                                            <?php echo remove_junk($cus['SVATNo']); ?>
+                                        </td>
+                                        <td>
+                                            <?php echo remove_junk(ucfirst($cus['EmployeeName'])); ?>
+                                        </td>
+                                    </tr>
                                     <?php endforeach; ?>
                                 </tbody>
                             </table>

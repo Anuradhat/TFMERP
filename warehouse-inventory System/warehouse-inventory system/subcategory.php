@@ -1,7 +1,7 @@
 <?php
 ob_start();
 
-$page_title = 'Subcategory Master';
+$page_title = 'Sub-Category Master';
 require_once('includes/load.php');
 page_require_level(1);
 
@@ -12,7 +12,7 @@ $all_Subcategory = find_by_sql("call spSelectAllSubcategory();");
 <?php include_once('layouts/header.php'); ?>
 <section class="content-header">
     <h1>
-        Subcategory Master
+        Sub-Category Master
         <small>Optional description</small>
     </h1>
     <ol class="breadcrumb">
@@ -21,7 +21,7 @@ $all_Subcategory = find_by_sql("call spSelectAllSubcategory();");
                 <i class="fa fa-dashboard"></i>Master
             </a>
         </li>
-        <li class="active">Subcategory</li>
+        <li class="active">Sub Category</li>
     </ol>
     <style>
         form {
@@ -48,14 +48,14 @@ $all_Subcategory = find_by_sql("call spSelectAllSubcategory();");
     </div>
 
     <div class="row">
-        <div class="col-md-12">
-            <?php echo display_msg($msg); ?>
+        <div id="message" class="col-md-12">
+            <?php include('_partial_message.php'); ?>
         </div>
     </div>
 
     <div class="box box-default">
         <div class="box-header with-border">
-            <h3 class="box-title">Subcategory Details</h3>
+            <h3 class="box-title">Sub-Category Details</h3>
 
             <div class="box-tools pull-right">
                 <button type="button" class="btn btn-box-tool" data-widget="collapse">
@@ -71,7 +71,7 @@ $all_Subcategory = find_by_sql("call spSelectAllSubcategory();");
                     <div class="box">
                         <!-- /.box-header -->
                         <div class="box-body">
-                            <table id="table" class="table table-bordered table-striped">
+                            <table id="table" class="table table-bordered table-striped datatable">
                                 <thead>
                                     <tr>
                                         <th>Action</th>
@@ -90,16 +90,15 @@ $all_Subcategory = find_by_sql("call spSelectAllSubcategory();");
                                                     <button type="submit" name="subcategory" class="btn  btn-warning btn-xs glyphicon glyphicon-edit"></button>
                                                     <input type="hidden" name="SubcategoryCode" value="<?php echo remove_junk($scat['SubcategoryCode']);?>" />
                                                 </form>
-                                                <form method="post" action="delete_subcategory.php">
-                                                    <button type="submit" name="subcategory" class="btn btn-danger btn-xs glyphicon glyphicon-trash"></button>
-                                                    <input type="hidden" name="SubcategoryCode" value="<?php echo remove_junk($scat['SubcategoryCode']);?>" />
-                                                </form>
+
+                                                <button type="button" name="subcategory" class="DeleteBtn btn btn-danger btn-xs glyphicon glyphicon-trash"></button>
+
                                             </div>
                                         </td>
                                         <td>
                                             <?php echo remove_junk($scat['CategoryDesc']); ?>
                                         </td>
-                                        <td>
+                                        <td id="RowId" class="clsRowId">
                                             <?php echo remove_junk($scat['SubcategoryCode']); ?>
                                         </td>
                                         <td>
@@ -122,5 +121,45 @@ $all_Subcategory = find_by_sql("call spSelectAllSubcategory();");
     </div>
 
 </section>
+
+
+<script>
+   $(document).ready(function () {
+      $(".DeleteBtn").click(function () {
+          var $row = $(this).closest("tr");
+          var RowNo = $row.find(".clsRowId").text().trim();
+
+        bootbox.confirm({
+            title: "Delete Confirmation",
+            message: "Do you want to delete this sub-category? This cannot be undone.",
+            buttons: {
+                cancel: {
+                    label: '<i class="fa fa-times"></i> Cancel'
+                },
+                confirm: {
+                    label: '<i class="fa fa-check"></i> Confirm'
+                }
+            },
+            callback: function (result) {
+                if (result === true) {
+                    $('.loader').show();
+
+                    $.ajax({
+                     url: 'delete_subcategory.php',
+                     type: "POST",
+                     data: { SubcategoryCode: RowNo },
+                     success: function (result) {
+                        location.reload();
+                    },
+                    complete: function (result) {
+                        $('.loader').fadeOut();
+                    }
+                });
+               }
+            }
+        });
+    });
+  });
+</script>
 
 <?php include_once('layouts/footer.php'); ?>

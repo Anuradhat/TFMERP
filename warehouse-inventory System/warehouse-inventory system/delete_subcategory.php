@@ -10,22 +10,19 @@ preventGetAction('subcategory.php');
 
 
 <?php
-if(isset($_POST['subcategory'])){
+if(isset($_POST['SubcategoryCode'])){
     $p_scatcode = remove_junk($db->escape($_POST['SubcategoryCode']));
 
     if(!$p_scatcode){
-        $session->msg("d","Missing subcategory identification.");
-        redirect('subcategory.php');
+        $flashMessages->warning('Missing subcategory identification.','subcategory.php');
     }
 
     $delete_id = delete_by_sp("call spDeleteSubcategory('{$p_scatcode}');");
 
     if($delete_id){
-        $session->msg("s","Subcategory deleted.");
-        redirect('subcategory.php');
+        $flashMessages->success('Subcategory deleted.','subcategory.php');
     } else {
-        $session->msg("d","Subcategory deletion failed.");
-        redirect('subcategory.php');
+        $flashMessages->error('Subcategory deletion failed.','subcategory.php');
     }
 }
 ?>

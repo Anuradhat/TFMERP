@@ -18,24 +18,19 @@ if(isset($_POST['bincode'])){
     $user = current_user();
 
     if(!$p_locacode){
-        $session->msg("d","Missing bin identification.");
-        redirect('location_bin.php');
+        $flashMessages->warning('Missing bin identification.','location_bin.php');
     }
 
     if($p_defaultbin == "1"){
-        $session->msg("d","Can't delte default bin");
-        redirect('location_bin.php');
-        exit;
+        $flashMessages->warning("Can't delete default bin.",'location_bin.php');
     }
 
     $delete_id = delete_by_sp("call spDeleteLocationBin('{$p_locacode}','{$p_bincode}','{$user['username']}');");
 
     if($delete_id){
-        $session->msg("s","Bin deleted.");
-        redirect('location_bin.php');
+        $flashMessages->success("Bin deleted.",'location_bin.php');
     } else {
-        $session->msg("d","Bin deletion failed.");
-        redirect('location_bin.php');
+        $flashMessages->error("Bin deletion failed.",'location_bin.php');
     }
 }
 ?>

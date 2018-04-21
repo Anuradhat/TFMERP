@@ -47,10 +47,10 @@ $all_locations = find_by_sql("call spSelectAllLocations();")
     </div>
 
     <div class="row">
-        <div class="col-md-12">
-            <?php echo display_msg($msg); ?>
-        </div>
+        <div id="message" class="col-md-12"><?php include('_partial_message.php'); ?></div>
     </div>
+
+
     <div class="box box-default">
         <div class="box-header with-border">
             <h3 class="box-title">Location Details</h3>
@@ -69,7 +69,7 @@ $all_locations = find_by_sql("call spSelectAllLocations();")
                     <div class="box">
                         <!-- /.box-header -->
                         <div class="box-body">
-                            <table id="table" class="table table-bordered table-striped">
+                            <table id="table" class="table table-bordered table-striped datatable">
                                 <thead>
                                     <tr>
                                         <th>Action</th>

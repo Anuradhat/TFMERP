@@ -29,23 +29,19 @@ if(isset($_POST['add_category'])){
 
         if($cat_count)
         {
-            $session->msg("d", "This category code exist in the system.");
-            redirect('add_category.php',false);
+            $flashMessages->warning('This category code exist in the system.','add_category.php');
         }
 
         $query  = "call spInsertCategory('{$p_DepartmentCode}','{$catcode}','{$p_CategoryDesc}','{$date}','{$user["username"]}');";
 
         if($db->query($query)){
-            $session->msg('s',"Category added ");
-            redirect('add_category.php', false);
+            $flashMessages->success('Category added','add_category.php');
         } else {
-            $session->msg('d',' Sorry failed to added!');
-            redirect('category.php', false);
+            $flashMessages->error('Sorry failed to added!','category.php');
         }
 
     } else{
-        $session->msg("d", $errors);
-        redirect('add_category.php',false);
+        $flashMessages->warning($errors,'add_category.php');
     }
 }
 
