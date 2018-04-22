@@ -2,11 +2,14 @@
   $page_title = 'Edit User';
   require_once('includes/load.php');
   // Checkin What level user has permission to view this page
-   page_require_level(1);
+   //page_require_level(1);
+  UserPageAccessControle(1,'Edit User');
 ?>
 <?php
   $e_user = find_by_id('users',(int)$_GET['id']);
   $groups  = find_all('user_groups');
+  $all_Employees = find_by_sql("call spSelectAllEmployees();");
+
   if(!$e_user){
     $session->msg("d","Missing user id.");
     redirect('users.php');
@@ -22,9 +25,15 @@
              $id = (int)$e_user['id'];
            $name = remove_junk($db->escape($_POST['name']));
        $username = remove_junk($db->escape($_POST['username']));
-          $level = (int)$db->escape($_POST['level']);
+
+       $parts = $_POST['level'];
+       $arr = explode(':', $parts);
+       $user_level = $arr[0];
+       $Groupname = $arr[1];
+
+       $employee = remove_junk($db->escape($_POST['EmployeeCode']));
        $status   = remove_junk($db->escape($_POST['status']));
-            $sql = "UPDATE users SET name ='{$name}', username ='{$username}',user_level='{$level}',status='{$status}' WHERE id='{$db->escape($id)}'";
+       $sql = "UPDATE users SET name ='{$name}', username ='{$username}',user_level='{$user_level}',EmployeeCode='{$employee}',group_name='{$Groupname}',status='{$status}' WHERE id='{$db->escape($id)}'";
          $result = $db->query($sql);
           if($result && $db->affected_rows() === 1){
             $session->msg('s',"Acount Updated ");
@@ -83,13 +92,23 @@ if(isset($_POST['update-pass'])) {
             </div>
             <div class="form-group">
                   <label for="username" class="control-label">Username</label>
-                  <input type="text" class="form-control" name="username" value="<?php echo remove_junk(ucwords($e_user['username'])); ?>">
+                  <input type="text" class="form-control" name="username" value="<?php echo remove_junk(ucwords($e_user['username'])); ?>" readonly="readonly" >
             </div>
+              <div class="form-group">
+                  <label for="level">Employee </label>
+                  <select class="form-control select2" style="width: 100%;" name="EmployeeCode" id="EmployeeCode1" required="required">
+                      <option value="">Select Employee</option><?php  foreach ($all_Employees as $EMP): ?>
+                      <option <?php if($EMP['EpfNumber'] === $e_user['EmployeeCode']) echo 'selected="selected"';?>
+                               value="<?php echo $EMP['EpfNumber'] ?>"><?php echo $EMP['EpfNumber'] ?> ~ <?php echo $EMP['EmployeeName'] ?>
+                      </option><?php endforeach; ?>
+
+                  </select>
+              </div>
             <div class="form-group">
               <label for="level">User Role</label>
                 <select class="form-control" name="level">
                   <?php foreach ($groups as $group ):?>
-                   <option <?php if($group['group_level'] === $e_user['user_level']) echo 'selected="selected"';?> value="<?php echo $group['group_level'];?>"><?php echo ucwords($group['group_name']);?></option>
+                   <option <?php if($group['group_level'] === $e_user['user_level']) echo 'selected="selected"';?> value="<?php echo $group['group_level'];?>:<?php echo ucwords($group['group_name']);?>"><?php echo ucwords($group['group_name']);?></option>
                 <?php endforeach;?>
                 </select>
             </div>

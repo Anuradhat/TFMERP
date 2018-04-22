@@ -8,7 +8,7 @@ $page_title = 'Create Barcode';
 require_once('includes/load.php');
 
 // Checkin What level user has permission to view this page
-page_require_level(2);
+UserPageAccessControle(1,'Barcode Create');
 
 
 if (strtoupper($_SERVER['REQUEST_METHOD']) == 'GET' && !$flashMessages->hasErrors() && !$flashMessages->hasWarnings())

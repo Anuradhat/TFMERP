@@ -3,7 +3,7 @@ ob_start();
 
 $page_title = 'Employee';
 require_once('includes/load.php');
-page_require_level(1);
+UserPageAccessControle(1,'Employee Details');
 
 $all_Employee = find_by_sql("call spSelectAllEmployee();")
 ?>
@@ -72,7 +72,7 @@ $all_Employee = find_by_sql("call spSelectAllEmployee();")
                     <div class="box">
                         <!-- /.box-header -->
                         <div class="box-body">
-                            <table id="table" class="table table-bordered table-striped">
+                            <table id="table" class="table table-bordered table-striped datatable">
                                 <thead>
                                     <tr>
                                         <th>Action</th>
@@ -93,13 +93,13 @@ $all_Employee = find_by_sql("call spSelectAllEmployee();")
                                                     <button type="submit" name="employee" class="btn  btn-warning btn-xs glyphicon glyphicon-edit"></button>
                                                     <input type="hidden" name="EpfNumber" value="<?php echo remove_junk($empl['EpfNumber']);?>" />
                                                 </form>
-                                                <form method="post" action="delete_employee.php">
-                                                    <button type="submit" name="employee" class="btn btn-danger btn-xs glyphicon glyphicon-trash"></button>
-                                                    <input type="hidden" name="EpfNumber" value="<?php echo remove_junk($empl['EpfNumber']);?>" />
-                                                </form>
+                                                <!--<form method="post" action="delete_employee.php">-->
+                                                <button type="button" name="employee" class="DeleteBtn btn btn-danger btn-xs glyphicon glyphicon-trash"></button>
+                                                    
+                                                <!--</form>-->
                                             </div>
                                         </td>
-                                        <td>
+                                        <td class="clsRowId">
                                             <?php echo remove_junk(ucfirst($empl['EpfNumber'])); ?>
                                         </td>
                                         <td>
@@ -131,5 +131,44 @@ $all_Employee = find_by_sql("call spSelectAllEmployee();")
     </div>
 
 </section>
+
+<script>
+   $(document).ready(function () {
+      $(".DeleteBtn").click(function () {
+          var $row = $(this).closest("tr");
+          var RowNo = $row.find(".clsRowId").text().trim();
+
+        bootbox.confirm({
+            title: "Delete Confirmation",
+            message: "Do you want to delete this employee? This cannot be undo.",
+            buttons: {
+                cancel: {
+                    label: '<i class="fa fa-times"></i> Cancel'
+                },
+                confirm: {
+                    label: '<i class="fa fa-check"></i> Confirm'
+                }
+            },
+            callback: function (result) {
+                if (result === true) {
+                    $('.loader').show();
+
+                    $.ajax({
+                        url: 'delete_employee.php',
+                     type: "POST",
+                     data: { EpfNumber: RowNo },
+                     success: function (result) {
+                        location.reload();
+                    },
+                    complete: function (result) {
+                        $('.loader').fadeOut();
+                    }
+                });
+               }
+            }
+        });
+    });
+  });
+</script>
 
 <?php include_once('layouts/footer.php'); ?>

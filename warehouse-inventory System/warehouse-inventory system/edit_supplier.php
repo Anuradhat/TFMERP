@@ -2,7 +2,7 @@
 ob_start();
 $page_title = 'Supplier - Edit Supplier';
 require_once('includes/load.php');
-page_require_level(2);
+UserPageAccessControle(1,'Supplier Edit');
 
 preventGetAction('supplier.php');
 

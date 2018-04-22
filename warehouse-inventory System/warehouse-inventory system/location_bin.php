@@ -155,7 +155,7 @@ function FillBins() {
         var Location = $('#LocationCode').val();
 
         $.ajax({
-            url: "Location_bin.php",
+            url: "location_bin.php",
             type: "POST",
             data: { Location: Location},
             success: function (result) {

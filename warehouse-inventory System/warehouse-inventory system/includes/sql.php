@@ -403,7 +403,7 @@ function tableExists($table){
 	  global $db;
 	  $results = array();
 	  $sql = "SELECT u.id,u.name,u.username,u.user_level,u.status,u.last_login,";
-	  $sql .="g.group_name ";
+	  $sql .="g.group_name,u.EmployeeCode ";
 	  $sql .="FROM users u ";
 	  $sql .="LEFT JOIN user_groups g ";
 	  $sql .="ON g.group_level=u.user_level ORDER BY u.name ASC";
@@ -468,6 +468,40 @@ function tableExists($table){
 
 	 }
 
+
+/*--------------------------------------------------------------*/
+/* Function for cheaking which user has access to page
+/*--------------------------------------------------------------*/
+   function UserPageAccessControle($require_level,$PageName){
+       global $session;
+       $current_user = current_user();
+       $login_level = find_by_groupLevel($current_user['user_level']);
+       $UserAccess = PageApprovelDetailsByUserName('NoNeed');
+
+       foreach($UserAccess as $UAccess){
+           if($PageName == $UAccess['Page'] and $UAccess['Controller'] == 'Page Access'){
+               $AccessStatus = $UAccess["Access"];
+           }
+       }
+
+       //if user not login
+       if (!$session->isUserLoggedIn(true)):
+           $session->msg('d','Please login...');
+           redirect('index.php', false);
+           //if Group status Deactive
+       elseif($login_level['group_status'] === '0'):
+		   $session->msg('d','This level user has been band!');
+		   redirect('home.php',false);
+           //cheackin log in User level and Require level is Less than or equal to
+       elseif($AccessStatus == '1'):
+           return true;
+       else:
+           $session->msg("d", "Sorry! you dont have permission to view the page.");
+           redirect('home.php', false);
+       endif;
+   }
+
+
 /*--------------------------------------------------------------*/
 /* Function for Finding all approvals'
 /*--------------------------------------------------------------*/
@@ -496,6 +530,18 @@ function tableExists($table){
            }
        }
        return "";
+   }
+
+/*--------------------------------------------------------------*/
+/* Function for Finding Page Approvels'
+/*--------------------------------------------------------------*/
+   function PageApprovelDetailsByUserName($UserName){
+       $current_user = current_user();
+
+       $userAccessDetails = find_by_sql("call spSelectUserAccessDetailsByUser('{$current_user["username"]}');");
+       //define("UserAccess",serialize($userAccessDetails));
+
+       return $userAccessDetails;
    }
 
    /*--------------------------------------------------------------*/

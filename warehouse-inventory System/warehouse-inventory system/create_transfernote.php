@@ -7,7 +7,7 @@ session_start();
 $page_title = 'Create Transfer Note';
 require_once('includes/load.php');
 // Checkin What level user has permission to view this page
-page_require_level(2);
+UserPageAccessControle(1,'Transfer Note Create');
 
 $all_locations = find_by_sql("call spSelectAllLocations();");
  

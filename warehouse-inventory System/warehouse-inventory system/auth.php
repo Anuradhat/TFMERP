@@ -15,6 +15,9 @@ if(empty($errors)){
      $session->login($user_id);
     //Update Sign in time
      updateLastLogIn($user_id);
+     //Load User Access
+     //PageApprovelDetailsByUserName($username);
+
      $session->msg("s", "Welcome to Techno Forms (Pvt) Ltd");
      redirect('home.php',false);
 

@@ -7,7 +7,7 @@ session_start();
 $page_title = 'Update Quotation';
 require_once('includes/load.php');
 // Checkin What level user has permission to view this page
-page_require_level(2);
+UserPageAccessControle(1,'Quotation Update');
 
 $default_flow = ReadSystemConfig('DefaultSOWorkFlow');
 $default_salesrepDesig = ReadSystemConfig('DefaultSalesRepDesigCode');

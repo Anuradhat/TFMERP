@@ -3,7 +3,7 @@ ob_start();
 
 $page_title = 'Employee Designation - Edit Designation';
 require_once('includes/load.php');
-page_require_level(2);
+UserPageAccessControle(1,'Employee Designation Edit');
 
 preventGetAction('employee_designation.php');
 

@@ -2,7 +2,7 @@
 ob_start();
 $page_title = 'Work-Flow Master';
 require_once('includes/load.php');
-page_require_level(1);
+UserPageAccessControle(1,'Work Flow');
 
 $all_workflows = find_by_sql("call spSelectAllWorkFlow();");
 ?>
@@ -69,7 +69,7 @@ $all_workflows = find_by_sql("call spSelectAllWorkFlow();");
                     <div class="box">
                         <!-- /.box-header -->
                         <div class="box-body">
-                            <table id="table" class="table table-bordered table-striped">
+                            <table id="table" class="table table-bordered table-striped datatable">
                                 <thead>
                                     <tr>
                                         <th>Action</th>

@@ -243,8 +243,8 @@ desired effect
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            <li><a href="add_user.php"><i class="fa fa-user-circle-o"></i> User</a></li>
-                            <li><a href="add_group.php"><i class="fa fa-user-circle"></i> User Level</a></li>
+                            <li><a href="users.php"><i class="fa fa-user-circle-o"></i> Manage Users</a></li>
+                            <li><a href="group.php"><i class="fa fa-user-circle"></i> User Group</a></li>
                             <li><a href="workflow.php"><i class="fa fa-check-circle"></i> Work-Flow </a></li>
                         </ul>
                     </li>

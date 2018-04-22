@@ -7,7 +7,7 @@ session_start();
 $page_title = 'Create Purchase Requisition';
 require_once('includes/load.php');
 // Checkin What level user has permission to view this page
-page_require_level(2);
+UserPageAccessControle(1,'PR Create');
 
 $all_Supplier = find_by_sql("call spSelectAllSuppliers();");
 

@@ -3,7 +3,7 @@ ob_start();
 
 $page_title = 'Employee Designation';
 require_once('includes/load.php');
-page_require_level(1);
+UserPageAccessControle(1,'Employee Designation');
 
 $all_EmployeeDesignation = find_by_sql("call spSelectAllEmployeeDesignation();")
 ?>
@@ -72,7 +72,7 @@ $all_EmployeeDesignation = find_by_sql("call spSelectAllEmployeeDesignation();")
                     <div class="box">
                         <!-- /.box-header -->
                         <div class="box-body">
-                            <table id="table" class="table table-bordered table-striped">
+                            <table id="table" class="table table-bordered table-striped datatable">
                                 <thead>
                                     <tr>
                                         <th>Action</th>
@@ -89,13 +89,12 @@ $all_EmployeeDesignation = find_by_sql("call spSelectAllEmployeeDesignation();")
                                                     <button type="submit" name="designation" class="btn  btn-warning btn-xs glyphicon glyphicon-edit"></button>
                                                     <input type="hidden" name="DesignationCode" value="<?php echo remove_junk($desig['DesignationCode']);?>" />
                                                 </form>
-                                                <form method="post" action="delete_employee_designation.php">
-                                                    <button type="submit" name="designation" class="btn btn-danger btn-xs glyphicon glyphicon-trash"></button>
-                                                    <input type="hidden" name="DesignationCode" value="<?php echo remove_junk($desig['DesignationCode']);?>" />
-                                                </form>
+                                                <!--<form method="post" action="delete_employee_designation.php">-->
+                                                    <button type="button" name="designation" class="DeleteBtn btn btn-danger btn-xs glyphicon glyphicon-trash"></button>
+                                                <!--</form>-->
                                             </div>
                                         </td>
-                                        <td>
+                                        <td class="clsRowId">
                                             <?php echo remove_junk(ucfirst($desig['DesignationCode'])); ?>
                                         </td>
                                         <td>
@@ -115,5 +114,44 @@ $all_EmployeeDesignation = find_by_sql("call spSelectAllEmployeeDesignation();")
     </div>
 
 </section>
+
+<script>
+   $(document).ready(function () {
+      $(".DeleteBtn").click(function () {
+          var $row = $(this).closest("tr");
+          var RowNo = $row.find(".clsRowId").text().trim();
+
+        bootbox.confirm({
+            title: "Delete Confirmation",
+            message: "Do you want to delete this designation? This cannot be undo.",
+            buttons: {
+                cancel: {
+                    label: '<i class="fa fa-times"></i> Cancel'
+                },
+                confirm: {
+                    label: '<i class="fa fa-check"></i> Confirm'
+                }
+            },
+            callback: function (result) {
+                if (result === true) {
+                    $('.loader').show();
+
+                    $.ajax({
+                        url: 'delete_employee_designation.php',
+                     type: "POST",
+                     data: { DesignationCode: RowNo },
+                     success: function (result) {
+                        location.reload();
+                    },
+                    complete: function (result) {
+                        $('.loader').fadeOut();
+                    }
+                });
+               }
+            }
+        });
+    });
+  });
+</script>
 
 <?php include_once('layouts/footer.php'); ?>

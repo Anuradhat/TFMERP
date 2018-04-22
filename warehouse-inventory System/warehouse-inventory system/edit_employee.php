@@ -3,7 +3,7 @@ ob_start();
 
 $page_title = 'Employee - Edit Employee';
 require_once('includes/load.php');
-page_require_level(2);
+UserPageAccessControle(1,'Employee Details Edit');
 
 preventGetAction('employee.php');
 $allEmployeeDepartmens = find_by_sql("call spSelectAllEmployeeDepartment();");

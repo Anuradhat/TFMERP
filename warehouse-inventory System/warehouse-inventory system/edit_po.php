@@ -7,7 +7,7 @@ session_start();
 $page_title = 'Update Purchase Order';
 require_once('includes/load.php');
 // Checkin What level user has permission to view this page
-page_require_level(2);
+UserPageAccessControle(1,'PO Update');
 
 $all_Supplier = find_by_sql("call spSelectAllSuppliers();");
 $all_workflows = find_by_sql("call spSelectAllWorkFlow();");

@@ -3,7 +3,7 @@ ob_start();
 
 $page_title = 'Employee Department';
 require_once('includes/load.php');
-page_require_level(1);
+UserPageAccessControle(1,'Employee Department');
 
 $all_EmployeeDepartment = find_by_sql("call spSelectAllEmployeeDepartment();")
 ?>
@@ -63,7 +63,7 @@ $all_EmployeeDepartment = find_by_sql("call spSelectAllEmployeeDepartment();")
             </div>
         </div>
 
-   
+
         <!-- /.box-header -->
         <div class="box-body">
             <div class="row">
@@ -72,7 +72,7 @@ $all_EmployeeDepartment = find_by_sql("call spSelectAllEmployeeDepartment();")
                     <div class="box">
                         <!-- /.box-header -->
                         <div class="box-body">
-                            <table id="table" class="table table-bordered table-striped">
+                            <table id="table" class="table table-bordered table-striped datatable">
                                 <thead>
                                     <tr>
                                         <th>Action</th>
@@ -89,13 +89,12 @@ $all_EmployeeDepartment = find_by_sql("call spSelectAllEmployeeDepartment();")
                                                     <button type="submit" name="department" class="btn  btn-warning btn-xs glyphicon glyphicon-edit"></button>
                                                     <input type="hidden" name="DepartmentCode" value="<?php echo remove_junk($dep['DepartmentCode']);?>" />
                                                 </form>
-                                                <form method="post" action="delete_employee_department.php">
-                                                    <button type="submit" name="department" class="btn btn-danger btn-xs glyphicon glyphicon-trash"></button>
-                                                    <input type="hidden" name="DepartmentCode" value="<?php echo remove_junk($dep['DepartmentCode']);?>" />
-                                                </form>
+
+                                                <button type="button" name="department" class="DeleteBtn btn btn-danger btn-xs glyphicon glyphicon-trash"></button>
+                                                
                                             </div>
                                         </td>
-                                        <td>
+                                        <td class="clsRowId">
                                             <?php echo remove_junk(ucfirst($dep['DepartmentCode'])); ?>
                                         </td>
                                         <td>
@@ -115,5 +114,44 @@ $all_EmployeeDepartment = find_by_sql("call spSelectAllEmployeeDepartment();")
     </div>
 
 </section>
+
+<script>
+   $(document).ready(function () {
+      $(".DeleteBtn").click(function () {
+          var $row = $(this).closest("tr");
+          var RowNo = $row.find(".clsRowId").text().trim();
+
+        bootbox.confirm({
+            title: "Delete Confirmation",
+            message: "Do you want to delete this department? This cannot be undo.",
+            buttons: {
+                cancel: {
+                    label: '<i class="fa fa-times"></i> Cancel'
+                },
+                confirm: {
+                    label: '<i class="fa fa-check"></i> Confirm'
+                }
+            },
+            callback: function (result) {
+                if (result === true) {
+                    $('.loader').show();
+
+                    $.ajax({
+                        url: 'delete_employee_department.php',
+                     type: "POST",
+                     data: { DepartmentCode: RowNo },
+                     success: function (result) {
+                        location.reload();
+                    },
+                    complete: function (result) {
+                        $('.loader').fadeOut();
+                    }
+                });
+               }
+            }
+        });
+    });
+  });
+</script>
 
 <?php include_once('layouts/footer.php'); ?>

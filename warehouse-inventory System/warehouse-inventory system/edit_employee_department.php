@@ -3,7 +3,7 @@ ob_start();
 
 $page_title = 'Employee Department - Edit Department';
 require_once('includes/load.php');
-page_require_level(2);
+UserPageAccessControle(1,'Employee Department Edit');
 
 preventGetAction('employee_department.php');
 

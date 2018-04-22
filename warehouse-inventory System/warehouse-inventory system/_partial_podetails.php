@@ -1,5 +1,5 @@
 
-<table id="table" class="table table-bordered table-striped">
+<table id="table" class="table table-bordered table-striped datatable">
     <thead>
         <tr>
             <th>Action</th>
@@ -30,9 +30,9 @@
             <td>
                 <div>
                     <button type="button" class="EditBtn btn btn-warning btn-xs glyphicon glyphicon-edit" data-toggle="modal" data-target="#myModal" contenteditable="false"></button>
-                     
+
                     <button type="button" class="btn btn-danger btn-xs glyphicon glyphicon-trash DeleteBtn" id="btnDelete" <?php   if(remove_junk($arr_header[4]) == "1") echo "disabled" ?>></button>
-                
+
                 </div>
             </td>
             <td id="RowId" class="clsRowId">

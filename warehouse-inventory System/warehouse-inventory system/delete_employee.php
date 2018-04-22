@@ -2,14 +2,14 @@
 ob_start();
 require_once('includes/load.php');
 // Checkin What level user has permission to view this page
-page_require_level(2);
+UserPageAccessControle(1,'Employee Details Delete');
 
 preventGetAction('employee.php');
 ?>
 
 
 <?php
-if(isset($_POST['employee'])){
+if(isset($_POST['EpfNumber'])){
     $p_EpfNumber = remove_junk($db->escape($_POST['EpfNumber']));
 
     if(!$p_EpfNumber){

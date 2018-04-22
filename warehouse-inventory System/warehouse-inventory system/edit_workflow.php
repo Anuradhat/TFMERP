@@ -3,7 +3,7 @@ ob_start();
 
 $page_title = 'Work-Flow Master - Update Work-Flow';
 require_once('includes/load.php');
-page_require_level(2);
+UserPageAccessControle(1,'Work Flow Edit');
 
 preventGetAction('workflow.php');
 

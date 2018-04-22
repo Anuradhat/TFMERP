@@ -4,6 +4,7 @@ require_once('includes/load.php');
 // Checkin What level user has permission to view this page
 page_require_level(1);
 $groups = find_all('user_groups');
+$all_Employees = find_by_sql("call spSelectAllEmployees();");
 ?>
 <?php
 if(isset($_POST['add_user'])){
@@ -14,13 +15,19 @@ if(isset($_POST['add_user'])){
     if(empty($errors)){
         $name   = remove_junk($db->escape($_POST['full-name']));
         $username   = remove_junk($db->escape($_POST['username']));
-        $password   = remove_junk($db->escape($_POST['password']));
-        $user_level = (int)$db->escape($_POST['level']);
+        $password   = remove_junk($db->escape($_POST['password']));  
+        
+        $parts = $_POST['level'];
+        $arr = explode(':', $parts);
+        $user_level = $arr[0];
+        $Groupname = $arr[1];
+
+        $employee = remove_junk($db->escape($_POST['EmployeeCode']));
         $password = sha1($password);
         $query = "INSERT INTO users (";
-        $query .="name,username,password,user_level,status";
+        $query .="name,username,password,user_level,status,EmployeeCode,group_name";
         $query .=") VALUES (";
-        $query .=" '{$name}', '{$username}', '{$password}', '{$user_level}','1'";
+        $query .=" '{$name}', '{$username}', '{$password}', '{$user_level}','1', '{$employee}', '{$Groupname}'";
         $query .=")";
         if($db->query($query)){
             //sucess
@@ -38,12 +45,12 @@ if(isset($_POST['add_user'])){
 }
 ?>
 <?php include_once('layouts/header.php'); ?>
-  <?php echo display_msg($msg); ?>
+  
 
 <section class="content-header">
     <h1>
         User
-        <small>Create and edit users</small>
+        <small>Create users</small>
     </h1>
     <ol class="breadcrumb">
         <li>
@@ -97,9 +104,19 @@ if(isset($_POST['add_user'])){
                         <input id="confirmpassword" type="password" class="form-control" name="confirmpassword" placeholder="Confirm Password" required="required">
                     </div>
                     <div class="form-group">
+                        <label for="level">Employee </label>
+                        <select class="form-control select2" style="width: 100%;" name="EmployeeCode" id="EmployeeCode1" required="required">
+                            <option value="">Select Employee</option><?php  foreach ($all_Employees as $EMP): ?>
+                            <option value="<?php echo $EMP['EpfNumber'] ?>"><?php echo $EMP['EpfNumber'] ?> ~ <?php echo $EMP['EmployeeName'] ?>
+                            </option><?php endforeach; ?>
+                            
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <label for="level">User Role</label>
                         <select class="form-control" name="level"><?php foreach ($groups as $group ):?>
-                            <option value="<?php echo $group['group_level'];?>"><?php echo ucwords($group['group_name']);?></option><?php endforeach;?>
+                            <option value="<?php echo $group['group_level'];?>:<?php echo ucwords($group['group_name']);?>"><?php echo ucwords($group['group_name']);?> 
+                            </option><?php endforeach;?>
                         </select>
                     </div>
                     <div class="form-group clearfix">
