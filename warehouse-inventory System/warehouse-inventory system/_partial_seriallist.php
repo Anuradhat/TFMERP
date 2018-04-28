@@ -27,7 +27,7 @@ $arr_serial =  ArraySearch($arr_item,$StockCode)[7];
                         <input type="text" class="form-control col-xs-3 input-sm" name="StockCode" value="<?php echo $_SESSION['StockCode'] ?>" required="required" readonly="readonly" disabled />
                     </td>
                     <td class="clsSerialId">
-                        <input type="text" class="form-control col-xs-3 input-sm" name="SerialCode" value="<?php if($arr_serial[$count-1] != null)  echo $arr_serial[$count-1] ?>" placeholder="Serial Code" required="required" autocomplete="off" onkeyup="TextBoxKeyUp(this);" />
+                        <input type="text" class="form-control col-xs-3 input-sm txtSerail" name="SerialCode" value="<?php if($arr_serial[$count-1] != null)  echo $arr_serial[$count-1] ?>" placeholder="Serial Code" required="required" autocomplete="off" onkeyup="TextBoxKeyUp(this);" />
                     </td>
                     <td class="clsLocationCode" style="display:none">
                         <input type="text" class="form-control col-xs-3 input-sm" name="LocationCode" value="<?php echo $_SESSION['LocationCode'] ?>" placeholder="Location Code" disabled />
@@ -187,4 +187,12 @@ $arr_serial =  ArraySearch($arr_item,$StockCode)[7];
         });
     });
          
+    var $quan = $('.txtSerail');
+    $('.txtSerail').keyup(function (e) {
+        if (e.keyCode == 13) {
+            var ind = $quan.index(this);
+            $quan.eq(ind + 1).focus();
+            setTimeout(function () { $quan.eq(ind + 1).select(); }, 100);
+        }
+    });
 </script>
