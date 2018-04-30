@@ -539,9 +539,9 @@ if (isset($_POST['CustomerCode'])) {
                 data: { "SalePriceValidate": SalePrice, "ProductCode": ProductCode },
                 success: function (result) {
                     if (result == "red")
-                        ("#SalePrice").css('background-color', 'red');
+                        $("#SalePrice").css('background-color', 'red');
                     else
-                  ("#SalePrice").css('background-color', '');
+                  $("#SalePrice").css('background-color', '');
 
                     $('.loader').fadeOut();
                 }

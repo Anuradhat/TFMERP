@@ -169,28 +169,30 @@ desired effect
                                 <!-- The user image in the navbar-->
                                 <img src="../libs/images/user.png" class="user-image" alt="User Image">
                                 <!-- hidden-xs hides the username on small devices so only the image appears. -->
-                                <span class="hidden-xs">Anuradha Thennakoon</span>
+                                <span class="hidden-xs"><?php echo $user['username'];?></span>
                             </a>
                             <ul class="dropdown-menu">
                                 <!-- The user image in the menu -->
                                 <li class="user-header">
                                     <img src="../libs/images/user.png" class="img-circle" alt="User Image">
                                     <p>
-                                        Anuradha Thennakoon - Web Developer
-                                        <small>Member since Nov. 2012</small>
+                                        <?php echo $user['name'];?>
+                                        <small>logged in <?php echo $user['last_login'];?></small>
                                     </p>
                                 </li>
                                 <!-- Menu Body -->
                                
                                 <!-- Menu Footer-->
                                 <li class="user-footer">
-                                    <div class="pull-left">
+                                    <!--<div class="pull-left">
                                         <a href="#" class="btn btn-default btn-flat">Profile</a>
-                                    </div>
-                                    <div class="pull-right">
-                                        <a href="#" class="btn btn-default btn-flat">Sign out</a>
-                                    </div>
-                                </li>
+                                    </div>-->
+                                    <form method="post" action="logout.php" >
+                                        <div class="pull-right">
+                                            <button type="submit" class="btn btn-default btn-flat">Sign out</button>
+                                        </div>
+                                    </form>
+                        </li>
                             </ul>
                         </li>
                         <!-- Control Sidebar Toggle Button -->
@@ -211,9 +213,18 @@ desired effect
                         <img src="../libs/images/user.png" class="img-circle" alt="User Image">
                     </div>
                     <div class="pull-left info">
-                        <p>Anuradha Thennakoon</p>
+                        <p><?php echo $user['name'];?></p>
                         <!-- Status -->
-                        <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+                        <?php 
+                            if ($user['name']){
+                                echo '<a href="#"><i class="fa fa-circle text-success"></i> Online</a>';
+                            }
+                            else
+                            {
+                                echo '<a href="#"><i class="fa fa-circle text-danger"></i> Offline</a>';
+                            }
+                        ?>
+                        
                     </div>
                 </div>
                 <!-- search form (Optional) -->
