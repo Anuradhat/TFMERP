@@ -26,6 +26,7 @@
     <Compile Include="create_creditnote.php" />
     <Compile Include="customer_payment.php" />
     <Compile Include="create_invoice.php" />
+    <Compile Include="edit_po_.php" />
     <Compile Include="edit_salesorder_.php" />
     <Compile Include="includes\FlashMessages.php" />
     <Compile Include="invoice_payment.php" />
