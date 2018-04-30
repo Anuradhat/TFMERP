@@ -106,14 +106,14 @@ if(isset($_POST['edit_po'])){
                 
                 try
                 {
-                    $db->begin();
-
                     $Po_count = find_by_sp("call spSelectPurchaseOrderFromCode('{$p_PoCode}');");
 
                     if(!$Po_count)
                     {
                         $flashMessages->warning('This purchase order number not exist in the system.','edit_po.php');
                     }
+
+                    $db->begin();
 
                     //Update purchase order header details
                     $query  = "call spUpdatePurchaseOrderH('{$p_PoCode}','{$p_SupplierCode}','{$p_WorkFlowCode}','{$p_Remarks}','{$date}','{$user["username"]}');";
@@ -133,7 +133,7 @@ if(isset($_POST['edit_po'])){
 
                     $db->commit();
                     
-                    $flashMessages->warning('Purchase order has been successfully updated.','edit_po.php');
+                    $flashMessages->success('Purchase order has been successfully updated.','edit_po.php');
 
                 }
                 catch(Exception $ex)

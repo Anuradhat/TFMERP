@@ -108,14 +108,14 @@ if(isset($_POST['create_pr'])){
                 {
                     $p_PRCode  = autoGenerateNumber('tfmtPurchaseRequisitionHT',1);
 
-                    $db->begin();
-
                     $Pr_count = find_by_sp("call spSelectPurchaseRequisitionFromCode('{$p_PRCode}');");
 
                     if($Pr_count)
                     {
                         $flashMessages->warning('This purchase requisition code exist in the system.','create_pr.php');
                     }
+
+                    $db->begin();
 
                     //Insert purchase requisition header details
                     $query  = "call spInsertPurchaseRequisitionH('{$p_PRCode}','{$date}','{$p_SupplierCode}','{$p_Remarks}','{$date}','{$user["username"]}');";

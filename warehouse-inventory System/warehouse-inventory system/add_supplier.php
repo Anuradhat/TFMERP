@@ -33,9 +33,6 @@ if(isset($_POST['add_supplier'])){
             //Supplier code
             $p_SupplierCode = autoGenerateNumber('tfmSupplierM',1);
 
-
-            $db->begin();
-
             $SupplierCount = find_by_sp("call spSelectSupplierByCode('{$p_SupplierCode}');");
 
             if($SupplierCount)
@@ -44,6 +41,8 @@ if(isset($_POST['add_supplier'])){
                 $session->msg('d','This supplier code exist in the system.');
                 redirect('add_supplier.php',false);
             }
+
+            $db->begin();
 
             $query = "call spInsertSupplier('{$p_SupplierCode}','{$p_SupplierName}','{$p_SupplierAddress1}','{$p_SupplierAddress2}','{$p_SupplierAddress3}','{$p_Telephone}',
            '{$p_Fax}','{$p_Email}','{$p_ContactPerson}','{$p_VatNo}','{$p_SVatNo}','{$p_CreditPeriod}','{$p_CurrencyCode}','{$p_user["username"]}');";

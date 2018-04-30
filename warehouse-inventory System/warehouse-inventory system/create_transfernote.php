@@ -67,8 +67,6 @@ if(isset($_POST['create_transfernote'])){
                 {
                     $p_TransferNoteNo  = autoGenerateNumber('tfmTransferNoteHT',1);
 
-                    $db->begin();
-
                     $TransferNote_count = find_by_sp("call spSelectTransferNoteFromCode('{$p_TransferNoteNo}');");
 
 
@@ -103,6 +101,7 @@ if(isset($_POST['create_transfernote'])){
                         }
                     }
 
+                    $db->begin();
 
                     //Insert transfer note header details
                     $query  = "call spInsertTransferNoteH('{$p_TransferNoteNo}','{$p_FromLocationCode}','{$p_FromBinCode}','{$p_ToLocationCode}','{$p_ToBinCode}','{$date}','{$p_Remarks}',7,'{$date}','{$user["username"]}');";

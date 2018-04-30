@@ -25,14 +25,15 @@ if(isset($_POST['add_location_bin'])){
 
         try
         {
-            $db->begin();
-
+            
             $bin_count = find_by_sp("call spSelectBinFromLocationAndBinCode('{$p_LocationCode}','{$p_BinCode}');");
 
             if($bin_count)
             {
                 $flashMessages->warning('This Bin code exists in the system.','add_location_bin.php');
             }
+
+            $db->begin();
 
             $query  = "call spInsertBin('{$p_LocationCode}','{$p_BinCode}','{$p_BinName}','{$user['username']}');";
 

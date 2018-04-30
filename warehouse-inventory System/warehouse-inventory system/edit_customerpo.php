@@ -57,14 +57,14 @@ if(isset($_POST['edit_customerpo'])){
                 try
                 {
 
-                    $db->begin();
-
                     $CusPo_count = find_by_sp("call spSelectCustomerPurchaseOrderHFromCode('{$p_CustomerPoCode}');");
 
                     if(!$CusPo_count)
                     {
                         $flashMessages->warning('This customer purchase order not exist in the system.','edit_customerpo.php');
                     }
+
+                    $db->begin();
 
                     //Update customer purchase order header details
                     $query  = "call spUpdateCusPurchaseOrderH('{$p_CustomerPoCode}','{$p_ReferenceNo}','{$p_WorkFlowCode}','{$p_Remarks}','{$date}','{$user["username"]}');";

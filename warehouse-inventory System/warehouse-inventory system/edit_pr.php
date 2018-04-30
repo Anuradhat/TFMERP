@@ -112,14 +112,14 @@ if(isset($_POST['edit_pr'])){
                 try
                 {
 
-                    $db->begin();
-
                     $Pr_count = find_by_sp("call spSelectPurchaseRequisitionFromCode('{$p_PRNo}');");
 
                     if(!$Pr_count)
                     {
                         $flashMessages->warning('This purchase requisition code not exist in the system.','edit_pr.php');
                     }
+
+                    $db->begin();
 
                     //Update purchase requisition header details
                     $query  = "call spUpdatePurchaseRequisitionH('{$p_PRNo}','{$p_SupplierCode}','{$p_Remarks}','{$date}','{$user["username"]}');";

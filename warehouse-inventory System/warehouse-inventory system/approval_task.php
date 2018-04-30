@@ -27,10 +27,18 @@ else
 if(isset($_POST['ReferenceNo']))
 {
     $ReferenceNo = remove_junk($db->escape($_POST['ReferenceNo']));
+    $TransactionCode = remove_junk($db->escape($_POST['TransactionCode']));
 
-    $_SESSION['SalesOrder'] = $ReferenceNo;
+    if ($TransactionCode == "001")
+    {
+        $_SESSION['PurchaseOrder'] = $ReferenceNo;
+    }
+    else if ($TransactionCode == "004")
+    {
+        $_SESSION['SalesOrder'] = $ReferenceNo;
+    }
+
     $_SESSION['redirect'] = true;
-
     echo 'redirect';
 }
 
@@ -121,7 +129,7 @@ if (isset($_POST['Approved']) && isset($_POST['TransactionCode']) && isset($_POS
                     <div class="box">
                         <!-- /.box-header -->
                         <div class="box-body">
-                            <table id="table" class="table table-bordered table-striped">
+                            <table id="table" class="table table-bordered table-striped datatable">
                                 <thead>
                                     <tr>
                                         <th>View</th>
@@ -141,7 +149,7 @@ if (isset($_POST['Approved']) && isset($_POST['TransactionCode']) && isset($_POS
                                             <button type="submit" name="Approved" class="btn  btn-primary btn-sm glyphicon glyphicon-list-alt"></button>
                                             <button type="button" class="EditBtn btn btn-warning btn-sm glyphicon glyphicon-edit" <?php if($approvals['TrnsactionCode'] != '004' && $approvals['TrnsactionCode'] != '001') echo "disabled" ?>></button>
                                         </td>
-                                        <td>
+                                        <td class="clsTransaction">
                                             <?php echo remove_junk($approvals['TransactionName']); ?>
                                         </td>
                                         <td style="display: none;" class="clsTransactionCode">
@@ -258,15 +266,20 @@ if (isset($_POST['Approved']) && isset($_POST['TransactionCode']) && isset($_POS
        $(".EditBtn").click(function () {
            $('.loader').show();
            var $row = $(this).closest("tr");
-           var RefNo = $row.find(".clsRefNo").text();
+           var RefNo = $row.find(".clsRefNo").text().trim();
+           var TranCode = $row.find(".clsTransactionCode").text().trim();
 
+           
            $.ajax({
                url: "approval_task.php",
                type: "POST",
-               data: 'ReferenceNo=' + RefNo.trim(),
+               data: { ReferenceNo: RefNo, TransactionCode: TranCode },
                success: function (result) {
-                   window.location = 'edit_salesorder_.php';
-
+                   if (Tran = '001')
+                      window.location = 'edit_po_.php';
+                   else if (Tran = '004')
+                      window.location = 'edit_salesorder_.php';
+                   
                    $('.loader').fadeOut();
                }
            });

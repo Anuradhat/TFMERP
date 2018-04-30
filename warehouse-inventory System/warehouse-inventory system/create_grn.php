@@ -87,11 +87,9 @@ if(isset($_POST['create_grn'])){
                 {
                     $p_GRNCode  = autoGenerateNumber('tfmGrnHT',1);
 
-                    $db->begin();
-
                     $Grn_count = find_by_sp("call spSelectGRNFromCode('{$p_GRNCode}');");
 
-
+                   
                     if($default_stock_bin == null)
                     {
                         $flashMessages->warning('Default stock bin not found for this selected location.','create_grn.php');
@@ -113,6 +111,8 @@ if(isset($_POST['create_grn'])){
                     {
                         $flashMessages->warning('Good received item(s) details not found.','create_grn.php');
                     }
+
+                    $db->begin();
 
                     //Insert good received note header details
                     $query  = "call spInsertGoodReceivedH('{$p_GRNCode}','{$p_LocationCode}','{$p_PurchaseOrderNo}','{$p_SupplierCode}','{$date}','{$p_ReferenceNo}','{$p_Remarks}','{$datetime}','{$date}','{$user["username"]}');";

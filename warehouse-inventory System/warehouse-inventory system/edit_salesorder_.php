@@ -6,8 +6,9 @@ session_start();
 
 $page_title = 'Update Quotation';
 require_once('includes/load.php');
+
 // Checkin What level user has permission to view this page
-page_require_level(2);
+UserPageAccessControle(1,'Quotation Update');
 
 preventGetAction('home.php');
 
@@ -64,8 +65,6 @@ if(isset($_POST['edit_salesorder_'])){
                 try
                 {
  
-                    $db->begin();
-
                     $So_count = find_by_sp("call spSelectSalesOrderHFromCode('{$p_SalesOrderCode}');");
 
                     if(!$So_count)
@@ -73,6 +72,8 @@ if(isset($_POST['edit_salesorder_'])){
                         $flashMessages->warning('This quotation number not exist in the system.','edit_salesorder_.php');
 
                     }
+
+                    $db->begin();
 
                     //Update quotation item details
                     foreach($arr_item as $row => $value)
@@ -325,7 +326,7 @@ if (isset($_POST['Edit'])) {
                             <label>Quotation</label>
                             <select class="form-control select2" style="width: 100%;" name="SalesOrderCode" id="SalesOrderCode" required="required" onchange="FillSODetails();" disabled>
                                 <option value="<?php echo $SalesOrderH['SoNo']; ?>" selected><?php echo $SalesOrderH['SoNo']; ?></option>
-                                <option value="">Select Quotation</option>
+                                <!--<option value="">Select Quotation</option>-->
                             </select>
                         </div>
 

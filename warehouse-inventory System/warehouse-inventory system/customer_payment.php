@@ -109,8 +109,6 @@ if(isset($_POST['customer_payment'])){
                     {
                         $p_CusPaymentCode  = autoGenerateNumber('tfmCusPaymentHT',1);
 
-                        $db->begin();
-
                         $CusPayment_count = find_by_sp("call spSelectCusPaymentHFromCode('{$p_CusPaymentCode}');");
 
 
@@ -119,6 +117,7 @@ if(isset($_POST['customer_payment'])){
                             $flashMessages->warning('Duplicate customer payment number found','customer_payment.php');
                         }
 
+                        $db->begin();
 
                         //Insert Customer Payment Header
                         $query  = "call spInsertCusPaymentH('{$p_CusPaymentCode}','{$p_LocationCode}','{$date}',{$TotalPayment},'{$date}','{$user["username"]}');";

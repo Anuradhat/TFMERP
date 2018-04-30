@@ -24,7 +24,7 @@ if(isset($_POST['add_location'])){
 
         try
         {
-            $db->begin();
+
 
             $loc_count = find_by_sp("call spSelectLocationFromCode('{$p_LocationCode}');");
 
@@ -33,6 +33,8 @@ if(isset($_POST['add_location'])){
                 $session->msg("d", "This location code exist in the system.");
                 redirect('add_location.php',false);
             }
+
+            $db->begin();
 
             $query  = "call spInsertLocation('{$p_LocationCode}','{$p_LocationName}',{$p_LocationOutlet},'{$date}','{$user["username"]}');";
 

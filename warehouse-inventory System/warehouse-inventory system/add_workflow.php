@@ -36,8 +36,7 @@ if(isset($_POST['add_workflow'])){
 
         try
         {
-            $db->begin();
-
+            
             $wf_count = find_by_sp("call spSelectWorkFlowFromCode('{$p_WorkFlowCode}');");
 
             if($wf_count)
@@ -45,6 +44,8 @@ if(isset($_POST['add_workflow'])){
                 $session->msg("d", "This work-flow code exist in the system.");
                 redirect('add_workflow.php',false);
             }
+
+            $db->begin();
 
             $query  = "call spInsertWorkFlowH('{$p_WorkFlowCode}','{$p_Description}','{$date}','{$user["username"]}');";
             $db->query($query);

@@ -49,11 +49,16 @@ class MySqli_DB {
             if (trim($sql != "")) {
                 $this->query_id = $this->con->query($sql);
                 do{} while(mysqli_more_results($this->con) && mysqli_next_result($this->con));
+                
                 //$this->next_result();
             }
-            if (!$this->query_id)
+
+            if (!$this->query_id){
+                throw new Exception("Error on this Query :<pre> " . $sql ." Error: ".$this->con->error."</pre>");
+            }
                 // only for Develope mode
-                die("Error on this Query :<pre> " . $sql ." Error: ".$this->con->error."</pre>");
+                //die("Error on this Query :<pre> " . $sql ." Error: ".$this->con->error."</pre>");
+
             // For production mode
             //  die("Error on Query");
             return $this->query_id;
@@ -125,21 +130,31 @@ class MySqli_DB {
     /*--------------------------------------------------------------*/
     // Begin transaction
     function begin(){
-        //$this->query("BEGIN");
+        //$this->query("SET autocommit  = 0;");
+        $this->query("call spStartTrans();");
         //mysqli_autocommit($this->con,false);
-        mysqli_begin_transaction($this->con,MYSQLI_TRANS_START_READ_WRITE);
+        //mysqli_begin_transaction($this->con,MYSQLI_TRANS_START_READ_WRITE);
     }
+
+    //auto commit
+    //function autocommit_disabled(){
+    //    // mysqli_autocommit($this->con,false);
+    //    mysqli_autocommit($this->con,false);
+    //}
+
 
     //Commit transaction
     function commit(){
-        // mysqli_autocommit($this->con,false);
-        mysqli_commit($this->con);
+        //mysqli_autocommit($this->con,false);
+        //mysqli_commit($this->con);
+
+        $this->query("call spCommitTrans();");
     }
 
     //Rollback transaction
     function rollback(){
-        //$this->query("ROLLBACK");
-        mysqli_rollback($this->con);
+        $this->con->query("call spRollbackTrans()");
+        //mysqli_rollback($this->con);
     }
 
     public function next_result()

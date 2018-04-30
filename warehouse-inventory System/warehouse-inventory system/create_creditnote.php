@@ -54,8 +54,6 @@ if(isset($_POST['create_creditnote'])){
                 {
                     $p_CreditNoteNo  = autoGenerateNumber('tfmCreditNoteHT',1);
 
-                    $db->begin();
-
                     $p_CreditNoteCount = find_by_sp("call spSelectCreditNoteHFromCode('{$p_CreditNoteNo}');");
 
                     if($p_CreditNoteCount)
@@ -80,9 +78,9 @@ if(isset($_POST['create_creditnote'])){
                         $TotalAmount += $value[3] * $value[4];
                     }
 
-
                     $InvoiceHed = find_by_sql("call spSelectInvoiceHFromCode('{$p_InvoiceNo}');");
 
+                    $db->begin();
 
                     //Insert credit note header details
                     $query  = "call spInsertCreditNoteH('{$p_CreditNoteNo}','{$InvoiceHed['spSelectInvoiceHFromCode']}','{$p_InvoiceNo}',{$TotalAmount},'{$date}','{$p_Remarks}','{$date}','{$user["username"]}');";

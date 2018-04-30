@@ -64,8 +64,6 @@ if(isset($_POST['edit_workflow'])){
 
         try
         {
-            $db->begin();
-
             $wf_count = find_by_sp("call spSelectWorkFlowFromCode('{$p_WorkFlowCode}');");
 
             if(!$wf_count)
@@ -73,6 +71,9 @@ if(isset($_POST['edit_workflow'])){
                 $session->msg("d", "This work-flow code not exist in the system.");
                 redirect('workflow.php',false);
             }
+
+            $db->begin();
+
             //Update Workflow header
             $query  = "call spUpdateWorkFlowH('{$p_WorkFlowCode}','{$p_Description}','{$date}','{$user["username"]}');";
             $db->query($query);

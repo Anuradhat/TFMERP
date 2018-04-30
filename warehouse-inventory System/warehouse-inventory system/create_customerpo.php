@@ -59,14 +59,15 @@ if(isset($_POST['create_customerpo'])){
                 {
                     $p_CusPoCode  = autoGenerateNumber('tfmCusPurchaseOrderHT',1);
 
-                    $db->begin();
-
+                    
                     $CusPo_count = find_by_sp("call spSelectCustomerPurchaseOrderHFromCode('{$p_CusPoCode}');");
 
                     if($CusPo_count)
                     {
                         $flashMessages->warning('This customer purchase order exist in the system.','create_customerpo.php');
                     }
+
+                    $db->begin();
 
                     //Insert customer purchase order header details
                     $query  = "call spInsertCusPurchaseOrderH('{$p_CusPoCode}','{$p_SalesOrderCode}','{$p_CustomerCode}','{$date}','{$p_ReferenceNo}','{$p_WorkFlowCode}','{$p_Remarks}','{$date}','{$user["username"]}');";

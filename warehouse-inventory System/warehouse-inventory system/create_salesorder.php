@@ -64,7 +64,7 @@ if(isset($_POST['create_salesorder'])){
                     
                     $p_SOCode  = autoGenerateNumber('tfmSalesOrderHT',1);
 
-                    $db->begin();
+                    
 
                     $So_count = find_by_sp("call spSelectSalesOrderHFromCode('{$p_SOCode}');");
 
@@ -72,6 +72,8 @@ if(isset($_POST['create_salesorder'])){
                     {
                         $flashMessages->warning('This quotation number exist in the system.','create_salesorder.php');
                     }
+
+                    $db->begin();
 
                     //Insert quotation header details
                     $query  = "call spInsertSalesOrderH('{$p_SOCode}','','{$p_CustomerCode}','{$p_SalesmanCode}','{$date}','{$p_WorkFlowCode}','{$p_Remarks}',{$p_ValidThru},'{$date}','{$user["username"]}');";

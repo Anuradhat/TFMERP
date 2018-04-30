@@ -56,7 +56,6 @@ if(isset($_POST['add_customer'])){
 
         try
         {
-            $db->begin();
 
             $cus_count = find_by_sp("call spSelectCustomerFromCode('{$p_CustomerCode}');");
 
@@ -64,6 +63,8 @@ if(isset($_POST['add_customer'])){
             {
                 $flashMessages->warning('This customer code exist in the system.','add_customer.php');
             }
+
+            $db->begin();
 
             $query  = "call spInsertCustomer('{$p_CustomerCode}','{$p_CustomerName}','{$p_NIC}','{$p_CustomerAddress1}','{$p_CustomerAddress2}',
                    '{$p_CustomerAddress3}','{$p_DeliveryAddress1}','{$p_DeliveryAddress2}','{$p_DeliveryAddress3}','{$p_DeliveryTo}','{$p_Tel}',

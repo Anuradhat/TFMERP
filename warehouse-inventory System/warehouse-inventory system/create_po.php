@@ -107,7 +107,7 @@ if(isset($_POST['create_po'])){
                 {
                     $p_POCode  = autoGenerateNumber('tfmPoHT',1);
 
-                    $db->begin();
+                    
 
                     $Po_count = find_by_sp("call spSelectPurchaseOrderFromCode('{$p_POCode}');");
 
@@ -116,6 +116,8 @@ if(isset($_POST['create_po'])){
                         $flashMessages->warning('This purchase order number exist in the system.','create_po.php');
 
                     }
+
+                    $db->begin();
 
                     //Insert purchase order header details
                     $query  = "call spInsertPurchaseOrderH('{$p_POCode}','{$p_PurchaseRequisition}','{$p_SupplierCode}','{$date}','{$p_WorkFlowCode}','{$p_Remarks}','{$date}','{$user["username"]}');";

@@ -62,9 +62,6 @@ if(isset($_POST['edit_salesorder'])){
                 //update quotation order 
                 try
                 {
- 
-                    $db->begin();
-
                     $So_count = find_by_sp("call spSelectSalesOrderHFromCode('{$p_SalesOrderCode}');");
 
                     if(!$So_count)
@@ -72,6 +69,8 @@ if(isset($_POST['edit_salesorder'])){
                         $flashMessages->warning('This quotation number not exist in the system.','edit_salesorder.php');
 
                     }
+
+                    $db->begin();
 
                     //Update sales quotation header details
                     $query  = "call spUpdateSalesOrderH('{$p_SalesOrderCode}','{$p_SalesmanCode}','{$p_WorkFlowCode}','{$p_Remarks}',{$p_ValidThru},'{$date}','{$user["username"]}');";

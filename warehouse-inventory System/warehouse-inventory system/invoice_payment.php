@@ -120,8 +120,6 @@ if(isset($_POST['invoice_payment'])){
                 {
                     $p_InvoiceCode  = autoGenerateNumber('tfmInvoiceHT',1);
 
-                    $db->begin();
-
                     $Invoice_count = find_by_sp("call spSelectInvoiceHFromCode('{$p_InvoiceCode}');");
 
                     if($Invoice_count)
@@ -130,12 +128,16 @@ if(isset($_POST['invoice_payment'])){
                         $flashMessages->warning('Duplicate invoice number found','invoice_payment.php');
                     }
 
+
+
                     $TotalCardValue = 0;  foreach($arr_card  as &$value) { $TotalCardValue += $value["value"];}
                     $TotalChequeValue = 0;  foreach($arr_cheque  as &$value) { $TotalChequeValue += $value["value"];}
                     $ToatlBankTrnPayment = 0;  foreach($arr_banktrn  as &$value) { $ToatlBankTrnPayment += $value["value"];}
                     $Credit = ($arr_header['NetAmount'] - ($_cash + $TotalCardValue + $TotalChequeValue + $ToatlBankTrnPayment)) < 0 ? 0 : ($arr_header['NetAmount'] - ($_cash + $TotalCardValue + $TotalChequeValue +$ToatlBankTrnPayment));
 
                     $PaidAmount = $_cash + $TotalCardValue + $TotalChequeValue + $ToatlBankTrnPayment;
+
+                    $db->begin();
 
                     //Insert invoice header details
                     $query  = "call spInsertInvoiceH('{$p_InvoiceCode}','{$p_LocationCode}','{$date}','{$datetime}','{$p_CustomerPoCode}','{$p_CustomerCode}',{$p_GrossAmount},0,{$p_DiscountAmount},{$p_NetAmount},{$Credit},{$PaidAmount},{$Credit},'{$p_SalesmanCode}',0,'','{$date}','{$user["username"]}');";
