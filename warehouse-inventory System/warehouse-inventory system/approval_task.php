@@ -139,7 +139,7 @@ if (isset($_POST['Approved']) && isset($_POST['TransactionCode']) && isset($_POS
                                     <tr>
                                         <td>
                                             <button type="submit" name="Approved" class="btn  btn-primary btn-sm glyphicon glyphicon-list-alt"></button>
-                                            <button type="button" class="EditBtn btn btn-warning btn-sm glyphicon glyphicon-edit" <?php if($approvals['TrnsactionCode'] != '004') echo "disabled" ?>></button>
+                                            <button type="button" class="EditBtn btn btn-warning btn-sm glyphicon glyphicon-edit" <?php if($approvals['TrnsactionCode'] != '004' && $approvals['TrnsactionCode'] != '001') echo "disabled" ?>></button>
                                         </td>
                                         <td>
                                             <?php echo remove_junk($approvals['TransactionName']); ?>
