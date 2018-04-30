@@ -3,7 +3,7 @@ ob_start();
 
 $page_title = 'Tax Master';
 require_once('includes/load.php');
-page_require_level(1);
+UserPageAccessControle(1,'Tax');
 
 $all_taxrates = find_by_sql("call spSelectAllTaxRates();")
 ?>

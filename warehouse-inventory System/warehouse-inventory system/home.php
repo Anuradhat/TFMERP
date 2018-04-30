@@ -16,6 +16,11 @@
 <?php include_once('layouts/header.php'); ?>
 <!-- Content Header (Page header) -->
 <section class="content-header">
+    <div class="row">
+        <div class="col-md-12">
+            <?php echo display_msg($msg); ?>
+        </div>
+    </div>
     <h1>
         Page Header
         <small>Optional descriptions</small>

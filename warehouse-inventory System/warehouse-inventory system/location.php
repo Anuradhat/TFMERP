@@ -2,7 +2,7 @@
 ob_start();
 $page_title = 'Location Master';
 require_once('includes/load.php');
-page_require_level(1);
+UserPageAccessControle(1,'Location');
 
 $all_locations = find_by_sql("call spSelectAllLocations();")
 ?>

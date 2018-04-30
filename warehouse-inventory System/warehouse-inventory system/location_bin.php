@@ -3,7 +3,7 @@ ob_start();
 
 $page_title = 'Bin Master';
 require_once('includes/load.php');
-page_require_level(1);
+UserPageAccessControle(1,'Stock Bin');
 
 $all_Location = find_by_sql("call spSelectAllLocations();");
 
