@@ -3,6 +3,7 @@ ob_start();
 
 $page_title = 'Supplier Master';
 require_once('includes/load.php');
+
 UserPageAccessControle(1,'Supplier');
 
 $all_suppliers = find_by_sql("call spSelectAllSuppliers();");

@@ -378,12 +378,10 @@
     <Compile Include="category.php" />
     <Compile Include="change_password.php" />
     <Compile Include="customer.php" />
-    <Compile Include="daily_sales.php" />
     <Compile Include="delete_category.php" />
     <Compile Include="delete_customer.php" />
     <Compile Include="delete_department.php" />
     <Compile Include="delete_group.php" />
-    <Compile Include="delete_media.php" />
     <Compile Include="delete_product.php" />
     <Compile Include="delete_sale.php" />
     <Compile Include="delete_user.php" />
@@ -415,12 +413,10 @@
     <Compile Include="libs\bower_components\ckeditor\samples\old\sample_posteddata.php" />
     <Compile Include="login_v2.php" />
     <Compile Include="logout.php" />
-    <Compile Include="media.php" />
     <Compile Include="monthly_sales.php" />
     <Compile Include="product.php" />
     <Compile Include="profile.php" />
     <Compile Include="sales_report.php" />
-    <Compile Include="sale_report_process.php" />
     <Compile Include="users.php" />
     <Compile Include="_partial_grndetails.php" />
     <Compile Include="_partial_podetails.php" />
