@@ -7,11 +7,16 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 	<!-- Tell the browser to be responsive to screen width -->
 	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport" />
-	<link rel="stylesheet" href="../libs/bower_components/bootstrap/dist/css/bootstrap.min.css" />
-	<!-- Font Awesome -->
-	<link rel="stylesheet" href="../libs/bower_components/font-awesome/css/font-awesome.min.css" />
-	<!-- Ionicons -->
-	<link rel="stylesheet" href="../libs/bower_components/Ionicons/css/ionicons.min.css" />
+
+    <link rel="stylesheet" href="/libs/bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="/libs/bower_components/font-awesome/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="libs/bower_components/Ionicons/css/ionicons.min.css">
+    <!-- bootstrap slider -->
+    <link rel="stylesheet" href="libs/bower_components/bootstrap-slider/slider.css">
+    <!-- iCheck -->
+    <link rel="stylesheet" href="libs/bower_components/iCheck/square/blue.css">
 	<!-- Theme style -->
 	<link rel="stylesheet" href="../libs/dist/css/AdminLTE.min.css" />
 	<!-- AdminLTE Skins. We have chosen the skin-blue for this starter
@@ -28,15 +33,15 @@
 	<link rel="stylesheet"
 		href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic" />
 
-	<script src="/libs/dist/iCheck/icheck.min.js"></script>
 
-	<title>Log In - TFM ERP</title>
+	<title>TFM ERP | Log In</title>
+    <link rel="shortcut icon" type="image/x-icon" href="../libs/ico/tfm_xs.ico" />
 </head>
 <body class="hold-transition login-page">
 	<div class="login-box">
 		<div class="login-logo">
-			<a href="../../index2.html">
-				<b>T</b>echno Forms 
+			<a href="#">
+				<b>T</b>echno <b>F</b>orms 
 				<b>E</b>RP
 				<b>S</b>olution 
 			</a>
