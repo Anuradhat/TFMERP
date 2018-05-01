@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<configuration date="2018/04/15" author="e.World Technology Ltd.">
+  <project id="{96C3AC86-2D54-440C-96F7-580D75E4EC8A}" file="" name="project1" product="PHPReportMaker" version="11.0" datetime="2018/04/15 12:56:08" languagefolder="phprptlang" userlevel="-2,&quot;Anonymous&quot;,0;">
+    <table id="UserGroupMenuAccess" name="UserGroupMenuAccess" caption="User Group Menu Access" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tfmAutoIncerementU" name="tfmAutoIncerementU" caption="tfm Auto Incerement U" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tfmBankM" name="tfmBankM" caption="tfm Bank M" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tfmBinM" name="tfmBinM" caption="tfm Bin M" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tfmCategoryM" name="tfmCategoryM" caption="tfm Category M" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tfmCreditNoteDT" name="tfmCreditNoteDT" caption="tfm Credit Note DT" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tfmCreditNoteHT" name="tfmCreditNoteHT" caption="tfm Credit Note HT" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tfmCurrencyM" name="tfmCurrencyM" caption="tfm Currency M" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tfmCusPaymentDT" name="tfmCusPaymentDT" caption="tfm Cus Payment DT" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tfmCusPaymentHT" name="tfmCusPaymentHT" caption="tfm Cus Payment HT" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tfmCusPurchaseOrderDT" name="tfmCusPurchaseOrderDT" caption="tfm Cus Purchase Order DT" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tfmCusPurchaseOrderHT" name="tfmCusPurchaseOrderHT" caption="tfm Cus Purchase Order HT" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tfmCustomerM" name="tfmCustomerM" caption="tfm Customer M" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tfmDepartmentM" name="tfmDepartmentM" caption="tfm Department M" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tfmEmployeeDepartmentM" name="tfmEmployeeDepartmentM" caption="tfm Employee Department M" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tfmEmployeeDesignationM" name="tfmEmployeeDesignationM" caption="tfm Employee Designation M" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tfmEmployeeM" name="tfmEmployeeM" caption="tfm Employee M" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tfmEmployeeReportingStructureM" name="tfmEmployeeReportingStructureM" caption="tfm Employee Reporting Structure M" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tfmGrnDT" name="tfmGrnDT" caption="tfm Grn DT" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tfmGrnHT" name="tfmGrnHT" caption="tfm Grn HT" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tfmGrnSerialT" name="tfmGrnSerialT" caption="tfm Grn Serial T" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tfmInvoiceDT" name="tfmInvoiceDT" caption="tfm Invoice DT" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tfmInvoiceHT" name="tfmInvoiceHT" caption="tfm Invoice HT" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tfmInvoiceSerialDT" name="tfmInvoiceSerialDT" caption="tfm Invoice Serial DT" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tfmInvoiceTaxT" name="tfmInvoiceTaxT" caption="tfm Invoice Tax T" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tfmLocationM" name="tfmLocationM" caption="tfm Location M" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tfmMenuM" name="tfmMenuM" caption="tfm Menu M" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tfmPaymentDT" name="tfmPaymentDT" caption="tfm Payment DT" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tfmPaymentTypesM" name="tfmPaymentTypesM" caption="tfm Payment Types M" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tfmPoDT" name="tfmPoDT" caption="tfm Po DT" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tfmPoHT" name="tfmPoHT" caption="tfm Po HT" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tfmProductM" name="tfmProductM" caption="tfm Product M" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tfmProductTaxM" name="tfmProductTaxM" caption="tfm Product Tax M" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tfmPurchaseRequisitionDT" name="tfmPurchaseRequisitionDT" caption="tfm Purchase Requisition DT" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tfmSalesOrderDT" name="tfmSalesOrderDT" caption="tfm Sales Order DT" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tfmSalesOrderHT" name="tfmSalesOrderHT" caption="tfm Sales Order HT" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tfmStatusM" name="tfmStatusM" caption="tfm Status M" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tfmStockM" name="tfmStockM" caption="tfm Stock M" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tfmStockMovementT" name="tfmStockMovementT" caption="tfm Stock Movement T" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tfmSubcategoryM" name="tfmSubcategoryM" caption="tfm Subcategory M" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tfmSupplierM" name="tfmSupplierM" caption="tfm Supplier M" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tfmSystemConfigU" name="tfmSystemConfigU" caption="tfm System Config U" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tfmTaxRatesM" name="tfmTaxRatesM" caption="tfm Tax Rates M" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tfmTransactionM" name="tfmTransactionM" caption="tfm Transaction M" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tfmTransferNoteDT" name="tfmTransferNoteDT" caption="tfm Transfer Note DT" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tfmTransferNoteHT" name="tfmTransferNoteHT" caption="tfm Transfer Note HT" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tfmTrasactionApprovelsU" name="tfmTrasactionApprovelsU" caption="tfm Trasaction Approvels U" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tfmWorkFlowDU" name="tfmWorkFlowDU" caption="tfm Work Flow DU" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tfmWorkFlowHU" name="tfmWorkFlowHU" caption="tfm Work Flow HU" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="tfmtPurchaseRequisitionHT" name="tfmtPurchaseRequisitionHT" caption="tfmt Purchase Requisition HT" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="user_groups" name="user_groups" caption="user groups" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="users" name="users" caption="users" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vwPendingApprovels" name="vwPendingApprovels" caption="vw Pending Approvels" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vwTopTransactionLevel" name="vwTopTransactionLevel" caption="vw Top Transaction Level" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="vwPurchaseOrder" name="vwPurchaseOrder" caption="vw Purchase Order" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+    <table id="rptPurchaseOrder" name="rptPurchaseOrder" caption="Purchase Order Report" userlevel="-2,&quot;Anonymous&quot;,0;" priv="1" />
+  </project>
+</configuration>
