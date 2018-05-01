@@ -222,6 +222,7 @@ if (isset($_POST['FromLocationCode']) && isset($_POST['FromBinCode']) && isset($
     $FromLocationCode = remove_junk($db->escape($_POST['FromLocationCode']));
     $FromBinCode = remove_junk($db->escape($_POST['FromBinCode']));
 
+    $arr_item = array();
     $arr_serial = array();
 
     $all_stocks = find_by_sql("call spSelectStockFromLocationNBinCode('{$FromLocationCode}','{$FromBinCode}');");
