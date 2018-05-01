@@ -448,6 +448,8 @@ desired effect
                             </ul>
                         </li>
 
+                    <li class="header">Reports & Files</li>
+
                     <li class="treeview">
                         <a href="#">
 
