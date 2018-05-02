@@ -142,7 +142,7 @@ if(isset($_POST['create_transfernote'])){
                             //Insert stock movement (-)
                             $Qty = -1 * $value[6];
                             $query  = "call spStockMovement('{$stock["StockCode"]}','{$p_FromLocationCode}','{$p_FromBinCode}',
-                                       '{$stock["ProductCode"]}','{$stock["SupplierCode"]}','003',{$stock["CostPrice"]},{$stock["SalePrice"]},0,{$stock["AvgCostPrice"]},{$stock["AvgSalePrice"]},{$Qty},'{$stock["ExpireDate"]}',
+                                       '{$stock["ProductCode"]}','',{$p_TransferNoteNo},'{$stock["SupplierCode"]}','003',{$stock["CostPrice"]},{$stock["SalePrice"]},0,{$stock["AvgCostPrice"]},{$stock["AvgSalePrice"]},{$Qty},'{$stock["ExpireDate"]}',
                                          '{$date}','{$user["username"]}');";
                             $db->query($query);
 

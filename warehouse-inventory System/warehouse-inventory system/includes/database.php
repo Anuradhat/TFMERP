@@ -153,7 +153,7 @@ class MySqli_DB {
 
     //Rollback transaction
     function rollback(){
-        $this->con->query("call spRollbackTrans()");
+        $this->con->query("call spRollbackTrans();");
         //mysqli_rollback($this->con);
     }
 
