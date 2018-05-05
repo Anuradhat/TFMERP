@@ -38,6 +38,9 @@ if(isset($_POST['add_location_bin'])){
             $query  = "call spInsertBin('{$p_LocationCode}','{$p_BinCode}','{$p_BinName}','{$user['username']}');";
 
             if($db->query($query)){
+                InsertRecentActvity("Bin Created","Reference No. ".$p_BinCode);
+
+
                 $db->commit();
 
                 $flashMessages->success('Bin Created.','add_location_bin.php');

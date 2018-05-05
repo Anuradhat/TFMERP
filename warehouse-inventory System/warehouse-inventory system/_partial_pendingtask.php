@@ -14,8 +14,7 @@
 </a>
 <ul class="dropdown-menu">
     <li class="header">
-        You have <?php   echo count($pendingJobs); ?>
- task(s)
+        You have <?php   echo count($pendingJobs); ?> task(s)
     </li>
     <li>
         <!-- inner menu: contains the actual data -->

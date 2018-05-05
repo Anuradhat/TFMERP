@@ -21,6 +21,8 @@ if(isset($_POST['taxrate'])){
     $delete_id = delete_by_sp("call spDeleteTaxRates('{$p_TaxCode}');");
 
     if($delete_id){
+        InsertRecentActvity("Tax deleted","Reference No. ".$p_TaxCode);
+
         $session->msg("s","Tax deleted");
         redirect('tax.php');
     } else {

@@ -77,7 +77,7 @@
                 type: "POST",
                 data: { "_stockcode": stockcode },
                 success: function (result) {
-                    $('#table').html(result);
+                    $('#tblBinDetails').html(result);
                 }
             });
 

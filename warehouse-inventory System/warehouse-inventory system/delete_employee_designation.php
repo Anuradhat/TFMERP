@@ -20,6 +20,8 @@ if(isset($_POST['DesignationCode'])){
     $delete_id = delete_by_sp("call spDeleteEmployeeDesignation('{$p_desigcode}');");
 
     if($delete_id){
+        InsertRecentActvity("Designation deleted","Reference No. ".$p_desigcode);
+
         $session->msg("s","Designation deleted.");
         redirect('employee_designation.php');
     } else {

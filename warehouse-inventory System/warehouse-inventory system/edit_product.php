@@ -91,6 +91,7 @@ if(isset($_POST['edit_product'])){
                 $db->query($query);
             }
 
+            InsertRecentActvity("Product updated","Reference No. ".$p_ProductCode);
 
             $db->commit();
 

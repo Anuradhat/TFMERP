@@ -81,6 +81,8 @@ if(isset($_POST['create_customerpo'])){
                         $db->query($query);
                     }
 
+                    InsertRecentActvity("Customer purchase order","Reference No. ".$p_CusPoCode);
+
                     $db->commit();
                     
                     $flashMessages->success('Customer purchase order has been saved successfully,\n   Your customer purchase order No: '.$p_CusPoCode,'create_customerpo.php');

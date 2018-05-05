@@ -10,6 +10,8 @@
  $Transaction = $_SESSION['Transaction'];
  $TransactionNo = $_SESSION['TransactionNo'];
 
+ InsertRecentActvity("Barcode","Reference No. ".$TransactionNo);
+
  if($Transaction == 'GRN')
    $all_Trans = find_by_sql("call spBarCodeForGRN('{$TransactionNo}');");
 

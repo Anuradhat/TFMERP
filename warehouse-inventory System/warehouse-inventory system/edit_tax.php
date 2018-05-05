@@ -45,6 +45,8 @@ if(isset($_POST['edit_tax'])){
 
         if($db->query($query)){
             $session->msg('s',"Tax updated");
+            InsertRecentActvity("Tax updated","Reference No. ".$p_TaxCode);
+
             redirect('tax.php', false);
         } else {
             $session->msg('d',' Sorry failed to updated!');

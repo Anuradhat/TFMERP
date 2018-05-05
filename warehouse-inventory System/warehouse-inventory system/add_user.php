@@ -31,6 +31,8 @@ if(isset($_POST['add_user'])){
         $query .=")";
         if($db->query($query)){
             //sucess
+            InsertRecentActvity("User created","Reference No. ".$username);
+
             $session->msg('s',"User account has been creted! ");
             redirect('add_user.php', false);
         } else {

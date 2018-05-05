@@ -46,7 +46,10 @@ if(isset($_POST['edit_subcategory'])){
         $query  = "call spUpdateSubcategory('{$p_SubcategoryCode}','{$p_SubcategoryDesc}',{$p_Commission},'{$date}','{$user["username"]}');";
 
         if($db->query($query)){
+            InsertRecentActvity("Subcategory updated","Reference No. ".$p_SubcategoryCode);
+
             $flashMessages->success('Subcategory updated','subcategory.php');
+
         } else {
             $flashMessages->error('Sorry failed to updated!','subcategory.php');
         }

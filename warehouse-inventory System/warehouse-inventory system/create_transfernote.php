@@ -156,6 +156,8 @@ if(isset($_POST['create_transfernote'])){
                         }
                     }
 
+                    InsertRecentActvity("Transfer note","Reference No. ".$p_TransferNoteNo);
+
                     $db->commit();
                     
                     $flashMessages->success('Transfer note has been saved successfully,\n   Your transfer note No: '.$p_TransferNoteNo,'create_transfernote.php');

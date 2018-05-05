@@ -49,6 +49,8 @@ if(isset($_POST['add_supplier'])){
 
             if($db->query($query))
             {
+                InsertRecentActvity("Supplier added","Reference No. ".$p_SupplierCode);
+
                 $db->commit();
                 $session->msg('s',"Supplier added ");
                 redirect('supplier.php', false);

@@ -42,6 +42,8 @@ if(isset($_POST['add_employee'])){
 '{$p_EmployeeAddress3}','{$p_TelephoneNo}','{$p_Email}','{$p_DepartmentCode}','{$p_DesignationCode}','{$user["username"]}');";
 
         if($db->query($query)){
+            InsertRecentActvity("Employee added","Reference No. ".$p_EpfNumber);
+
             $session->msg('s',"Employee added ");
             redirect('add_employee.php', false);
         } else {

@@ -21,6 +21,8 @@ if(isset($_POST['customer'])){
     $delete_id = delete_by_sp("call spDeleteCustomer('{$p_cuscode}');");
 
     if($delete_id){
+        InsertRecentActvity("Customer deleted","Reference No. ".$p_cuscode);
+
         $session->msg("s","Customer deleted.");
         redirect('customer.php');
     } else {

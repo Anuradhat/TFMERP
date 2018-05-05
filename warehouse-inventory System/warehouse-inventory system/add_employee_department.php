@@ -35,6 +35,8 @@ if(isset($_POST['add_department'])){
         $query  = "call spInsertEmployeeDepartment('{$depcode}','{$p_DepartmentName}','{$date}','{$user["username"]}');";
 
         if($db->query($query)){
+            InsertRecentActvity("Employee Department added","Reference No. ".$depcode);
+
             $session->msg('s',"Department added ");
             redirect('add_employee_department.php', false);
         } else {

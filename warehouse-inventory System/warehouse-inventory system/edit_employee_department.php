@@ -46,6 +46,8 @@ if(isset($_POST['edit_department'])){
         $query  = "call spUpdateEmployeeDepartment('{$p_DepartmentCode}','{$p_DepartmentName}','{$date}','{$user["username"]}');";
 
         if($db->query($query)){
+            InsertRecentActvity("Department updated","Reference No. ".$p_DepartmentCode);
+
             $session->msg('s',"Department updated");
             redirect('employee_department.php', false);
         } else {

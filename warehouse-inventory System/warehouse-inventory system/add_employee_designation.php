@@ -33,6 +33,8 @@ if(isset($_POST['add_designation'])){
         $query  = "call spInsertEmployeeDesignation('{$desigcode}','{$p_DesignationName}','{$date}','{$user["username"]}');";
 
         if($db->query($query)){
+            InsertRecentActvity("Designation added","Reference No. ".$desigcode);
+
             $session->msg('s',"Designation added ");
             redirect('add_employee_designation.php', false);
         } else {

@@ -20,6 +20,8 @@ if(isset($_POST['SubcategoryCode'])){
     $delete_id = delete_by_sp("call spDeleteSubcategory('{$p_scatcode}');");
 
     if($delete_id){
+        InsertRecentActvity("Subcategory deleted","Reference No. ".$p_scatcode);
+
         $flashMessages->success('Subcategory deleted.','subcategory.php');
     } else {
         $flashMessages->error('Subcategory deletion failed.','subcategory.php');

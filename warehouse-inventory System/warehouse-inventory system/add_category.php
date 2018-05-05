@@ -35,6 +35,8 @@ if(isset($_POST['add_category'])){
         $query  = "call spInsertCategory('{$p_DepartmentCode}','{$catcode}','{$p_CategoryDesc}','{$date}','{$user["username"]}');";
 
         if($db->query($query)){
+            InsertRecentActvity("Category added","Reference No. ".$catcode);
+
             $flashMessages->success('Category added','add_category.php');
         } else {
             $flashMessages->error('Sorry failed to added!','category.php');

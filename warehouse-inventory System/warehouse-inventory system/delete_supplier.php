@@ -40,6 +40,8 @@ if(isset($_POST['deletesupplier2'])){
 
         if($db->query($query))
         {
+            InsertRecentActvity("Supplier deleted","Reference No. ".$p_SupplierCode);
+
             $session->msg('s',"Supplier deleted ");
             redirect('supplier.php', false);
         }

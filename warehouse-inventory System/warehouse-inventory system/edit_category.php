@@ -45,6 +45,8 @@ if(isset($_POST['edit_category'])){
         $query  = "call spUpdateCategory('{$p_CategoryCode}','{$p_CategoryDesc}','{$date}','{$user["username"]}');";
 
         if($db->query($query)){
+            InsertRecentActvity("Category updated","Reference No. ".$p_CategoryCode);
+
             $flashMessages->success('Category updated','category.php');
         } else {
             $flashMessages->error('Sorry failed to updated!','category.php');

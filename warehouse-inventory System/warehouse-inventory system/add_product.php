@@ -75,6 +75,8 @@ if(isset($_POST['add_product'])){
               $db->query($query);
            }
 
+           InsertRecentActvity("Product added","Reference No. ".$prod_code);
+
              $db->commit();
 
             $flashMessages->success('Product added ','add_product.php');

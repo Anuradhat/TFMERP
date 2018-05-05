@@ -31,6 +31,8 @@ if(isset($_POST['add_tax'])){
         $query  = "call spInsertTaxRates('{$p_TaxCode}','{$p_TaxDesc}',{$p_TaxRate},'{$date}','{$user["username"]}');";
 
         if($db->query($query)){
+            InsertRecentActvity("Tax added","Reference No. ".$p_TaxCode);
+
             $session->msg('s',"Tax added ");
             redirect('add_tax.php', false);
         } else {

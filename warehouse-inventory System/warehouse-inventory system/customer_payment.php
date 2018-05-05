@@ -177,6 +177,8 @@ if(isset($_POST['customer_payment'])){
                             $db->query($query);
                         }
 
+                        InsertRecentActvity("Customer payment","Reference No. ".$p_CusPaymentCode);
+
 
                         $db->commit();
 

@@ -28,6 +28,8 @@ if(isset($_POST['bincode'])){
     $delete_id = delete_by_sp("call spDeleteLocationBin('{$p_locacode}','{$p_bincode}','{$user['username']}');");
 
     if($delete_id){
+        InsertRecentActvity("Bin deleted","Reference No. ".$p_bincode);
+
         $flashMessages->success("Bin deleted.",'location_bin.php');
     } else {
         $flashMessages->error("Bin deletion failed.",'location_bin.php');

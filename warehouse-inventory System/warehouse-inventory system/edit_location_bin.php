@@ -48,6 +48,9 @@ if(isset($_POST['edit_location_bin'])){
         $query  = "call spUpdateBin('{$p_LocationCode}','{$p_BinCode}','{$p_BinName}',{$p_DefaultBin},'{$user['username']}');";
 
         if($db->query($query)){
+
+            InsertRecentActvity("Bin updated","Reference No. ".$p_BinCode);
+
             $flashMessages->success('Bin updated.','location_bin.php');
 
         } else {

@@ -25,6 +25,8 @@ if(isset($_POST['WorkFlowCode'])){
     $delete_id = delete_by_sp("call spDeleteWorkFlowH('{$p_WorkFlowCode}','{$date}','{$user["username"]}');");
 
     if($delete_id){
+        InsertRecentActvity("Work-Flow deleted","Reference No. ".$p_WorkFlowCode);
+
         $session->msg("s","Work-Flow deleted.");
         redirect('workflow.php');
     } else {

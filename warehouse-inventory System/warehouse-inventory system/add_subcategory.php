@@ -34,6 +34,8 @@ if(isset($_POST['add_subcategory'])){
         $query  = "call spInsertSubcategory('{$p_CategoryCode}','{$scatcode}','{$p_SubcategoryDesc}',{$p_Commission},'{$date}','{$user["username"]}');";
 
         if($db->query($query)){
+            InsertRecentActvity("Subcategory added","Reference No. ".$p_SubcategoryCode);
+
             $flashMessages->success('Subcategory added','add_subcategory.php');
         } else {
             $flashMessages->error('Sorry failed to added!','subcategory.php');

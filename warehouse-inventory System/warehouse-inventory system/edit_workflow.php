@@ -110,6 +110,9 @@ if(isset($_POST['edit_workflow'])){
                 $db->query($query);
             }
 
+            InsertRecentActvity("Work-flow updated","Reference No. ".$p_WorkFlowCode);
+
+
             $db->commit();
             $session->msg('s',"Work-flow updated ");
             redirect('workflow.php', false);

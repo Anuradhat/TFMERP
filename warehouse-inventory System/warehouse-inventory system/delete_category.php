@@ -18,6 +18,8 @@ if(isset($_POST['CategoryCode'])){
     $delete_id = delete_by_sp("call spDeleteCategory('{$p_catcode}');");
 
     if($delete_id){
+        InsertRecentActvity("Category deleted","Reference No. ".$p_catcode);
+
         $flashMessages->success('Category deleted.','category.php');
     } else {
         $flashMessages->error('category deletion failed.','category.php');

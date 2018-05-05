@@ -47,6 +47,8 @@ if(isset($_POST['edit_location'])){
         $query  = "call spUpdateLocation('{$p_LocationCode}','{$p_LocationName}',{$p_LocationOutlet},'{$date}','{$user["username"]}');";
 
         if($db->query($query)){
+            InsertRecentActvity("Location updated","Reference No. ".$p_LocationCode);
+
             $session->msg('s',"Location updated");
             redirect('location.php', false);
         } else {

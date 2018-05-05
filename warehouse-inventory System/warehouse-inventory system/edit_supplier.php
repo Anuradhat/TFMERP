@@ -51,6 +51,8 @@ if(isset($_POST['edit_supplier'])){
 
         if($db->query($query))
         {
+            InsertRecentActvity("Supplier updated","Reference No. ".$p_SupplierCode);
+
             $session->msg('s',"Supplier updated");
             redirect('supplier.php', false);
         }

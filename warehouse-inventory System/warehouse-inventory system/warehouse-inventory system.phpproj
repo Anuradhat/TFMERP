@@ -358,7 +358,6 @@
     <Compile Include="add_department.php" />
     <Compile Include="add_group.php" />
     <Compile Include="add_product.php" />
-    <Compile Include="add_sale.php" />
     <Compile Include="add_user.php" />
     <Compile Include="admin.php" />
     <Compile Include="ajax.php" />
@@ -384,16 +383,13 @@
     <Compile Include="delete_department.php" />
     <Compile Include="delete_group.php" />
     <Compile Include="delete_product.php" />
-    <Compile Include="delete_sale.php" />
     <Compile Include="delete_user.php" />
     <Compile Include="department.php" />
-    <Compile Include="edit_account.php" />
     <Compile Include="edit_category.php" />
     <Compile Include="edit_customer.php" />
     <Compile Include="edit_department.php" />
     <Compile Include="edit_group.php" />
     <Compile Include="edit_product.php" />
-    <Compile Include="edit_sale.php" />
     <Compile Include="edit_user.php" />
     <Compile Include="group.php" />
     <Compile Include="home.php" />

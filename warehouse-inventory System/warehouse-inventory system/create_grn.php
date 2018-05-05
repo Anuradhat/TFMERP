@@ -271,6 +271,8 @@ if(isset($_POST['create_grn'])){
                     $query  = "call spUpdatePOToProcessStatus('{$p_PurchaseOrderNo}');";
                     $db->query($query);
 
+                    InsertRecentActvity("Good received note","Reference No. ".$p_GRNCode);
+
 
                     $db->commit();
                     

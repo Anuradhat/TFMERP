@@ -136,6 +136,8 @@ if(isset($_POST['edit_pr'])){
                         $db->query($query);
                     }
 
+                    InsertRecentActvity("Purchase requisition updated","Reference No. ".$p_PRNo);
+
                     $db->commit();
                     
                     $flashMessages->success('Purchase requisition has been updated successfully','edit_pr.php');

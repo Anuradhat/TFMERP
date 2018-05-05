@@ -82,6 +82,8 @@ if(isset($_POST['edit_customerpo'])){
                         $db->query($query);
                     }
 
+                    InsertRecentActvity("Customer purchase order updated","Reference No. ".$p_CustomerPoCode); 
+
                     $db->commit();
                     
                     $flashMessages->success('Customer purchase order has been successfully updated.','edit_customerpo.php');

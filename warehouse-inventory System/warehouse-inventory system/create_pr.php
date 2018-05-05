@@ -128,6 +128,8 @@ if(isset($_POST['create_pr'])){
                         $db->query($query);
                     }
 
+                    InsertRecentActvity("Purchase requisition","Reference No. ".$p_PRCode);
+
                     $db->commit();
 
                     $flashMessages->success('Purchase requisition has been saved successfully,\n   Your Purchase Requisition No: '.$p_PRCode,'create_pr.php');

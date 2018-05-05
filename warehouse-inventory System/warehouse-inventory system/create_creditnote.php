@@ -122,6 +122,8 @@ if(isset($_POST['create_creditnote'])){
                     }
                     
 
+                    InsertRecentActvity("Credit note","Reference No. ".$p_CreditNoteNo);
+
                     $db->commit();
                     
                     $flashMessages->success('Credit note has been saved successfully,\n   Your credit note No: '.$p_CreditNoteNo,'create_creditnote.php');

@@ -92,6 +92,7 @@ if(isset($_POST['create_po'])){
             $p_PurchaseRequisition  = remove_junk($db->escape($_POST['PRNo']));
             $p_WorkFlowCode  = remove_junk($db->escape($_POST['WorkFlowCode']));
             $p_Remarks  = remove_junk($db->escape($_POST['Remarks']));
+
             $date    = make_date();
             $user =  current_user();
 
@@ -130,6 +131,8 @@ if(isset($_POST['create_po'])){
                         $query  = "call spInsertPurchaseOrderD('{$p_POCode}','{$value[0]}','{$value[1]}',{$value[2]},{$value[3]},{$amount});";
                         $db->query($query);
                     }
+
+                    InsertRecentActvity("Purchase order","Reference No. ".$p_POCode);
 
                     $db->commit();
 

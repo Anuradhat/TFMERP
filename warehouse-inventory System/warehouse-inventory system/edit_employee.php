@@ -55,6 +55,8 @@ if(isset($_POST['edit_employee'])){
 '{$p_EmployeeAddress3}','{$p_TelephoneNo}','{$p_Email}','{$p_DepartmentCode}','{$p_DesignationCode}','{$user["username"]}');";
 
         if($db->query($query)){
+            InsertRecentActvity("Employee updated","Reference No. ".$p_EpfNumber);
+
             $session->msg('s',"Employee updated");
             redirect('employee.php', false);
         } else {

@@ -78,6 +78,8 @@ if(isset($_POST['edit_customer'])){
                    '{$date}','{$user["username"]}');";
 
         if($db->query($query)){
+            InsertRecentActvity("Customer updated","Reference No. ".$p_CustomerCode);
+
             $flashMessages->success('Customer has been successfully updated.','customer.php');
 
         } else {

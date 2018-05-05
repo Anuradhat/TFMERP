@@ -22,6 +22,8 @@ if(isset($_POST['department'])){
     $delete_id = delete_by_sp("call spDeleteDepartment('{$p_depcode}');");
 
     if($delete_id){
+        InsertRecentActvity("Department deleted","Reference No. ".$p_depcode);
+
         $session->msg("s","Department deleted.");
         redirect('department.php');
     } else {

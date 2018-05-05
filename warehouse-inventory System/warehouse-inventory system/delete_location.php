@@ -22,6 +22,8 @@ if(isset($_POST['location'])){
     $delete_id = delete_by_sp("call spDeleteLocation('{$p_locacode}');");
 
     if($delete_id){
+        InsertRecentActvity("Location deleted","Reference No. ".$p_locacode);
+
         $session->msg("s","Location deleted.");
         redirect('location.php');
     } else {

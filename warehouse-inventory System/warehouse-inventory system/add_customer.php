@@ -72,6 +72,9 @@ if(isset($_POST['add_customer'])){
                    '{$date}','{$user["username"]}');";
 
             if($db->query($query)){
+                InsertRecentActvity("Customer added","Reference No. ".$p_CustomerCode);
+
+
                 $db->commit();
                 $flashMessages->success('Customer code has been saved successfully.','add_customer.php');
 

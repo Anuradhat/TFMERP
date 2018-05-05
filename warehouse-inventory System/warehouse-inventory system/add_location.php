@@ -39,6 +39,8 @@ if(isset($_POST['add_location'])){
             $query  = "call spInsertLocation('{$p_LocationCode}','{$p_LocationName}',{$p_LocationOutlet},'{$date}','{$user["username"]}');";
 
             if($db->query($query)){
+                InsertRecentActvity("Location added","Reference No. ".$p_LocationCode);
+
                 $db->commit();
                 $session->msg('s',"Location added ");
                 redirect('add_location.php', false);

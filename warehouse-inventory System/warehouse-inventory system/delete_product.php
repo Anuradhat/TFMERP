@@ -20,7 +20,9 @@ if(isset($_POST['ProductCode'])){
     $delete_id = delete_by_sp("call spDeleteProduct('{$p_procode}');");
 
     if($delete_id){
-        $flashMessages->success('product deleted','product.php');
+        InsertRecentActvity("Product deleted","Reference No. ".$p_procode);
+
+        $flashMessages->success('Product deleted','product.php');
     } else {
         $flashMessages->warning('Product deletion failed.','product.php');
     }

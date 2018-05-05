@@ -78,6 +78,8 @@ if(isset($_POST['add_workflow'])){
                 $db->query($query);
             }
 
+            InsertRecentActvity("Work-flow created","Reference No. ".$p_WorkFlowCode);
+
             $db->commit();
             $session->msg('s',"Work-flow created ");
             redirect('add_workflow.php', false);

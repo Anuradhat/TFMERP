@@ -245,6 +245,8 @@ if(isset($_POST['invoice_payment'])){
                         }
                     }
 
+                    InsertRecentActvity("Invoice","Reference No. ".$p_InvoiceCode);
+
                     $db->commit();
 
 

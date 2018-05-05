@@ -86,6 +86,8 @@ if(isset($_POST['create_salesorder'])){
                         $db->query($query);
                     }
 
+                    InsertRecentActvity("Quotation","Reference No. ".$p_TransferNoteNo);
+
                     $db->commit();
                     
                     $flashMessages->success('Quotation has been saved successfully,\n   Your Quotation No: '.$p_SOCode,'create_salesorder.php');

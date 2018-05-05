@@ -46,6 +46,8 @@ if(isset($_POST['edit_designation'])){
         $query  = "call spUpdateEmployeeDesignation('{$p_DesignationCode}','{$p_DesignationName}','{$date}','{$user["username"]}');";
 
         if($db->query($query)){
+            InsertRecentActvity("Designation updated","Reference No. ".$p_DesignationCode);
+
             $session->msg('s',"Designation updated");
             redirect('employee_designation.php', false);
         } else {

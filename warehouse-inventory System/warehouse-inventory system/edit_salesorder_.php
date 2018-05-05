@@ -82,6 +82,8 @@ if(isset($_POST['edit_salesorder_'])){
                         $db->query($query);
                     }
 
+                    InsertRecentActvity("Quotation updated","Reference No. ".$p_SalesOrderCode);
+
                     $db->commit();
                     
                     $flashMessages->success('Quotation has been successfully updated.','approval_task.php');

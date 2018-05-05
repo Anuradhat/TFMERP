@@ -140,8 +140,10 @@ if(isset($_POST['edit_po'])){
                         $db->query($query);
                     }
 
+                    InsertRecentActvity("Purchase order updated","Reference No. ".$PurchaseOrder);
+
                     $db->commit();
-                    
+
                     $flashMessages->success('Purchase order has been successfully updated.','approval_task.php');
 
                 }
