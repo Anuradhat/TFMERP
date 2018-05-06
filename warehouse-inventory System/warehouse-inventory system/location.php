@@ -121,7 +121,7 @@ $all_locations = find_by_sql("call spSelectAllLocations();")
    $(document).ready(function () {
       $(".DeleteBtn").click(function () {
           var $row = $(this).closest("tr");
-          var RowNo = $row.find(".clsRowId").text();
+          var RowNo = $row.find(".clsRowId").text().trim();
 
         bootbox.confirm({
             title: "Delete Confirmation",
@@ -136,12 +136,17 @@ $all_locations = find_by_sql("call spSelectAllLocations();")
             },
             callback: function (result) {
                 if (result === true) {
+                    $('.loader').show();
+
                     $.ajax({
                     url: 'delete_location.php',
                     type: "POST",
-                    data: { department: 'OK', DepartmentCode : RowNo },
+                    data: { LocationCode: RowNo },
                     success: function (result) {
-
+                        location.reload();
+                    },
+                    complete: function (result) {
+                        $('.loader').fadeOut();
                     }
                 });
                 }

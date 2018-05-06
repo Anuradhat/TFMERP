@@ -90,13 +90,14 @@ $all_customers = find_by_sql("call spSelectAllCustomers();")
                                                     <button type="submit" name="customer" class="btn  btn-warning btn-xs glyphicon glyphicon-edit"></button>
                                                     <input type="hidden" name="CustomerCode" value="<?php echo remove_junk($cus['CustomerCode']);?>" />
                                                 </form>
-                                                <form method="post" action="delete_customer.php">
+                                                <button type="button" name="customer" class="DeleteBtn btn btn-danger btn-xs glyphicon glyphicon-trash"></button>
+                                                <!--<form method="post" action="delete_customer.php">
                                                     <button type="submit" name="customer" class="btn btn-danger btn-xs glyphicon glyphicon-trash"></button>
-                                                    <input type="hidden" name="CustomerCode" value="<?php echo remove_junk($cus['CustomerCode']);?>" />
-                                                </form>
+                                                    <input type="hidden" name="CustomerCode" value="" />
+                                                </form>-->
                                             </div>
                                         </td>
-                                        <td>
+                                        <td class="clsRowId">
                                             <?php echo remove_junk($cus['CustomerCode']); ?>
                                         </td>
                                         <td>
@@ -128,5 +129,47 @@ $all_customers = find_by_sql("call spSelectAllCustomers();")
     </div>
 
 </section>
+
+
+<script>
+   $(document).ready(function () {
+      $(".DeleteBtn").click(function () {
+          var $row = $(this).closest("tr");
+          var RowNo = $row.find(".clsRowId").text().trim();
+
+        bootbox.confirm({
+            title: "Delete Confirmation",
+            message: "Do you want to delete this customer? This cannot be undone.",
+            buttons: {
+                cancel: {
+                    label: '<i class="fa fa-times"></i> Cancel'
+                },
+                confirm: {
+                    label: '<i class="fa fa-check"></i> Confirm'
+                }
+            },
+            callback: function (result) {
+                if (result === true) {
+                    $('.loader').show();
+
+                    $.ajax({
+                     url: 'delete_customer.php',
+                     type: "POST",
+                     data: { CustomerCode: RowNo },
+                     success: function (result) {
+                        location.reload();
+                    },
+                    complete: function (result) {
+                        $('.loader').fadeOut();
+                    }
+                });
+               }
+            }
+        });
+    });
+  });
+</script>
+
+
 
 <?php include_once('layouts/footer.php'); ?>

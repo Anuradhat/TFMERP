@@ -11,7 +11,7 @@
 
 
 <?php
-if(isset($_POST['location'])){
+if(isset($_POST['LocationCode'])){
     $p_locacode = remove_junk($db->escape($_POST['LocationCode']));
 
     if(!$p_locacode){

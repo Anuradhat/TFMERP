@@ -10,7 +10,7 @@ preventGetAction('customer.php');
 
 
 <?php
-if(isset($_POST['customer'])){
+if(isset($_POST['CustomerCode'])){
     $p_cuscode = remove_junk($db->escape($_POST['CustomerCode']));
 
     if(!$p_cuscode){

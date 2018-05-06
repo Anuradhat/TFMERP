@@ -6,24 +6,22 @@ UserPageAccessControle(1,'Supplier Delete');
 
 preventGetAction('supplier.php');
 
-$allCurrencyTypes = find_by_sql("call spSelectAllCurrency();");
-
 ?>
 
 <?php 
-if(isset($_POST['supplier'])){
+if(isset($_POST['SupplierCode'])){
     $p_SupplierCode = remove_junk($db->escape($_POST['SupplierCode']));
     $SupplierCount = find_by_sp("call spSelectSupplierByCode('{$p_SupplierCode}');");
 }
 ?>
 
 <?php
-if(isset($_POST['deletesupplier2'])){
-    $req_fields = array('hSupplierCode');
+if(isset($_POST['SupplierCode'])){
+    $req_fields = array('SupplierCode');
     validate_fields($req_fields);
 
     if(empty($errors)){
-        $p_SupplierCode = remove_junk($db->escape($_POST['hSupplierCode']));
+        $p_SupplierCode = remove_junk($db->escape($_POST['SupplierCode']));
         
         $p_date = make_date();
         $p_user = current_user();

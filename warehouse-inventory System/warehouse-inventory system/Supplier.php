@@ -90,12 +90,12 @@ $all_suppliers = find_by_sql("call spSelectAllSuppliers();");
                                                 <button type="submit" name="supplier" class="btn  btn-warning btn-xs glyphicon glyphicon-edit" title="Edit Supplier"></button>
                                                 <input type="hidden" name="SupplierCode" value="<?php echo remove_junk($sup['SupplierCode']);?>" />
                                             </form>
-                                            <form method="post" action="delete_supplier.php">
-                                                <button type="submit" name="supplier" class="btn btn-danger btn-xs glyphicon glyphicon-trash" title="Delete Supplier"></button>
-                                                <input type="hidden" name="SupplierCode" value="<?php echo remove_junk($sup['SupplierCode']);?>" />
-                                            </form>
+                                            <!--<form method="post" action="delete_supplier.php">-->
+                                            <button type="submit" name="supplier" class="DeleteBtn btn btn-danger btn-xs glyphicon glyphicon-trash" title="Delete Supplier"></button>
+                                                <!--<input type="hidden" name="SupplierCode" value="" />-->
+                                            <!--</form>-->
                                         </td>
-                                        <td>
+                                        <td class="clsRowId">
                                             <?php echo remove_junk($sup['SupplierCode']); ?>
                                         </td>
                                         <td>
@@ -130,6 +130,48 @@ $all_suppliers = find_by_sql("call spSelectAllSuppliers();");
         </div>
     </div>
 </section>
+
+<script>
+   $(document).ready(function () {
+      $(".DeleteBtn").click(function () {
+          var $row = $(this).closest("tr");
+          var RowNo = $row.find(".clsRowId").text().trim();
+
+        bootbox.confirm({
+            title: "Delete Confirmation",
+            message: "Do you want to delete this supplier? This cannot be undone.",
+            buttons: {
+                cancel: {
+                    label: '<i class="fa fa-times"></i> Cancel'
+                },
+                confirm: {
+                    label: '<i class="fa fa-check"></i> Confirm'
+                }
+            },
+            callback: function (result) {
+                if (result === true) {
+                    $('.loader').show();
+
+                    $.ajax({
+                        url: 'delete_supplier.php',
+                     type: "POST",
+                     data: { SupplierCode: RowNo },
+                     success: function (result) {
+                        location.reload();
+                    },
+                    complete: function (result) {
+                        $('.loader').fadeOut();
+                    }
+                });
+               }
+            }
+        });
+    });
+  });
+</script>
+
+
+
 <?php include_once('layouts/footer.php');?>
 
 
