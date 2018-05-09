@@ -171,10 +171,19 @@ $all_banks = find_by_sql("call spSelectAllBanks();");
             data: { "chequearr": dict.length == 0 ? null : dict },
             success: function (data) {
                 var val = (data == null || data === "" ? 0.00 : data);
-  
-                $('#ChequePayment').val(parseFloat(val).toFixed(2));
-                CalculateCreditDue();
-                $('#myModal').modal('toggle');
+                
+                if (val == 0) {
+                    bootbox.alert('Cheque payments not found.');
+                    $('.loader').fadeOut();
+                }
+                else {
+                    $('#ChequePayment').val(parseFloat(val).toFixed(2));
+                    CalculateCreditDue();
+                    $('#myModal').modal('toggle');
+                    $('.loader').fadeOut();
+                }
+            },
+            complete: function (result) {
                 $('.loader').fadeOut();
             }
         });

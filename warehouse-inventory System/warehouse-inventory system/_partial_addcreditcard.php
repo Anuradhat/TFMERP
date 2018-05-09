@@ -149,9 +149,19 @@
             data: { "arr": dict.length == 0 ? null : dict },
             success: function (data) {
                 var val = (data == null || data === "" ? 0.00 : data);
-                $('#CardPayment').val(parseFloat(val).toFixed(2));
-                CalculateCreditDue();
-                $('#myModal').modal('toggle');
+
+                if (val == 0) {
+                    bootbox.alert('Card payments not found.');
+                    $('.loader').fadeOut();
+                }
+                else {
+                    $('#CardPayment').val(parseFloat(val).toFixed(2));
+                    CalculateCreditDue();
+                    $('#myModal').modal('toggle');
+                    $('.loader').fadeOut();
+                }
+            },
+            complete: function (result) {
                 $('.loader').fadeOut();
             }
         });

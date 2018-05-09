@@ -275,11 +275,12 @@ if (isset($_POST['Approved']) && isset($_POST['TransactionCode']) && isset($_POS
                type: "POST",
                data: { ReferenceNo: RefNo, TransactionCode: TranCode },
                success: function (result) {
-                   if (Tran = '001')
+                   if (TranCode == '001')
                       window.location = 'edit_po_.php';
-                   else if (Tran = '004')
+                   else if (TranCode == '004')
                       window.location = 'edit_salesorder_.php';
-                   
+               },
+               complete: function (result) {
                    $('.loader').fadeOut();
                }
            });
