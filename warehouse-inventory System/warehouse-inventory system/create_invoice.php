@@ -596,7 +596,7 @@ if (isset($_POST['Edit'])) {
                     <div class="col-md-3">
                         <div class="form-group">
                             <label>Serial Code</label>
-                            <input type="text" class="form-control" name="SerialCode" id="SerialCode" placeholder="Serial Code" required="required" autocomplete="off" />
+                            <input type="text" class="form-control" name="SerialCode" id="SerialCode" placeholder="Serial Code" required="required" autocomplete="off" disabled/>
                             <input type="hidden" name="ProductCode" id="ProductCode" />
                             <input type="hidden" name="StockCode" id="StockCode" />
                         </div>
@@ -627,13 +627,13 @@ if (isset($_POST['Edit'])) {
                     <div class="col-md-3">
                         <div class="form-group">
                             <label>Sale Price</label>
-                            <input type="text" class="form-control decimal" name="SalePrice" id="SalePrice" pattern="([0-9]+\.)?[0-9]+" placeholder="Sale Price" required="required" />
+                            <input type="text" class="form-control decimal" name="SalePrice" id="SalePrice" pattern="([0-9]+\.)?[0-9]+" placeholder="Sale Price" required="required" disabled/>
                         </div>
 
                         <div class="form-group pull-right">
                             <label>&nbsp;</label><br>
-                            <button type="button" class="btn btn-info" id="item"  onclick="AddItem(this, event);" value="item">&nbsp;&nbsp;&nbsp;Add&nbsp;&nbsp;&nbsp;</button>
-                            <button type="reset" class="btn btn-success">&nbsp;Reset&nbsp;</button>
+                            <button type="button" class="btn btn-info" id="item"  onclick="AddItem(this, event);" value="item" disabled>&nbsp;&nbsp;&nbsp;Add&nbsp;&nbsp;&nbsp;</button>
+                            <button type="reset" class="btn btn-success" disabled>&nbsp;Reset&nbsp;</button>
                         </div>
                     </div>
 

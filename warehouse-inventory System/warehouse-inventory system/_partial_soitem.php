@@ -21,7 +21,7 @@
         <div class="col-xs-3">
             <div class="form-group">
                 <label>Sale Price</label>
-                <input type="text" class="integer form-control decimal" name="SalePrice" id="pSalePrice" placeholder="Sale Price" required="required" value="<?php echo $serchitem[2]; ?>" />
+                <input type="text" class="integer form-control decimal" name="SalePrice" id="pSalePrice" placeholder="Sale Price" required="required" value="<?php echo $serchitem[2]; ?>" disabled/>
             </div>
         </div>
 

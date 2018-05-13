@@ -161,7 +161,7 @@ if (isset($_POST['Add'])) {
     
     $arr_item = $_SESSION['details'];
     
-    if($SalePrice == "" || $SalePrice <= 0)
+    if($SalePrice == "" || $SalePrice < 0)
     {
 
         $flashMessages->warning('Invalid sales price.');
@@ -355,7 +355,7 @@ if (isset($_POST['CustomerCode'])) {
                     <div class="col-md-3">
                         <div class="form-group">
                             <label>Sale Price</label>
-                            <input type="text" class="form-control decimal" name="SalePrice" id="SalePrice" pattern="([0-9]+\.)?[0-9]+" placeholder="Sale Price" required="required" onchange="ValidateSalePrice();" />
+                            <input type="text" class="form-control decimal" name="SalePrice" id="SalePrice" pattern="([0-9]+\.)?[0-9]+" placeholder="Sale Price" required="required" onchange="ValidateSalePrice();" disabled />
                         </div>
 
                     </div>
@@ -419,7 +419,7 @@ if (isset($_POST['CustomerCode'])) {
             bootbox.alert('Please select correct product.');
             $("#ProductCode").focus();
         }
-        else if ($('#SalePrice').val() == "" || $('#SalePrice').val() <= 0) {
+        else if ($('#SalePrice').val() == "" || $('#SalePrice').val() < 0) {
             $("#SalePrice").focus();
             bootbox.alert('Please enter valid sale price.');
         }

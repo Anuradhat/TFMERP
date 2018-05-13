@@ -149,7 +149,7 @@ if (isset($_POST['Add'])) {
     {
         $flashMessages->warning('Product code is not found!');
     }
-    else if($SalePrice == "" || $SalePrice <= 0)
+    else if($SalePrice == "" || $SalePrice < 0)
     {
         $flashMessages->warning('Invalid sales price.');
     }
@@ -398,7 +398,7 @@ if (isset($_POST['SalesOrderCode'])) {
                     <div class="col-md-3">
                         <div class="form-group">
                             <label>Sale Price</label>
-                            <input type="text" class="form-control decimal" name="SalePrice" id="SalePrice" pattern="([0-9]+\.)?[0-9]+" placeholder="Sale Price" required="required" />
+                            <input type="text" class="form-control decimal" name="SalePrice" id="SalePrice" pattern="([0-9]+\.)?[0-9]+" placeholder="Sale Price" required="required" disabled />
                         </div>
                     </div>
 
@@ -462,7 +462,7 @@ if (isset($_POST['SalesOrderCode'])) {
             $("#ProductCode").focus();
             bootbox.alert('Please select correct product.');
         }
-        else if ($('#SalePrice').val() == "" || $('#SalePrice').val() <= 0) {
+        else if ($('#SalePrice').val() == "" || $('#SalePrice').val() < 0) {
             $("#SalePrice").focus();
             bootbox.alert('Please enter valid sale price.');
         }
