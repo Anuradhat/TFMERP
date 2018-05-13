@@ -217,6 +217,7 @@ if(isset($_POST['_checkedStatus'])){
 
 <script type="text/javascript">
     $("#btnUpdateMenuAccess").click(function () {
+        $('.loader').show();
         $("#GroupAccessTable tr").each(function (i, el) {
             var $tds = $(this),
                 ID = $tds.find("td:eq(0)").text(),
@@ -245,7 +246,11 @@ if(isset($_POST['_checkedStatus'])){
                 data: { "_ID": ID.trim(), "_MainMenu": MainMenu.trim(), "_SubMenu": SubMenu.trim(), "_Page": Page.trim(), "_Controller": Controller.trim(), "_checkedStatus": checkedStatus, "_groupName": groupName.trim() },
                 success : function (){
                 //    altert('Success')
+                },
+                complete: function (result) {
+                    $('.loader').fadeOut();
                 }
+
             });
 
             })

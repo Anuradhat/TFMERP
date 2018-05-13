@@ -17,6 +17,7 @@
     <IncludeDebugInformation>false</IncludeDebugInformation>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="add_BankAccountDetails.php" />
     <Compile Include="add_employee.php" />
     <Compile Include="add_employee_designation.php" />
     <Compile Include="add_employee_department.php" />
@@ -26,8 +27,10 @@
     <Compile Include="create_creditnote.php" />
     <Compile Include="customer_payment.php" />
     <Compile Include="create_invoice.php" />
+    <Compile Include="delete_bank_account_details.php" />
     <Compile Include="edit_po_.php" />
     <Compile Include="edit_salesorder_.php" />
+    <Compile Include="BankAccountDetails.php" />
     <Compile Include="includes\FlashMessages.php" />
     <Compile Include="invoice_payment.php" />
     <Compile Include="edit_customerpo.php" />
