@@ -23,9 +23,10 @@ $SalesOrder  = $_SESSION['SalesOrder'];
 $all_workflows = find_by_sql("call spSelectAllWorkFlow();");
 $all_locations = find_by_sql("call spSelectAllLocations();");
 $all_salesrep = find_by_sql("call spSelectEmployeeFromDesignationCode('{$default_salesrepDesig}');");
-$Customer = find_by_sql("call spSelectCustomerFromSalesmanCode('{$current_user["EmployeeCode"]}');");
 
 $SalesOrderH = find_by_sp("call spSelectSalesOrderHFromCode('{$SalesOrder}');");
+
+$Customer = find_by_sql("call spSelectCustomerFromCode('{$SalesOrderH["CustomerCode"]}');");
 
 if (strtoupper($_SERVER['REQUEST_METHOD']) == 'GET' && !$flashMessages->hasErrors() && !$flashMessages->hasWarnings())
 {
