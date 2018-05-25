@@ -1,3 +1,17 @@
+<?php
+//global $session;
+$current_user = current_user();
+$login_level = find_by_groupLevel($current_user['user_level']);
+$UserAccess = PageApprovelDetailsByUserName('NoNeed');
+$PageName = 'Quotation Approval';
+$AccessStatus = 0;
+
+foreach($UserAccess as $UAccess){
+    if($PageName == $UAccess['Page'] and $UAccess['Controller'] == 'Edit Price'){
+        $AccessStatus = $UAccess["Access"];
+    }
+}
+?>
 
 <div class="row">
     <form method="post" action="edit_salesorder_.php">
@@ -21,7 +35,7 @@
         <div class="col-xs-3">
             <div class="form-group">
                 <label>Sale Price</label>
-                <input type="text" class="integer form-control decimal" name="SalePrice" id="pSalePrice" placeholder="Sale Price" required="required" value="<?php echo $serchitem[2]; ?>" disabled/>
+                <input type="text" class="integer form-control decimal" name="SalePrice" id="pSalePrice" placeholder="Sale Price" required="required" value="<?php echo $serchitem[2]; ?>" <?php if($AccessStatus == '1'){ echo '';} else {echo "disabled=\"disabled\"";} ?> />
             </div>
         </div>
 
@@ -45,8 +59,7 @@
         var Qty = parseInt($("#pQty").val());
         var ProductCode = $("#hProductCode").val();
 
-        if (SalePrice <= 0)
-        {
+        if (SalePrice <= 0) {
             $("#pSalePrice").focus();
             bootbox.alert('You enter sale price is invalid.');
         }

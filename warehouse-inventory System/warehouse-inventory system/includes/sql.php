@@ -536,7 +536,7 @@ function check_pending_approvels($transaction_code = "")
 /*--------------------------------------------------------------*/
 /* Function for Finding Page Approvels'
 /*--------------------------------------------------------------*/
-function PageApprovelDetailsByUserName($UserName){
+    function PageApprovelDetailsByUserName($UserName){
     $current_user = current_user();
 
     $userAccessDetails = find_by_sql("call spSelectUserAccessDetailsByUser('{$current_user["username"]}');");

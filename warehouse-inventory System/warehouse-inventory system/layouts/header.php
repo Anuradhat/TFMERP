@@ -315,8 +315,7 @@ desired effect
                         </a>
                         <ul class="treeview-menu">
                             <li><a href="BankAccountDetails.php"><i class="fa fa-file-text-o"></i>Bank Accounts</a></li>
-
-
+                            <li><a href="BankTransaction.php"><i class="fa fa-file-text-o"></i>Bank Transaction</a></li>
                         </ul>
                     </li>
 
