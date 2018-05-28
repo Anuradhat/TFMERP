@@ -373,28 +373,28 @@ if (isset($_POST['FillTable']) &&  isset($_POST['CustomerPoCode'])) {
     $arr_serial = array();
 
     foreach($CPO_Details as &$value){
-        $product = find_by_sp("call spSelectProductFromCode('{$value["ProductCode"]}');");
+    //    $product = find_by_sp("call spSelectProductFromCode('{$value["ProductCode"]}');");
 
-        $ToatlTax = 0;
+    //    $ToatlTax = 0;
 
-        if(filter_var($product["Tax"],FILTER_VALIDATE_BOOLEAN))
-        {
-            $ProductTax = find_by_sql("call spSelectProductTaxFromProductCode('{$value["ProductCode"]}');");  
-            foreach($ProductTax as &$pTax)
-            {
+    //    if(filter_var($product["Tax"],FILTER_VALIDATE_BOOLEAN))
+    //    {
+    //        $ProductTax = find_by_sql("call spSelectProductTaxFromProductCode('{$value["ProductCode"]}');");  
+    //        foreach($ProductTax as &$pTax)
+    //        {
 
-                $TaxRatesM = find_by_sql("call spSelectTaxRatesFromCode('{$pTax["TaxCode"]}');");
-                foreach($TaxRatesM as &$TaxRt)
-                {
-                    $ToatlTax += $TaxRt["TaxRate"];
-                }
-            }
-        }
+    //            $TaxRatesM = find_by_sql("call spSelectTaxRatesFromCode('{$pTax["TaxCode"]}');");
+    //            foreach($TaxRatesM as &$TaxRt)
+    //            {
+    //                $ToatlTax += $TaxRt["TaxRate"];
+    //            }
+    //        }
+    //    }
 
-        $TaxAmount = round((($value["Amount"] * $ToatlTax)/100));
-        $ToatlAmount = $TaxAmount + $value["Amount"];
+    //    $TaxAmount = round((($value["Amount"] * $ToatlTax)/100));
+    //    $ToatlAmount = $TaxAmount + $value["Amount"];
 
-        $arr_item[]  = array($value["ProductCode"],$value["ProductDesc"],$value["CostPrice"],$value["SellingPrice"],$value["Qty"],$ToatlAmount,$arr_serial,$TaxAmount);
+        $arr_item[]  = array($value["ProductCode"],$value["ProductDesc"],$value["CostPrice"],$value["SellingPrice"],$value["Qty"],$value["Amount"],$arr_serial,$value["TaxAmount"]);
     }
     $_SESSION['details'] = $arr_item;
 

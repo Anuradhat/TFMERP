@@ -7,6 +7,7 @@
             <th>Product Description</th>
             <th>Sale Price</th>
             <th>Qty</th>
+            <th>Tax Amount</th>
             <th>Amount</th>
         </tr>
     </thead>
@@ -16,11 +17,12 @@
             <td></td>
             <td></td>
             <td></td>
+            <td></td>
             <td>
                 <b>Total:</b>
             </td>
             <td>
-                <?php $TotalAmount = 0;foreach($arr_item  as &$value){ $TotalAmount += $value[2] * $value[3];} echo '<b>'.number_format($TotalAmount,2).'</b>'; ?>
+                <?php $TotalAmount = 0;foreach($arr_item  as &$value){ $TotalAmount += $value[4];} echo '<b>'.number_format($TotalAmount,2).'</b>'; ?>
             </td>
         </tr>
     </tfoot>
@@ -46,7 +48,10 @@
                 <?php echo $value[3] ?>
             </td>
             <td>
-                <?php  echo number_format(($value[3] == null ? 0 : $value[2] * $value[3]),2) ?>
+                <?php  echo number_format(($value[5] == null ? 0 : $value[5]),2) ?>
+            </td>
+            <td>
+                <?php  echo number_format(($value[4] == null ? 0 : $value[4]),2) ?>
             </td>
         </tr><?php  } ?>
     </tbody>
@@ -76,6 +81,8 @@
     $(document).ready(function () {
         $(".EditBtn").click(function () {
 
+            $('.loader').show();
+
             var $row = $(this).closest("tr");
             var RowNo = $row.find(".clsRowId").text();
 
@@ -88,6 +95,9 @@
                     modalBody.append(result);
                     $("#myModalLabel").text('Customer Purchase Order Item');
                     $('.modal-body').html(modalBody);
+                },
+                complete: function (result) {
+                    $('.loader').fadeOut();
                 }
             });
 

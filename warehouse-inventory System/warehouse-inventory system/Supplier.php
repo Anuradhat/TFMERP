@@ -68,7 +68,7 @@ $all_suppliers = find_by_sql("call spSelectAllSuppliers();");
                 <div class="col-lg-12 col-md-12 col-sm-12">
                     <div class="box">
                         <div class="box-body">
-                            <table class="table table-condensed table-hover table-striped datatable">
+                            <table id="table" class="table table-condensed table-hover table-striped datatable">
                                 <thead>
                                     <tr>
                                         <th>Action</th>
@@ -92,7 +92,7 @@ $all_suppliers = find_by_sql("call spSelectAllSuppliers();");
                                             </form>
                                             <!--<form method="post" action="delete_supplier.php">-->
                                             <button type="submit" name="supplier" class="DeleteBtn btn btn-danger btn-xs glyphicon glyphicon-trash" title="Delete Supplier"></button>
-                                                <!--<input type="hidden" name="SupplierCode" value="" />-->
+                                            <!--<input type="hidden" name="SupplierCode" value="" />-->
                                             <!--</form>-->
                                         </td>
                                         <td class="clsRowId">

@@ -29,6 +29,7 @@
     <Compile Include="customer_payment.php" />
     <Compile Include="create_invoice.php" />
     <Compile Include="delete_bank_account_details.php" />
+    <Compile Include="edit_customerpo_.php" />
     <Compile Include="edit_po_.php" />
     <Compile Include="edit_salesorder_.php" />
     <Compile Include="BankAccountDetails.php" />

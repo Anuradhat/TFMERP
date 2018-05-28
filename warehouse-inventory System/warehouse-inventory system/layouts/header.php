@@ -487,7 +487,7 @@ desired effect
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            <li><a href="reports/index.php"><i class="fa fa-file-text-o"></i>View Reports</a></li>
+                            <li><a href="tfm_reports/index.php" target="_blank"><i class="fa fa-file-text-o"></i>View Reports</a></li>
 
 
                         </ul>

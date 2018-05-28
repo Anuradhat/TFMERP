@@ -80,16 +80,56 @@ if(isset($_POST['create_salesorder'])){
                     $db->query($query);
 
                     //Insert quotation item details
+                    $TotalAmount = 0;
                     foreach($arr_item as $row => $value)
                     {
-                        $query  = "call spInsertSalesOrderD('{$p_SOCode}','{$value[0]}','{$value[1]}',0,{$value[2]},{$value[3]},{$value[4]});";
+                        $TotalAmount += $value[4];
+                        $query  = "call spInsertSalesOrderD('{$p_SOCode}','{$value[0]}','{$value[1]}',0,{$value[2]},{$value[3]},{$value[5]},{$value[4]});";
                         $db->query($query);
                     }
 
                     InsertRecentActvity("Quotation","Reference No. ".$p_TransferNoteNo);
 
                     $db->commit();
-                    
+
+                    //Send Mail
+                    $WorkFlowDetForMail = find_by_sp("call spSelectWorkFlowLevel1DetailsForMail('{$p_WorkFlowCode}');");
+                    $Customer = find_by_sp("call spSelectCustomerFromCode('{$p_CustomerCode}');");
+
+                    $Subject = 'You have to Approve Quotation';
+
+                    $htmlContent = '
+                    <html>
+                    <head></head>
+                    <body>
+                        <p>Hi '.$WorkFlowDetForMail['EmployeeName'].',<p>
+                        <h1>'.$Subject.'</h1>
+                        <table cellspacing="0" style="border: 2px dashed #008000; width: 400px; height: 300px;">
+                            <tr>
+                                <th align="left">Quotation No: </th><td>'.$p_SOCode.'</td>
+                            </tr>
+                            <tr style="background-color: #e0e0e0;">
+                                <th align="left">Quotation Date: </th><td>'.$date.'</td>
+                            </tr> 
+                            <tr >
+                                <th align="left">Customer: </th><td>'.$Customer['CustomerName'].'</td>
+                            </tr>
+                            <tr style="background-color: #e0e0e0;">
+                                <th align="left">Quotation Amount:</th><td>'.number_format($TotalAmount,2).'</td>
+                            </tr>
+                            <tr>
+                                <th align="left">Log In</th><td><a href="http://erp.tfm.lk/">TFM ERP System</a></td>
+                            </tr>                
+                        </table>
+                         <br><br>
+                          <i>This is a system generated email – please do not reply. </i>
+                    </body>
+                    </html>';
+
+                    SendMailForApprovals($WorkFlowDetForMail['Email'],$Subject,$htmlContent);
+
+
+
                     $flashMessages->success('Quotation has been saved successfully,\n   Your Quotation No: '.$p_SOCode,'create_salesorder.php');
 
                 }
@@ -179,7 +219,31 @@ if (isset($_POST['Add'])) {
         }
         else
         {
-            $arr_item[] = array($ProductCode,$ProductDesc,$SalePrice,$Qty,$Qty * $SalePrice); 
+            
+            $product = find_by_sp("call spSelectProductFromCode('{$ProductCode}');");
+
+            $ToatlTax = 0;
+
+            if(filter_var($product["Tax"],FILTER_VALIDATE_BOOLEAN))
+            {
+                $ProductTax = find_by_sql("call spSelectProductTaxFromProductCode('{$ProductCode}');");  
+                foreach($ProductTax as &$pTax)
+                {
+
+                    $TaxRatesM = find_by_sql("call spSelectTaxRatesFromCode('{$pTax["TaxCode"]}');");
+                    foreach($TaxRatesM as &$TaxRt)
+                    {
+                        $ToatlTax += $TaxRt["TaxRate"];
+                    }
+                }
+            }
+            
+            $ItemAmount = $Qty * $SalePrice;
+            $TaxAmount = round((($ItemAmount * $ToatlTax)/100));
+            $ToatlAmount = $TaxAmount + $ItemAmount;
+            
+            
+            $arr_item[] = array($ProductCode,$ProductDesc,$SalePrice,$Qty,$ToatlAmount,$TaxAmount); 
             $_SESSION['details'] = $arr_item;     
         }
     }

@@ -28,6 +28,7 @@ $SalesOrderH = find_by_sp("call spSelectSalesOrderHFromCode('{$SalesOrder}');");
 
 $Customer = find_by_sql("call spSelectCustomerFromCode('{$SalesOrderH["CustomerCode"]}');");
 
+
 if (strtoupper($_SERVER['REQUEST_METHOD']) == 'GET' && !$flashMessages->hasErrors() && !$flashMessages->hasWarnings())
 {
     unset($_SESSION['details']);
@@ -79,7 +80,7 @@ if(isset($_POST['edit_salesorder_'])){
                     //Update quotation item details
                     foreach($arr_item as $row => $value)
                     {
-                        $query  = "call spUpdateSalesOrderFromCode('{$p_SalesOrderCode}','{$value[0]}',{$value[2]},{$value[3]},{$value[4]},'{$date}','{$user["username"]}');";
+                        $query  = "call spUpdateSalesOrderFromCode('{$p_SalesOrderCode}','{$value[0]}',{$value[2]},{$value[3]},{$value[4]},{$value[5]},'{$date}','{$user["username"]}');";
                         $db->query($query);
                     }
 
@@ -127,7 +128,7 @@ if (isset($_SESSION['redirect'])) {
     $SO_Details = find_by_sql("call spSelectSalesOrderDFromCode('{$SalesOrder}');");
 
     foreach($SO_Details as &$value){
-        $arr_item[]  = array($value["ProductCode"],$value["ProductDesc"],$value["SellingPrice"],$value["Qty"],$value["Amount"]);
+        $arr_item[]  = array($value["ProductCode"],$value["ProductDesc"],$value["SellingPrice"],$value["Qty"],$value["Amount"],$value["TaxAmount"]);
     }
 
     $_SESSION['details'] = $arr_item;   
@@ -204,17 +205,48 @@ if (isset($_POST['Edit'])) {
     $ProductCode = remove_junk($db->escape($_POST['ProductCode']));
     $Qty = remove_junk($db->escape($_POST['Qty']));
     $SalePrice = remove_junk($db->escape($_POST['SalePrice']));
+    $ExcludeTax = remove_junk($db->escape($_POST['ExcludeTax']));
+
 
     $arr_item = $_SESSION['details'];
+
+
+
+    $product = find_by_sp("call spSelectProductFromCode('{$ProductCode}');");
+
+    $ToatlTax = 0;
+
+    if(!filter_var($ExcludeTax,FILTER_VALIDATE_BOOLEAN)){
+        if(filter_var($product["Tax"],FILTER_VALIDATE_BOOLEAN))
+        {
+            $ProductTax = find_by_sql("call spSelectProductTaxFromProductCode('{$ProductCode}');");  
+            foreach($ProductTax as &$pTax)
+            {
+
+                $TaxRatesM = find_by_sql("call spSelectTaxRatesFromCode('{$pTax["TaxCode"]}');");
+                foreach($TaxRatesM as &$TaxRt)
+                {
+                    $ToatlTax += $TaxRt["TaxRate"];
+                }
+            }
+        }
+    }
+
+    $ItemAmount = $Qty * $SalePrice;
+    $TaxAmount = round((($ItemAmount * $ToatlTax)/100));
+    $ToatlAmount = $TaxAmount + $ItemAmount;
 
     //Change Qty
     $arr_item = ChangValueFromListOfArray( $arr_item,$ProductCode,3,$Qty);
     //Change sale price
     $arr_item = ChangValueFromListOfArray( $arr_item,$ProductCode,2,$SalePrice);
     //Change Amount
-    $arr_item = ChangValueFromListOfArray( $arr_item,$ProductCode,4,$SalePrice * $Qty);
+    $arr_item = ChangValueFromListOfArray( $arr_item,$ProductCode,4,$ToatlAmount);
+    //Change Tax Amount
+    $arr_item = ChangValueFromListOfArray( $arr_item,$ProductCode,5,$TaxAmount);
 
     $_SESSION['details'] = $arr_item;
+
 
     return include('_partial_sodetails.php');
 }

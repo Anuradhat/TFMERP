@@ -7,11 +7,13 @@
             <th>Product Description</th>
             <th>Sale Price</th>
             <th>Qty</th>
+            <th>Tax Amount</th>
             <th>Amount</th>
         </tr>
     </thead>
     <tfoot>
         <tr>
+            <td></td>
             <td></td>
             <td></td>
             <td></td>
@@ -46,6 +48,9 @@
                 <?php echo $value[3] ?>
             </td>
             <td>
+                <?php  echo number_format(($value[5] == null ? 0 : $value[5]),2) ?>
+            </td>
+            <td>
                 <?php  echo number_format(($value[4] == null ? 0 : $value[4]),2) ?>
             </td>
         </tr><?php  } ?>
@@ -76,6 +81,8 @@
     $(document).ready(function () {
         $(".EditBtn").click(function () {
 
+            $('.loader').show();
+
             var $row = $(this).closest("tr");
             var RowNo = $row.find(".clsRowId").text();
 
@@ -88,6 +95,9 @@
                     modalBody.append(result);
                     $("#myModalLabel").text('Quotation Item');
                     $('.modal-body').html(modalBody);
+                },
+                complete: function (result) {
+                    $('.loader').fadeOut();
                 }
             });
 

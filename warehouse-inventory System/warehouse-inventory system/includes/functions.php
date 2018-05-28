@@ -285,4 +285,20 @@ function EqualValue($val,$arr)
 }
 
 
+function SendMailForApprovals($ToMail,$subject,$htmlContent)
+{
+    
+    // Set content-type header for sending HTML email
+    $headers = "MIME-Version: 1.0" . "\r\n";
+    $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+
+    // Additional headers
+    $headers .= 'From: TFM ERP Mail Notification <erp@tfm.lk>' . "\r\n";
+
+
+    mail($ToMail,$subject,$htmlContent,$headers);
+
+}
+
+
 ?>

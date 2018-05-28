@@ -22,6 +22,14 @@ foreach($UserAccess as $UAccess){
                 <input type="text" class="form-control" id="ProductCode" name="ProductCode" placeholder="Product Code" required="required" autocomplete="off" value="<?php echo $serchitem[0]; ?>" readonly="readonly" disabled="disabled" />
                 <input type="hidden" name="hProductCode" id="hProductCode" value="<?php echo $serchitem[0]; ?>" />
             </div>
+
+            <div class="form-group checkbox">
+                <label class="form-check-label">
+                    <input type="checkbox" name="ExcludeTax" id="ExcludeTax" class="form-check-input" <?php if($AccessStatus == '1'){ echo '';} else {echo "disabled=\"disabled\"";} ?> />
+                    Exclude Tax
+                </label>
+            </div>
+
         </div>
 
         <div class="col-xs-3">
@@ -54,10 +62,13 @@ foreach($UserAccess as $UAccess){
 <script type="text/javascript">
     function EditItem(ctrl, event) {
         event.preventDefault();
+        
+        $('.loader').show();
 
         var SalePrice = parseInt($("#pSalePrice").val());
         var Qty = parseInt($("#pQty").val());
         var ProductCode = $("#hProductCode").val();
+        var ExcludeTax = $("#ExcludeTax").prop('checked');
 
         if (SalePrice <= 0) {
             $("#pSalePrice").focus();
@@ -71,10 +82,13 @@ foreach($UserAccess as $UAccess){
             $.ajax({
                 url: "edit_salesorder_.php",
                 type: "POST",
-                data: { Edit: 'Edit', ProductCode: ProductCode, Qty: Qty, SalePrice: SalePrice },
+                data: { Edit: 'Edit', ProductCode: ProductCode, Qty: Qty, SalePrice: SalePrice, ExcludeTax: ExcludeTax },
                 success: function (result) {
                     $("#table").html(result);
                     $('#myModal').modal('toggle');
+                },
+                complete: function (result) {
+                    $('.loader').fadeOut();
                 }
             });
         }

@@ -118,9 +118,7 @@ if(isset($_POST['create_grn'])){
                     $query  = "call spInsertGoodReceivedH('{$p_GRNCode}','{$p_LocationCode}','{$p_PurchaseOrderNo}','{$p_SupplierCode}','{$date}','{$p_ReferenceNo}','{$p_Remarks}','{$datetime}','{$date}','{$user["username"]}');";
                     $db->query($query);
                    
-                    //Update purchase order process date
-                    $query  = "call spUpdatePurchaseOrderProcessDate('{$p_PurchaseOrderNo}','{$datetime}');";
-                    $db->query($query);
+                   
 
                     //Insert good received note item details
                     foreach($arr_item as $row => $value)
@@ -266,6 +264,12 @@ if(isset($_POST['create_grn'])){
                             
                         }
                     }
+
+
+                    //Update purchase order process date
+                    //$query  = "call spUpdatePurchaseOrderProcessDate('{$p_PurchaseOrderNo}','{$datetime}');";
+                    //$db->query($query);
+
 
                     //Change Po status
                     $query  = "call spUpdatePOToProcessStatus('{$p_PurchaseOrderNo}');";

@@ -124,10 +124,12 @@ if(isset($_POST['create_po'])){
                     $query  = "call spInsertPurchaseOrderH('{$p_POCode}','{$p_PurchaseRequisition}','{$p_SupplierCode}','{$date}','{$p_WorkFlowCode}','{$p_Remarks}','{$date}','{$user["username"]}');";
                     $db->query($query);
 
+                     $TotalAmount = 0;
                     //Insert purchase order item details
                     foreach($arr_item as $row => $value)
                     {
                         $amount = $value[2] * $value[3];
+                        $TotalAmount += $amount;
                         $query  = "call spInsertPurchaseOrderD('{$p_POCode}','{$value[0]}','{$value[1]}',{$value[2]},{$value[3]},{$amount});";
                         $db->query($query);
                     }
@@ -136,8 +138,44 @@ if(isset($_POST['create_po'])){
 
                     $db->commit();
 
-                    $flashMessages->success('Purchase order has been saved successfully,\n   Your Purchase order No: '.$p_POCode,'create_po.php');
+                    
+                    //Send Mail
+                    $WorkFlowDetForMail = find_by_sp("call spSelectWorkFlowLevel1DetailsForMail('{$p_WorkFlowCode}');");
+                    $Supplier = find_by_sp("call spSelectSupplierByCode('{$p_SupplierCode}');");
 
+                    $Subject = 'You have to Approve Purchase Order';
+
+                    $htmlContent = '
+                    <html>
+                    <head></head>
+                    <body>
+                        <p>Hi '.$WorkFlowDetForMail['EmployeeName'].',<p>
+                        <h1>'.$Subject.'</h1>
+                        <table cellspacing="0" style="border: 2px dashed #008000; width: 400px; height: 300px;">
+                            <tr>
+                                <th align="left">Purchase Order No: </th><td>'.$p_POCode.'</td>
+                            </tr>
+                            <tr style="background-color: #e0e0e0;">
+                                <th align="left">Purchase Order Date: </th><td>'.$date.'</td>
+                            </tr> 
+                            <tr >
+                                <th align="left">Supplier: </th><td>'.$Supplier['SupplierName'].'</td>
+                            </tr>
+                            <tr style="background-color: #e0e0e0;">
+                                <th align="left">Purchase Order Amount:</th><td>'.number_format($TotalAmount,2).'</td>
+                            </tr>
+                            <tr>
+                                <th align="left">Log In</th><td><a href="http://erp.tfm.lk/">TFM ERP System</a></td>
+                            </tr>                
+                        </table>
+                         <br><br>
+                          <i>This is a system generated email – please do not reply. </i>
+                    </body>
+                    </html>';
+
+                    SendMailForApprovals($WorkFlowDetForMail['Email'],$Subject,$htmlContent);
+
+                    $flashMessages->success('Purchase order has been saved successfully,\n   Your Purchase order No: '.$p_POCode,'create_po.php');
                 }
                 catch(Exception $ex)
                 {

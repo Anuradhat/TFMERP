@@ -78,7 +78,7 @@ if(isset($_POST['edit_customerpo'])){
                     //Insert customer purchase order details
                     foreach($arr_item as $row => $value)
                     {
-                        $query  = "call spInsertCusPurchaseOrderD('{$p_CustomerPoCode}','{$value[0]}','{$value[1]}',0,{$value[2]},{$value[3]},{($value[2]*$value[3])});";
+                        $query  = "call spInsertCusPurchaseOrderD('{$p_CustomerPoCode}','{$value[0]}','{$value[1]}',0,{$value[2]},{$value[3]},{$value[5]},{$value[4]});";
                         $db->query($query);
                     }
 
@@ -155,7 +155,32 @@ if (isset($_POST['Add'])) {
         }
         else
         {
-            $arr_item[] = array($ProductCode,$ProductDesc,$SalePrice,$Qty,$Qty * $SalePrice); 
+
+            $product = find_by_sp("call spSelectProductFromCode('{$ProductCode}');");
+
+            $ToatlTax = 0;
+
+            if(filter_var($product["Tax"],FILTER_VALIDATE_BOOLEAN))
+            {
+                $ProductTax = find_by_sql("call spSelectProductTaxFromProductCode('{$ProductCode}');");  
+                foreach($ProductTax as &$pTax)
+                {
+
+                    $TaxRatesM = find_by_sql("call spSelectTaxRatesFromCode('{$pTax["TaxCode"]}');");
+                    foreach($TaxRatesM as &$TaxRt)
+                    {
+                        $ToatlTax += $TaxRt["TaxRate"];
+                    }
+                }
+            }
+            
+            $ItemAmount = $Qty * $SalePrice;
+            $TaxAmount = round((($ItemAmount * $ToatlTax)/100));
+            $ToatlAmount = $TaxAmount + $ItemAmount;
+
+
+
+            $arr_item[] = array($ProductCode,$ProductDesc,$SalePrice,$Qty,$ToatlAmount,$TaxAmount); 
             $_SESSION['details'] = $arr_item;     
         }
     }
@@ -194,7 +219,7 @@ if (isset($_POST['FillTable']) &&  isset($_POST['CustomerPoCode'])) {
     $CPO_Details = find_by_sql("call spSelectCustomerPurchaseOrderDFromCode('{$CustomerPoCode}');");
     
     foreach($CPO_Details as &$value){
-        $arr_item[]  = array($value["ProductCode"],$value["ProductDesc"],$value["SellingPrice"],$value["Qty"],$value["Amount"]);
+        $arr_item[]  = array($value["ProductCode"],$value["ProductDesc"],$value["SellingPrice"],$value["Qty"],$value["Amount"],$value["TaxAmount"]);
     }
     $_SESSION['details'] = $arr_item; 
 

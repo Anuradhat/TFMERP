@@ -37,6 +37,10 @@ if(isset($_POST['ReferenceNo']))
     {
         $_SESSION['SalesOrder'] = $ReferenceNo;
     }
+    else if ($TransactionCode == "005")
+    {
+        $_SESSION['CustomerPO'] = $ReferenceNo;
+    }
 
     $_SESSION['redirect'] = true;
     echo 'redirect';
@@ -146,8 +150,8 @@ if (isset($_POST['Approved']) && isset($_POST['TransactionCode']) && isset($_POS
                                     <?php foreach ($pending_approvals as $approvals): ?>
                                     <tr>
                                         <td>
-                                            <button type="submit" name="Approved" class="btn  btn-primary btn-sm glyphicon glyphicon-list-alt"></button>
-                                            <button type="button" class="EditBtn btn btn-warning btn-sm glyphicon glyphicon-edit" <?php if($approvals['TrnsactionCode'] != '004' && $approvals['TrnsactionCode'] != '001') echo "disabled" ?>></button>
+                                            <!--<button type="submit" name="Approved" class="btn  btn-primary btn-sm glyphicon glyphicon-list-alt"></button>-->
+                                            <button type="button" class="EditBtn btn btn-warning btn-sm glyphicon glyphicon-edit" <?php if($approvals['TrnsactionCode'] != '004' && $approvals['TrnsactionCode'] != '001' && $approvals['TrnsactionCode'] != '005' ) echo "disabled" ?>></button>
                                         </td>
                                         <td class="clsTransaction">
                                             <?php echo remove_junk($approvals['TransactionName']); ?>
@@ -278,7 +282,9 @@ if (isset($_POST['Approved']) && isset($_POST['TransactionCode']) && isset($_POS
                    if (TranCode == '001')
                       window.location = 'edit_po_.php';
                    else if (TranCode == '004')
-                      window.location = 'edit_salesorder_.php';
+                       window.location = 'edit_salesorder_.php';
+                   else if (TranCode == '005')
+                       window.location = 'edit_customerpo_.php';
                },
                complete: function (result) {
                    $('.loader').fadeOut();

@@ -1,3 +1,18 @@
+<?php
+//global $session;
+$current_user = current_user();
+$login_level = find_by_groupLevel($current_user['user_level']);
+$UserAccess = PageApprovelDetailsByUserName('NoNeed');
+$PageName = 'Quotation Approval';
+$AccessStatus = 0;
+
+foreach($UserAccess as $UAccess){
+    if($PageName == $UAccess['Page'] and $UAccess['Controller'] == 'Edit Price'){
+        $AccessStatus = $UAccess["Access"];
+    }
+}
+?>
+
 
 <div class="row">
     <form method="post" action="create_customerpo.php">
@@ -7,6 +22,13 @@
                 <label>Product Code</label>
                 <input type="text" class="form-control" id="ProductCode" name="StockCode" placeholder="Product Code" required="required" autocomplete="off" value="<?php echo $serchitem[0]; ?>" readonly="readonly" disabled="disabled" />
                 <input type="hidden" name="hProductCode" id="hProductCode" value="<?php echo $serchitem[0]; ?>" />
+            </div>
+
+            <div class="form-group checkbox">
+                <label class="form-check-label">
+                    <input type="checkbox" name="ExcludeTax" id="ExcludeTax" class="form-check-input" <?php if($AccessStatus == '1'){ echo '';} else {echo "disabled=\"disabled\"";} ?> />
+                    Exclude Tax
+                </label>
             </div>
         </div>
 
@@ -21,7 +43,7 @@
         <div class="col-xs-3">
             <div class="form-group">
                 <label>Sale Price</label>
-                <input type="text" class="integer form-control decimal" name="SalePrice" id="pSalePrice" placeholder="Sale Price" required="required" value="<?php echo $serchitem[2]; ?>" disabled readonly="readonly" />
+                <input type="text" class="integer form-control decimal" name="SalePrice" id="pSalePrice" placeholder="Sale Price" required="required" value="<?php echo $serchitem[2]; ?>" disabled readonly="readonly" <?php if($AccessStatus == '1'){ echo '';} else {echo "disabled=\"disabled\"";} ?> />
             </div>
         </div>
 
@@ -44,20 +66,25 @@
         var SalePrice = $("#pSalePrice").val();
         var Qty = parseInt($("#pQty").val());
         var ProductCode = $("#hProductCode").val();
+        var ExcludeTax = $("#ExcludeTax").prop('checked');
 
         if (Qty <= 0) {
             $("#pQty").focus();
             bootbox.alert('You enter qty is invalid.');
         }
         else {
+            $('.loader').show();
+
             $.ajax({
                 url: "create_customerpo.php",
                 type: "POST",
-                data: { Edit: 'Edit', ProductCode: ProductCode, Qty: Qty, SalePrice: SalePrice },
+                data: { Edit: 'Edit', ProductCode: ProductCode, Qty: Qty, SalePrice: SalePrice,ExcludeTax: ExcludeTax },
                 success: function (result) {
                     $("#table").html(result);
                     $('#myModal').modal('toggle');
-                    //$('#modal-container').modal('hide');
+                },
+                complete: function (result) {
+                    $('.loader').fadeOut();
                 }
             });
         }
