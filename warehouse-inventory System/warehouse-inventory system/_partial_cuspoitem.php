@@ -3,7 +3,7 @@
 $current_user = current_user();
 $login_level = find_by_groupLevel($current_user['user_level']);
 $UserAccess = PageApprovelDetailsByUserName('NoNeed');
-$PageName = 'Quotation Approval';
+$PageName = 'Customer PO Approval';
 $AccessStatus = 0;
 
 foreach($UserAccess as $UAccess){
