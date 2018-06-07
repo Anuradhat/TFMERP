@@ -295,6 +295,7 @@ if (isset($_POST['Supplier'])) {
 <section class="content">
     <!-- Your Page Content Here -->
     <form method="post" action="create_po.php">
+
         <div class="box box-default">
             <div class="box-body">
                 <div class="row">

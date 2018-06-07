@@ -156,18 +156,25 @@ immediately after the control sidebar -->
             return false;
     });
 
+
+    $(document).on('submit', 'form', function () {
+
+        //var buttons = $(this).find('[type="submit"]');
+        //buttons.each(function (btn) {
+        //    $(buttons[btn]).prop('disabled', true);
+        //});
+        $('.loader').show();
+    });
+
+
+
+
   $(window).on('load', function () {
       $('.loader').fadeOut();
   });
 
 
-  //$(document).on('submit', 'form', function () {
-
-  //    var buttons = $(this).find('[type="submit"]');
-  //    buttons.each(function (btn) {
-  //        $(buttons[btn]).prop('disabled', true);
-  //    });
-  //});
+  
 
 </script>
  <a href="javascript:" id="return-to-top"><i class="fa fa-chevron-up"></i></a>
