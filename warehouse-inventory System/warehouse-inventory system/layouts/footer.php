@@ -158,11 +158,6 @@ immediately after the control sidebar -->
 
 
     $(document).on('submit', 'form', function () {
-
-        //var buttons = $(this).find('[type="submit"]');
-        //buttons.each(function (btn) {
-        //    $(buttons[btn]).prop('disabled', true);
-        //});
         $('.loader').show();
     });
 
