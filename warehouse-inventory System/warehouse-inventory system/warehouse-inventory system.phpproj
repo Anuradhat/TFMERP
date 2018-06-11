@@ -34,6 +34,7 @@
     <Compile Include="edit_salesorder_.php" />
     <Compile Include="BankAccountDetails.php" />
     <Compile Include="includes\FlashMessages.php" />
+    <Compile Include="invoice1.php" />
     <Compile Include="invoice_payment.php" />
     <Compile Include="edit_customerpo.php" />
     <Compile Include="create_customerpo.php" />
