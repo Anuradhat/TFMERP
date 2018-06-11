@@ -164,6 +164,13 @@ if (isset($_POST['_LocationCode'])) {
    return;
 }
 
+if (isset($_POST['InvoiceNo'])) {
+    $InvoiceNo = remove_junk($db->escape($_POST['InvoiceNo']));
+    $_SESSION['InvoiceNo'] = $InvoiceNo;
+
+    echo 'redirect';
+}
+
 
 if (isset($_POST['_productcode'])) {
     $productcode = remove_junk($db->escape($_POST['_productcode']));
@@ -494,6 +501,8 @@ if (isset($_POST['Edit'])) {
                             <button type="reset" class="btn btn-success">&nbsp;Reset&nbsp;&nbsp;</button>
                             <button type="button" class="btn btn-warning" onclick="window.location = 'home.php'">Cancel  </button>
                         </div>
+                        <button type="button" class="btn btn-info pull-right" name="print_invoice" onclick="printInvoice(this, event);" value="printInvoice">&nbsp;&nbsp;Print&nbsp;&nbsp;</button>
+
                     </div>
                 </div>
             </div>
@@ -671,6 +680,47 @@ if (isset($_POST['Edit'])) {
 </section>
 
 <script type="text/javascript">
+    function printInvoice(ctrl, event) {
+        event.preventDefault();
+        bootbox.prompt({
+            title: "Please enter invoice number.",
+            inputType: 'number',
+             buttons: {
+                cancel: {
+                    label: '<i class="fa fa-times"></i> Cancel',
+                    value: '0'
+             },
+                confirm: {
+                    label: '<i class="fa fa-check"></i> Confirm',
+                    value: '1'
+             }
+            },
+            callback: function (result) {
+                if (result != null)
+                {
+                   $('.loader').show();
+
+                    $.ajax({
+                        url: 'create_invoice.php',
+                        type: 'POST',
+                        data: { InvoiceNo: result },
+                        success: function (data) {
+                            //window.location = 'invoice.php';
+                            window.open('invoice.php', "Customer Invoice", "location=0,width=500,height=650");
+                        },
+                        complete: function (data) {
+                            $('.loader').fadeOut();
+                        }
+                    });
+
+                }
+            }
+         
+        });
+
+    }
+
+
     function AddItem(ctrl, event) {
         //event.preventDefault();
         var LocationCode = $('#LocationCode').val();

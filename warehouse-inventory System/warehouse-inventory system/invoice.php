@@ -10,9 +10,16 @@ require_once('pdf/fpdf.php');
 $page_title = 'Invoice';
 require_once('includes/load.php');
 
-$inv_Customer = find_by_sp("call spSelectCusDetailsFromInvoiceNo('000001');");
-$inv_Header = find_by_sp("call spSelectInvoiceHFromCode('000001');");
-$inv_Detail = find_by_sql("call spSelectInvoiceDFromCode('000001');");
+preventGetAction('create_invoice.php');
+
+if($_SESSION['InvoiceNo'] != null) 
+    $InvoiceNo = $_SESSION['InvoiceNo']; 
+else 
+    redirect('create_invoice.php');
+
+$inv_Customer = find_by_sp("call spSelectCusDetailsFromInvoiceNo('{$InvoiceNo}');");
+$inv_Header = find_by_sp("call spSelectInvoiceHFromCode('{$InvoiceNo}');");
+$inv_Detail = find_by_sql("call spSelectInvoiceDFromCode('{$InvoiceNo}');");
 
 $pdf = new FPDF('P','mm',array(215,280));
 $pdf->AddPage();

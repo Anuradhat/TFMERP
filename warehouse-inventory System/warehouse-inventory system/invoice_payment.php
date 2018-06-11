@@ -250,6 +250,10 @@ if(isset($_POST['invoice_payment'])){
                     $db->commit();
 
 
+                    $_SESSION['InvoiceNo'] = $p_InvoiceCode;
+
+                    echo('<script>$(document).ready(function () { window.open("invoice.php", "Customer Invoice", "width=500,height=650"); });</script>');
+
                     $flashMessages->success('Invoice has been saved successfully,\n   Your invoice No: '.$p_InvoiceCode,'create_invoice.php');
 
                 }
