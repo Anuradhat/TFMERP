@@ -948,7 +948,19 @@ if (isset($_POST['Edit'])) {
             data: { SalesmanCodeSelection: SalesmanCode },
             success: function (result) {
                 $("#CustomerCode").html(""); // clear before appending new list
+                $("#CustomerPoCode").html("");
+
                 $("#CustomerCode").html(result);
+            },
+            complete: function (result) {
+                $('#CustomerAddress1').val('');
+                $('#CustomerAddress2').val('');
+                $('#CustomerAddress3').val('');
+
+                $('#DeliveryAddress1').val('');
+                $('#DeliveryAddress2').val('');
+                $('#DeliveryAddress3').val('');
+
                 $('.loader').fadeOut();
             }
         });
