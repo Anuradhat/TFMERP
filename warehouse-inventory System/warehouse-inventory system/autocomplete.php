@@ -182,7 +182,13 @@ if (isset($_POST['Customer'])) {
         $array = array (
             'CustomerCode' => $row['CustomerCode'],
             'CustomerName' => $row['CustomerName'],
-            'Credit' => $row['Credit']
+            'Credit' => $row['Credit'],
+            'CustomerAddress1' => $row['CustomerAddress1'],
+            'CustomerAddress2' => $row['CustomerAddress2'],
+            'CustomerAddress3' => $row['CustomerAddress3'],
+            'DeliveryAddress1' => $row['DeliveryAddress1'],
+            'DeliveryAddress2' => $row['DeliveryAddress2'],
+            'DeliveryAddress3' => $row['DeliveryAddress3']
         );
     }
     //RETURN JSON ARRAY

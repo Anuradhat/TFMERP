@@ -157,6 +157,19 @@ if(isset($_POST['create_invoice'])){
 }
 
 
+if (isset($_POST['SalesmanCodeSelection'])) {
+    $SalesmanCode = remove_junk($db->escape($_POST['SalesmanCodeSelection']));
+    
+    $Customer = find_by_sql("call spSelectCustomerFromSalesmanCode('{$SalesmanCode}');");
+    echo "<option value=''>Select Customer</option>";
+
+    foreach($Customer as &$value){
+        echo "<option value ={$value["CustomerCode"]}>{$value["CustomerName"]}</option>";
+    } 
+    return;
+}
+
+
 if (isset($_POST['_LocationCode'])) {
     $LocationCode = remove_junk($db->escape($_POST['_LocationCode']));
     $_SESSION['LocationCode'] = $LocationCode;
@@ -534,17 +547,17 @@ if (isset($_POST['Edit'])) {
                         </div>
 
                         <div class="form-group">
-                            <label>Customer Purchase Order</label>
-                            <select class="form-control select2" style="width: 100%;" name="CustomerPoCode" id="CustomerPoCode"  onchange="FillCPODetails();" <?php if ($Required_CusPO == 1) echo "required=required"  ?> >
-                                <option value="">Select Customer PO</option><?php  foreach ($all_CPO as $cpo): ?>
-                                <option value="<?php echo $cpo['CusPoNo'] ?>" <?php if($cpo['CusPoNo'] == $arr_header["CustomerPoCode"]) echo "selected";  ?>><?php echo $cpo['CusPoNo'] ?>
-                                </option><?php endforeach; ?>
+                            <label>Customer</label>
+                            <select class="form-control select2" style="width: 100%;" name="CustomerCode" id="CustomerCode" required="required" onchange="FillCPO();">
+                                <option value="">Select Customer</option>
                             </select>
                         </div>
 
                         <div class="form-group">
-                            <label>Remarks</label>
-                            <textarea name="Remarks" id="Remarks" class="form-control" placeholder="Enter remarks here.."><?php echo remove_junk($arr_header['Remarks']) ?></textarea>
+                            <label>Customer Address</label>
+                            <input type="text" class="form-control" name="CustomerAddress1" id="CustomerAddress1" disabled="disabled" />
+                            <input type="text" class="form-control" name="CustomerAddress2" id="CustomerAddress2" disabled="disabled"/>
+                            <input type="text" class="form-control" name="CustomerAddress3" id="CustomerAddress3" disabled="disabled"/>
                         </div>
 
                     </div>
@@ -559,34 +572,49 @@ if (isset($_POST['Edit'])) {
                             </select>
                         </div>
 
-                        <div class="form-group">
-                            <div class="form-group">
-                                <label>Date</label>
-                                <input type="text" class="form-control" name="SoDate" id="SoDate" placeholder="Date" readonly="readonly" disabled="disabled" value="<?php echo make_date(); ?>" />
-                            </div>
-                        </div>
-                    </div>
-
-
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label>Customer</label>
-                            <select class="form-control select2" style="width: 100%;" name="CustomerCode" id="CustomerCode" required="required" onchange="FillCPO();">
-                                <option value="">Select Customer</option><?php  foreach ($all_Customers as $cus): ?>
-                                <option value="<?php echo $cus['CustomerCode'] ?>" <?php if($cus['CustomerCode'] == $arr_header["CustomerCode"]) echo "selected";  ?>><?php echo $cus['CustomerName'] ?>
+                         <div class="form-group">
+                            <label>Customer Purchase Order</label>
+                            <select class="form-control select2" style="width: 100%;" name="CustomerPoCode" id="CustomerPoCode"  onchange="FillCPODetails();" <?php if ($Required_CusPO == 1) echo "required=required"  ?> >
+                                <option value="">Select Customer PO</option><?php  foreach ($all_CPO as $cpo): ?>
+                                <option value="<?php echo $cpo['CusPoNo'] ?>" <?php if($cpo['CusPoNo'] == $arr_header["CustomerPoCode"]) echo "selected";  ?>><?php echo $cpo['CusPoNo'] ?>
                                 </option><?php endforeach; ?>
                             </select>
                         </div>
 
+                         <div class="form-group">
+                            <label>Delivery Address</label>
+                            <input type="text" class="form-control" name="DeliveryAddress1" id="DeliveryAddress1" disabled="disabled" />
+                            <input type="text" class="form-control" name="DeliveryAddress2" id="DeliveryAddress2" disabled="disabled"/>
+                            <input type="text" class="form-control" name="DeliveryAddress3" id="DeliveryAddress3" disabled="disabled"/>
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-md-4">         
                         <div class="form-group">
                             <label>Salesman</label>
-                            <select class="form-control select2" style="width: 100%;" name="SalesmanCode" id="SalesmanCode" required="required">
+                            <select class="form-control select2" style="width: 100%;" name="SalesmanCode" id="SalesmanCode" required="required" onchange="FillCustomer();">
                                 <option value="">Select Salesman</option><?php  foreach ($all_salesrep as $srep): ?>
                                 <option value="<?php echo $srep['EpfNumber'] ?>" <?php if($srep['EpfNumber'] == $arr_header["SalesmanCode"]) echo "selected";  ?>><?php echo $srep['EmployeeName'] ?>
                                 </option><?php endforeach; ?>
                             </select>
                         </div>
 
+
+                        
+                        <div class="form-group">
+                            <div class="form-group">
+                                <label>Date</label>
+                                <input type="text" class="form-control" name="SoDate" id="SoDate" placeholder="Date" readonly="readonly" disabled="disabled" value="<?php echo make_date(); ?>" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Remarks</label>
+                            <textarea name="Remarks" id="Remarks" class="form-control" placeholder="Enter remarks here.."><?php echo remove_junk($arr_header['Remarks']) ?></textarea>
+                        </div>
+  
                     </div>
 
                 </div>
@@ -909,10 +937,38 @@ if (isset($_POST['Edit'])) {
     });
 
 
+
+    function FillCustomer() {
+        $('.loader').show();
+
+        var SalesmanCode = $('#SalesmanCode').val();
+        $.ajax({
+            url: "create_salesorder.php",
+            type: "POST",
+            data: { SalesmanCodeSelection: SalesmanCode },
+            success: function (result) {
+                $("#CustomerCode").html(""); // clear before appending new list
+                $("#CustomerCode").html(result);
+                $('.loader').fadeOut();
+            }
+        });
+    }
+
+
+
+
     function FillCPO() {
         $('.loader').show();
 
         var Customer = $('#CustomerCode').val();
+
+
+        var CustomerAddress1 = "";
+        var CustomerAddress2 = "";
+        var CustomerAddress3 = "";
+        var DeliveryAddress1 = "";
+        var DeliveryAddress2 = "";
+        var DeliveryAddress3 = "";
 
         $.ajax({
             url: "create_invoice.php",
@@ -926,6 +982,36 @@ if (isset($_POST['Edit'])) {
 
 
         $.ajax({
+            url: 'autocomplete.php',
+            type: 'POST',
+            data: { Customer: Customer },
+            dataType: 'json',
+            success: function (data) {
+                jQuery(data).each(function (i, item) {
+                    CustomerAddress1 = item.CustomerAddress1;
+                    CustomerAddress2 = item.CustomerAddress2;
+                    CustomerAddress3 = item.CustomerAddress3;
+
+                    DeliveryAddress1 = item.DeliveryAddress1;
+                    DeliveryAddress2 = item.DeliveryAddress2;
+                    DeliveryAddress3 = item.DeliveryAddress3;
+                });
+            },
+            complete: function (data) {
+                $('#CustomerAddress1').val(CustomerAddress1);
+                $('#CustomerAddress2').val(CustomerAddress2);
+                $('#CustomerAddress3').val(CustomerAddress3);
+
+                $('#DeliveryAddress1').val(DeliveryAddress1);
+                $('#DeliveryAddress2').val(DeliveryAddress2);
+                $('#DeliveryAddress3').val(DeliveryAddress3);
+            }
+        });
+
+
+
+
+        $.ajax({
             url: "create_invoice.php",
             type: "POST",
             data: { CustomerChanged: 'OK' },
@@ -935,6 +1021,7 @@ if (isset($_POST['Edit'])) {
                 $('.loader').fadeOut();
             }
         });
+
     }
 
 
@@ -947,22 +1034,22 @@ if (isset($_POST['Edit'])) {
             $('#SalesmanCode').val('').trigger('change');
         }
 
+
         //Fill header details
-        $.ajax({
-            url: "autocomplete.php",
-            type: "POST",
-            data: { CustomerPoCode: CustomerPoCode },
-            dataType: 'json',
-            success: function (data) {
-                //Fill header details
-                jQuery(data).each(function (i, item) {
-                    //$('#LocationCode').val(item.LocationCode).trigger('change');
-                    $('#SalesmanCode').val(item.SalesmanCode).trigger('change');
-                });
+        //$.ajax({
+        //    url: "autocomplete.php",
+        //    type: "POST",
+        //    data: { CustomerPoCode: CustomerPoCode },
+        //    dataType: 'json',
+        //    success: function (data) {
+        //        //Fill header details
+        //        jQuery(data).each(function (i, item) {
+        //            //$('#LocationCode').val(item.LocationCode).trigger('change');
+        //            $('#SalesmanCode').val(item.SalesmanCode).trigger('change');
+        //        });
 
-            }
-        });
-
+        //    }
+        //});
 
         $.ajax({
             url: "create_invoice.php",
