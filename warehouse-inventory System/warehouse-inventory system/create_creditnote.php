@@ -33,13 +33,16 @@ if(isset($_POST['create_creditnote'])){
 
     if($_POST['create_creditnote'] == "save")
     {
-        $req_fields = array('hInvoiceNo');
+        $req_fields = array('hInvoiceNo','SupportDocument','ReasonForCredit');
 
         validate_fields($req_fields);
 
         if(empty($errors))
         {
             $p_InvoiceNo  = remove_junk($db->escape($_POST['hInvoiceNo']));
+            $p_SupportDocument  = remove_junk($db->escape($_POST['SupportDocument']));
+            $p_ReasonForCredit  = remove_junk($db->escape($_POST['ReasonForCredit']));
+
             $date    = make_date();
             $user =  current_user();
 
@@ -83,7 +86,7 @@ if(isset($_POST['create_creditnote'])){
                     $db->begin();
 
                     //Insert credit note header details
-                    $query  = "call spInsertCreditNoteH('{$p_CreditNoteNo}','{$InvoiceHed['spSelectInvoiceHFromCode']}','{$p_InvoiceNo}',{$TotalAmount},'{$date}','{$p_Remarks}','{$date}','{$user["username"]}');";
+                    $query  = "call spInsertCreditNoteH('{$p_CreditNoteNo}','{$InvoiceHed['CustomerCode']}','{$p_InvoiceNo}','{$p_SupportDocument}','{$p_ReasonForCredit}',{$TotalAmount},'{$date}','{$p_Remarks}','{$date}','{$user["username"]}');";
                     $db->query($query);
 
 
@@ -222,6 +225,13 @@ if (isset($_POST['InvoiceNo'])) {
     return;
 }
 
+if (isset($_POST['CreditNoteNo'])) {
+    $CreditNoteNo = remove_junk($db->escape($_POST['CreditNoteNo']));
+    $_SESSION['CreditNoteNo'] = $CreditNoteNo;
+
+    echo 'redirect';
+}
+
 
 ?>
 
@@ -259,6 +269,8 @@ if (isset($_POST['InvoiceNo'])) {
                             <button type="reset" class="btn btn-success">&nbsp;Reset&nbsp;&nbsp;</button>
                             <button type="button" class="btn btn-warning" onclick="window.location = 'home.php'">Cancel  </button>
                         </div>
+                         <button type="button" class="btn btn-info pull-right" name="print_creditnote" onclick="printcreditnote(this, event);" value="printIcreditnote">&nbsp;&nbsp;Print&nbsp;&nbsp;</button>
+
                     </div>
                 </div>
             </div>
@@ -290,10 +302,16 @@ if (isset($_POST['InvoiceNo'])) {
                             </div>
                         </div>
 
+
                         <div class="form-group">
-                            <label>Remarks</label>
-                            <textarea name="Remarks" id="Remarks" class="form-control" placeholder="Enter remarks here.."></textarea>
+                            <label>Supporting Document</label>
+                            <select class="form-control select2" style="width: 100%;" name="SupportDocument" id="SupportDocument" required="required">
+                                <option value="">Select Document</option>
+                                <option value= "1">Full Credit</option>
+                                <option value="2" >Partial Credit</option>
+                            </select>
                         </div>
+
                     </div>
 
                     <div class="col-md-4">
@@ -306,6 +324,16 @@ if (isset($_POST['InvoiceNo'])) {
                             </select>
                         </div>
 
+                        <div class="form-group">
+                            <label>Reason For Credit</label>
+                            <select class="form-control select2" style="width: 100%;" name="ReasonForCredit" id="ReasonForCredit" required="required">
+                               <option value="">Select Reason</option>
+                               <option value="1">Invoice Reversal (DATA ENTRY ERROR)</option>
+                               <option value= "2">Good Returns</option>
+                               <option value="3" >Other</option>
+                            </select>
+                        </div>
+
                     </div>
 
 
@@ -315,6 +343,11 @@ if (isset($_POST['InvoiceNo'])) {
                                 <label>Invoice Date</label>
                                 <input type="text" class="form-control" name="InvDate" id="InvDate" placeholder="Invoice Date" readonly="readonly" disabled="disabled" value="<?php echo make_date(); ?>" />
                             </div>
+                        </div>
+
+                         <div class="form-group">
+                            <label>Remarks</label>
+                            <textarea name="Remarks" id="Remarks" class="form-control" placeholder="Enter remarks here.."></textarea>
                         </div>
 
                     </div>
@@ -395,6 +428,49 @@ if (isset($_POST['InvoiceNo'])) {
 </section>
 
 <script type="text/javascript">
+    function printcreditnote(ctrl, event) {
+        event.preventDefault();
+        bootbox.prompt({
+            title: "Please enter credit note number.",
+            inputType: 'text',
+            buttons: {
+                cancel: {
+                    label: '<i class="fa fa-times"></i> Cancel',
+                    value: '0'
+                },
+                confirm: {
+                    label: '<i class="fa fa-check"></i> Confirm',
+                    value: '1'
+                }
+            },
+            callback: function (result) {
+                if (result != null) {
+                    $('.loader').show();
+
+                    $.ajax({
+                        url: 'create_creditnote.php',
+                        type: 'POST',
+                        data: { CreditNoteNo: result },
+                        success: function (data) {
+                            //window.location = 'invoice.php';
+                            window.open('creditnote.php', "Customer Credit Note", "location=0,width=550,height=700");
+                        },
+                        complete: function (data) {
+                            $('.loader').fadeOut();
+                        }
+                    });
+
+                }
+            }
+
+        });
+
+    }
+
+
+
+
+
 
     function AddItem(ctrl, event)
     {

@@ -26,6 +26,7 @@
     <Compile Include="approval_task.php" />
     <Compile Include="create_barcode.php" />
     <Compile Include="create_creditnote.php" />
+    <Compile Include="creditnote.php" />
     <Compile Include="customer_payment.php" />
     <Compile Include="create_invoice.php" />
     <Compile Include="delete_bank_account_details.php" />
