@@ -63,7 +63,7 @@ if(isset($_POST['edit_customerpo_'])){
 
                     if(!$CusPo_count)
                     {
-                        $flashMessages->warning('This customer purchase order not exist in the system.','edit_customerpo_.php');
+                        $flashMessages->warning('This customer purchase order not exist in the system.','edit_customerpo_.php?TransactionCode=005');
                     }
 
                     $db->begin();

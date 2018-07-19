@@ -17,6 +17,7 @@
     <IncludeDebugInformation>false</IncludeDebugInformation>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="InvoiceStatus.php" />
     <Compile Include="BankTransaction.php" />
     <Compile Include="add_BankAccountDetails.php" />
     <Compile Include="add_employee.php" />

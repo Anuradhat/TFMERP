@@ -88,7 +88,7 @@ if(isset($_POST['edit_salesorder_'])){
 
                     $db->commit();
                     
-                    $flashMessages->success('Quotation has been successfully updated.','approval_task.php');
+                    $flashMessages->success('Quotation has been successfully updated.','approval_task.php?TransactionCode=004');
 
                 }
                 catch(Exception $ex)

@@ -119,7 +119,7 @@ if(isset($_POST['edit_po'])){
 
                     if(!$Po_count)
                     {
-                        $flashMessages->warning('This purchase order number not exist in the system.','edit_po.php');
+                        $flashMessages->warning('This purchase order number not exist in the system.','edit_po.php?TransactionCode=001');
                     }
 
                     $db->begin();
