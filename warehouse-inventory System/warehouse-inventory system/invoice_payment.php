@@ -137,7 +137,7 @@ if(isset($_POST['invoice_payment'])){
 
                     $PaidAmount = $_cash + $TotalCardValue + $TotalChequeValue + $ToatlBankTrnPayment;
 
-                    $db->begin();
+                    //$db->begin();
 
                     //Insert invoice header details
                     $query  = "call spInsertInvoiceH('{$p_InvoiceCode}','{$p_LocationCode}','{$date}','{$datetime}','{$p_CustomerPoCode}','{$p_CustomerCode}',{$p_GrossAmount},0,{$p_DiscountAmount},{$p_NetAmount},{$Credit},{$PaidAmount},{$Credit},'{$p_SalesmanCode}',0,'','{$date}','{$user["username"]}');";
@@ -247,7 +247,7 @@ if(isset($_POST['invoice_payment'])){
 
                     InsertRecentActvity("Invoice","Reference No. ".$p_InvoiceCode);
 
-                    $db->commit();
+                    //$db->commit();
 
 
                     $_SESSION['InvoiceNo'] = $p_InvoiceCode;
@@ -259,7 +259,7 @@ if(isset($_POST['invoice_payment'])){
                 }
                 catch(Exception $ex)
                 {
-                    $db->rollback();
+                    //$db->rollback();
 
                     $flashMessages->error('Sorry failed to create invoice! '.$ex->getMessage(),'invoice_payment.php');
                 }
@@ -614,7 +614,7 @@ if (isset($_POST['CashPayment'])) {
 
         });
     });
-    
+
     $(document).ready(function () {
         $(".ChequeBtn").click(function () {
             $('.loader').show();
@@ -697,7 +697,7 @@ if (isset($_POST['CashPayment'])) {
         var CardValue = $("#CardPayment").val() == "" ? 0 : $("#CardPayment").val();
         var ChequeValue = $("#ChequePayment").val() == "" ? 0 : $("#ChequePayment").val();
         var TransferValue = $("#BankTransferPayment").val() == "" ? 0 : $("#BankTransferPayment").val();
-        
+
 
         var Credit = (parseFloat(NetAmount) - (parseFloat(CashValue) + parseFloat(CardValue) + parseFloat(ChequeValue) + parseFloat(TransferValue))) < 0 ? 0 : (parseFloat(NetAmount) - (parseFloat(CashValue) + parseFloat(CardValue) + parseFloat(ChequeValue) + parseFloat(TransferValue)));
         $("#Credit").val((Credit).toFixed(2));

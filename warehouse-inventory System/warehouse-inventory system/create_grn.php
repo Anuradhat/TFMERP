@@ -45,7 +45,7 @@ if(isset($_POST['create_grn'])){
             $p_LocationCode  = remove_junk($db->escape($_POST['LocationCode']));
             $p_ReferenceNo = remove_junk($db->escape($_POST['ReferenceNo']));
             $p_Remarks  = remove_junk($db->escape($_POST['Remarks']));
-            
+
             $date    = make_date();
             $datetime    = make_datetime();
             $user =  current_user();
@@ -81,15 +81,15 @@ if(isset($_POST['create_grn'])){
             //check details values
             if(count($arr_item)>0)
             {
-                //save purchase order 
-                
+                //save purchase order
+
                 try
                 {
                     $p_GRNCode  = autoGenerateNumber('tfmGrnHT',1);
 
                     $Grn_count = find_by_sp("call spSelectGRNFromCode('{$p_GRNCode}');");
 
-                   
+
                     if($default_stock_bin == null)
                     {
                         $flashMessages->warning('Default stock bin not found for this selected location.','create_grn.php');
@@ -112,13 +112,13 @@ if(isset($_POST['create_grn'])){
                         $flashMessages->warning('Good received item(s) details not found.','create_grn.php');
                     }
 
-                    $db->begin();
+                    //$db->begin();
 
                     //Insert good received note header details
                     $query  = "call spInsertGoodReceivedH('{$p_GRNCode}','{$p_LocationCode}','{$p_PurchaseOrderNo}','{$p_SupplierCode}','{$date}','{$p_ReferenceNo}','{$p_Remarks}','{$datetime}','{$date}','{$user["username"]}');";
                     $db->query($query);
-                   
-                   
+
+
 
                     //Insert good received note item details
                     foreach($arr_item as $row => $value)
@@ -130,7 +130,7 @@ if(isset($_POST['create_grn'])){
                         }
                     }
 
-      
+
                     //==========re-Calculate stock lot to cost price=====================================================================
                     $maintain_stock = ReadSystemConfig('StockLot');
                     $StockLotToCost = ReadSystemConfig('StockLotToCost');
@@ -161,11 +161,11 @@ if(isset($_POST['create_grn'])){
                                 }
                             }
                         }
-              
+
                     }
                     //====================================================================================================================
 
-                
+
                     //==========re-Calculate stock lot to Expire Date ====================================================================
                     $StockLotToExpDate = ReadSystemConfig('StockLotToExpDate');
 
@@ -197,7 +197,7 @@ if(isset($_POST['create_grn'])){
                     }
                     //====================================================================================================================
 
-                    //Calculate stock       
+                    //Calculate stock
                     foreach($arr_item as $row => $value)
                     {
                         if ($value[5] > 0)
@@ -242,11 +242,11 @@ if(isset($_POST['create_grn'])){
                             //Get Last Serial
                             $LastSerial = $value[7];
 
-                            //Save Serial 
+                            //Save Serial
                             for($i = 1;$i<= $value[5] ;$i++)
                             {
                                 //$SerialNo  = autoGenerateSerialNumber();
-                                
+
                                 $SerialNo = $value[0].'-'.(++$LastSerial);
 
 
@@ -261,7 +261,7 @@ if(isset($_POST['create_grn'])){
                             $db->query($query);
 
 
-                            
+
                         }
                     }
 
@@ -278,14 +278,14 @@ if(isset($_POST['create_grn'])){
                     InsertRecentActvity("Good received note","Reference No. ".$p_GRNCode);
 
 
-                    $db->commit();
-                    
+                    //$db->commit();
+
                     $flashMessages->success('Good received note has been saved successfully,\n   Your good received note No: '.$p_GRNCode,'create_grn.php');
 
                 }
                 catch(Exception $ex)
                 {
-                    $db->rollback();
+                    //$db->rollback();
 
                     $flashMessages->error('Sorry failed to create good received note. '.$ex->getMessage(),'create_grn.php');
 
@@ -313,7 +313,7 @@ if (isset($_POST['_prodcode'])) {
 
     $_SESSION['begindt'] =  make_datetime();
 
-    return include('_partial_grndetails.php');  
+    return include('_partial_grndetails.php');
 }
 
 if (isset($_POST['Edit'])) {
@@ -337,7 +337,7 @@ if (isset($_POST['Edit'])) {
     if(filter_var($maintain_stock,FILTER_VALIDATE_BOOLEAN) == true)
     {
         if(filter_var($StockLotToExpDate,FILTER_VALIDATE_BOOLEAN) == true)
-        {  
+        {
             if ($productdetails["ExpireDate"] != $ExpireDate)
                 $arr_item = ChangValueFromListOfArray( $arr_item,$ProductCode,0,$productdetails["ProductCode"]."-".($productdetails["StockNo"] + 1));
             else
@@ -347,12 +347,12 @@ if (isset($_POST['Edit'])) {
 
     $_SESSION['details'] = $arr_item;
 
-    return include('_partial_grndetails.php');  
+    return include('_partial_grndetails.php');
 }
 
 
 if (isset($_POST['_PoNo'])) {
-    $_SESSION['header']  = null; 
+    $_SESSION['header']  = null;
     $_SESSION['details'] = null;
 
     $PoNo = remove_junk($db->escape($_POST['_PoNo']));
@@ -393,9 +393,9 @@ if (isset($_POST['_PoNo'])) {
         }
     }
 
-    $_SESSION['details'] = $arr_item; 
-    
-    return include('_partial_grndetails.php'); 
+    $_SESSION['details'] = $arr_item;
+
+    return include('_partial_grndetails.php');
 }
 
 
@@ -404,13 +404,13 @@ if (isset($_POST['_RowNo'])) {
     $ProductCode = remove_junk($db->escape($_POST['_RowNo']));
     $serchitem = ArraySearch($arr_item,$ProductCode);
 
-    return include('_partial_grnitem.php'); 
+    return include('_partial_grnitem.php');
 }
 
 
 if (isset($_POST['Supplier'])) {
-    unset($_SESSION['details']); 
-    
+    unset($_SESSION['details']);
+
     $SupplierCode = remove_junk($db->escape($_POST['Supplier']));
 
     $all_Po = find_by_sql("call spSelectRelesePurchaseOrderFromSupplierCode('{$SupplierCode}');");
@@ -505,7 +505,7 @@ if (isset($_POST['Supplier'])) {
                                 <textarea name="Remarks" id="Remarks" class="form-control" placeholder="Enter remarks here.."><?php echo remove_junk($arr_header['Remarks']) ?></textarea>
                             </div>
                         </div>
-                       
+
                     </div>
 
                     <div class="col-md-4">
@@ -626,7 +626,7 @@ if (isset($_POST['Supplier'])) {
             });
         }
     }
-  
+
 
     $(document).ready(function () {
         $('#ProductCode').typeahead({

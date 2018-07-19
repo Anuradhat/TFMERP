@@ -101,7 +101,7 @@ if(isset($_POST['create_transfernote'])){
                         }
                     }
 
-                    $db->begin();
+                  // $db->begin();
 
                     //Insert transfer note header details
                     $query  = "call spInsertTransferNoteH('{$p_TransferNoteNo}','{$p_FromLocationCode}','{$p_FromBinCode}','{$p_ToLocationCode}','{$p_ToBinCode}','{$date}','{$p_Remarks}',7,'{$date}','{$user["username"]}');";
@@ -127,12 +127,12 @@ if(isset($_POST['create_transfernote'])){
                             //Select stock
                             $stock = find_by_sp("call spSelectStock('{$value[0]}','{$p_FromLocationCode}','{$p_FromBinCode}');");
 
-
                             //Insert or update New Stock 
                             $query  = "call spStock('{$stock["StockCode"]}','{$p_ToLocationCode}','{$p_ToBinCode}',
                                        '{$stock["ProductCode"]}','{$stock["SupplierCode"]}',{$stock["CostPrice"]},{$stock["SalePrice"]},0,{$stock["AvgCostPrice"]},{$stock["AvgSalePrice"]},0,0,{$value[6]},'{$stock["ExpireDate"]}',
                                          '{$stock["PurchaseDate"]}','{$date}');";
                             $db->query($query);
+
 
                             //Update Old Stock 
                             $query  = "call spUpdateStock('{$stock["StockCode"]}','{$p_FromLocationCode}','{$p_FromBinCode}',{$value[6]},'{$date}');";
@@ -158,14 +158,14 @@ if(isset($_POST['create_transfernote'])){
 
                     InsertRecentActvity("Transfer note","Reference No. ".$p_TransferNoteNo);
 
-                    $db->commit();
+                    //$db->commit();
                     
                     $flashMessages->success('Transfer note has been saved successfully,\n   Your transfer note No: '.$p_TransferNoteNo,'create_transfernote.php');
 
                 }
                 catch(Exception $ex)
                 {
-                    $db->rollback();
+                   // $db->rollback();
 
                     $flashMessages->error('Sorry failed to create transfer note. '.$ex->getMessage(),'create_transfernote.php');
                 }
