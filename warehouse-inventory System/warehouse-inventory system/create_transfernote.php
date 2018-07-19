@@ -10,7 +10,7 @@ require_once('includes/load.php');
 UserPageAccessControle(1,'Transfer Note Create');
 
 $all_locations = find_by_sql("call spSelectAllLocations();");
- 
+
 if (strtoupper($_SERVER['REQUEST_METHOD']) == 'GET' && !$flashMessages->hasErrors() && !$flashMessages->hasWarnings())
 {
     unset($_SESSION['details']);
@@ -62,7 +62,7 @@ if(isset($_POST['create_transfernote'])){
             if(count($arr_item)>0)
             {
                 //save transfer note no
-                
+
                 try
                 {
                     $p_TransferNoteNo  = autoGenerateNumber('tfmTransferNoteHT',1);
@@ -106,7 +106,7 @@ if(isset($_POST['create_transfernote'])){
                     //Insert transfer note header details
                     $query  = "call spInsertTransferNoteH('{$p_TransferNoteNo}','{$p_FromLocationCode}','{$p_FromBinCode}','{$p_ToLocationCode}','{$p_ToBinCode}','{$date}','{$p_Remarks}',7,'{$date}','{$user["username"]}');";
                     $db->query($query);
-                   
+
 
                     //Insert transfer note item details
                     foreach($arr_item as $row => $value)
@@ -127,14 +127,14 @@ if(isset($_POST['create_transfernote'])){
                             //Select stock
                             $stock = find_by_sp("call spSelectStock('{$value[0]}','{$p_FromLocationCode}','{$p_FromBinCode}');");
 
-                            //Insert or update New Stock 
+                            //Insert or update New Stock
                             $query  = "call spStock('{$stock["StockCode"]}','{$p_ToLocationCode}','{$p_ToBinCode}',
                                        '{$stock["ProductCode"]}','{$stock["SupplierCode"]}',{$stock["CostPrice"]},{$stock["SalePrice"]},0,{$stock["AvgCostPrice"]},{$stock["AvgSalePrice"]},0,0,{$value[6]},'{$stock["ExpireDate"]}',
                                          '{$stock["PurchaseDate"]}','{$date}');";
                             $db->query($query);
 
 
-                            //Update Old Stock 
+                            //Update Old Stock
                             $query  = "call spUpdateStock('{$stock["StockCode"]}','{$p_FromLocationCode}','{$p_FromBinCode}',{$value[6]},'{$date}');";
                             $db->query($query);
 
@@ -159,7 +159,7 @@ if(isset($_POST['create_transfernote'])){
                     InsertRecentActvity("Transfer note","Reference No. ".$p_TransferNoteNo);
 
                     //$db->commit();
-                    
+
                     $flashMessages->success('Transfer note has been saved successfully,\n   Your transfer note No: '.$p_TransferNoteNo,'create_transfernote.php');
 
                 }
@@ -182,7 +182,7 @@ if(isset($_POST['create_transfernote'])){
         }
 
     }
-  
+
 }
 
 
@@ -196,7 +196,7 @@ if (isset($_POST['Edit'])) {
     $arr_item = ChangValueFromListOfArray( $arr_item,$StockCode,6,$TrnQty);
     $_SESSION['details'] = $arr_item;
 
-    return include('_partial_bindetails.php');  
+    return include('_partial_bindetails.php');
 }
 
 
@@ -207,7 +207,7 @@ if (isset($_POST['_stockcode'])) {
 
     $_SESSION['details'] = $arr_item;
 
-    return include('_partial_bindetails.php');  
+    return include('_partial_bindetails.php');
 }
 
 if (isset($_POST['StockCode']) && isset($_POST['TrnQty'])) {
@@ -215,8 +215,8 @@ if (isset($_POST['StockCode']) && isset($_POST['TrnQty'])) {
     $_SESSION['LocationCode'] = $_POST['LocationCode'];
     $_SESSION['BinCode'] = $_POST['BinCode'];
     $_SESSION['TrnQty'] = $_POST['TrnQty'];
-  
-    return include('_partial_seriallist.php');  
+
+    return include('_partial_seriallist.php');
 }
 
 
@@ -232,26 +232,26 @@ if (isset($_POST['FromLocationCode']) && isset($_POST['FromBinCode']) && isset($
         $arr_item[]  = array($value["StockCode"],$value["ProductCode"],$value["ProductDesc"],$value["CostPrice"],$value["ExpireDate"],intval($value["SIH"]),0,$arr_serial);
     }
 
-    $_SESSION['details'] = $arr_item; 
+    $_SESSION['details'] = $arr_item;
 
-    return include('_partial_bindetails.php'); 
+    return include('_partial_bindetails.php');
 }
 
 
 
 if (isset($_POST['StockCode']) && isset($_POST['arr'])) {
     $arr_serial = array();
-  
+
     $StockCode = remove_junk($db->escape($_POST['StockCode']));
     $arr_serial = $db->escape_array($_POST['arr']);
 
-    
+
     //Get all sessions values
     $arr_item = $_SESSION['details'];
 
     $arr_item = ChangValueFromListOfArray($arr_item,$StockCode,7,$arr_serial);
 
-    $_SESSION['details'] = $arr_item;  
+    $_SESSION['details'] = $arr_item;
 }
 
 
@@ -260,14 +260,14 @@ if (isset($_POST['StockCode'])) {
     $StockCode = remove_junk($db->escape($_POST['StockCode']));
     $serchitem = ArraySearch($arr_item,$StockCode);
 
-    return include('_partial_binitem.php'); 
+    return include('_partial_binitem.php');
 }
 
 
 
 if (isset($_POST['FromLocationCode'])) {
-    unset($_SESSION['details']); 
-    
+    unset($_SESSION['details']);
+
     $FromLocationCode = remove_junk($db->escape($_POST['FromLocationCode']));
 
     $Bins = find_by_sql("call spSelectBinFromLocationCode('{$FromLocationCode}');");
@@ -284,7 +284,7 @@ if (isset($_POST['FromLocationCode'])) {
 }
 
 if (isset($_POST['ToLocationCode'])) {
-   
+
     $ToLocationCode = remove_junk($db->escape($_POST['ToLocationCode']));
     $selected = "";
 
@@ -373,7 +373,7 @@ if (isset($_POST['ToLocationCode'])) {
                                 </option><?php endforeach; ?>
                             </select>
                         </div>
-                       
+
                         <div class="form-group">
                             <div class="form-group">
                                 <label>Remarks</label>
@@ -421,7 +421,7 @@ if (isset($_POST['ToLocationCode'])) {
                                 <input type="text" class="form-control" name="TrnNoteDate" placeholder="Date" readonly="readonly" disabled="disabled" value="<?php echo make_date(); ?>" />
                             </div>
                         </div>
-                      
+
                     </div>
 
                 </div>
@@ -453,13 +453,11 @@ if (isset($_POST['ToLocationCode'])) {
                 </div>
             </div>
         </div>
-
-    
 </section>
 
 
 <script type="text/javascript">
-  
+
     function FillFromBin() {
         var FromLocationCode = $('#FromLocationCode').val();
         $('.loader').show();
@@ -512,7 +510,7 @@ if (isset($_POST['ToLocationCode'])) {
             type: "POST",
             url: "create_transfernote.php", // Name of the php files
             data: { FromLocationCode: FromLocationCode, FromBinCode: FromBinCode, BinItem: 'OK' },
-            success: function (result) {                
+            success: function (result) {
                 //$("#tblBinDetails").remove();
                 $("#tblBinDetails").html(result);
                 $('table').DataTable();
@@ -525,7 +523,7 @@ if (isset($_POST['ToLocationCode'])) {
         });
      }
 
-  
+
     //$(function () {
     //  $("table").DataTable();
     //})
