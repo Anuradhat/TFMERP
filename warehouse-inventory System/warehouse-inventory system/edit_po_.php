@@ -34,7 +34,7 @@ if($_SESSION['details'] != null) $arr_item = $_SESSION['details'];
 <?php
 if(isset($_POST["ProductCode"]))
 {
-    $req_fields = array('ProductCode','hProductDesc','CostPrice','pQty');   
+    $req_fields = array('ProductCode','hProductDesc','CostPrice','pQty');
 
     validate_fields($req_fields);
 
@@ -43,24 +43,39 @@ if(isset($_POST["ProductCode"]))
         $p_ProductDesc  = remove_junk($db->escape($_POST['hProductDesc']));
         $p_CostPrice  = remove_junk($db->escape($_POST['CostPrice']));
         $p_Qty = remove_junk($db->escape($_POST['pQty']));
+        $p_Tax  =    remove_junk($db->escape($_POST['Taxs']));
 
         $prod_count = find_by_sp("call spSelectProductFromCode('{$p_ProductCode}');");
 
+        //------------------  Tax calculation ----------------------------------------------
+        $ToatlTax = 0;
+
+
+        $TaxRatesM = find_by_sql("call spSelectTaxRatesFromCode('{$p_Tax}');");
+        foreach($TaxRatesM as &$TaxRt)
+        {
+            $ToatlTax += $TaxRt["TaxRate"];
+        }
+
+
+        $Amount = $p_CostPrice * $p_Qty;
+        $TaxAmount = round((($Amount * $ToatlTax)/100));
+        //-----------------------------------------------------------------------------------
 
         if(!$prod_count)
         {
             $flashMessages->warning('This product code not exist in the system.');
 
-            return include('_partial_podetails.php');  
+            return include('_partial_podetails.php');
         }
 
 
         if ($_SESSION['details'] == null)
         {
-            $arr_item[]  = array($p_ProductCode,$p_ProductDesc,$p_CostPrice,$p_Qty);
-            $_SESSION['details'] = $arr_item; 
+            $arr_item[]  = array($p_ProductCode,$p_ProductDesc,$p_CostPrice,$p_Qty,$ToatlTax,$TaxAmount,$p_Tax);
+            $_SESSION['details'] = $arr_item;
 
-            return include('_partial_podetails.php'); 
+            return include('_partial_podetails.php');
         }
         else
         {
@@ -68,16 +83,16 @@ if(isset($_POST["ProductCode"]))
 
             if(!ExistInArray($arr_item,$p_ProductCode))
             {
-                $arr_item[] = array($p_ProductCode,$p_ProductDesc,$p_CostPrice,$p_Qty);
+                $arr_item[] = array($p_ProductCode,$p_ProductDesc,$p_CostPrice,$p_Qty,$ToatlTax,$TaxAmount,$p_Tax);
                 $_SESSION['details'] = $arr_item;
 
-                return include('_partial_podetails.php'); 
+                return include('_partial_podetails.php');
             }
             else
             {
                 $flashMessages->warning('This product exist in the list.');
 
-                return include('_partial_podetails.php');  
+                return include('_partial_podetails.php');
             }
 
         }
@@ -110,8 +125,8 @@ if(isset($_POST['edit_po'])){
             //check details values
             if(count($arr_item)>0)
             {
-                //update purchase order 
-                
+                //update purchase order
+
                 try
                 {
 
@@ -135,8 +150,9 @@ if(isset($_POST['edit_po'])){
                     //Insert purchase order item details
                     foreach($arr_item as $row => $value)
                     {
-                        $amount = $value[2] * $value[3];
-                        $query  = "call spInsertPurchaseOrderD('{$PurchaseOrder}','{$value[0]}','{$value[1]}',{$value[2]},{$value[3]},{$amount});";
+                        $amount =$value[2] * $value[3] + $value[5];
+
+                        $query  = "call spInsertPurchaseOrderD('{$PurchaseOrder}','{$value[0]}','{$value[1]}',{$value[2]},{$value[3]},{$value[4]},{$value[5]},'{$value[6]}',{$amount});";
                         $db->query($query);
                     }
 
@@ -174,7 +190,7 @@ if (isset($_POST['_prodcode'])) {
     $arr_item = RemoveValueFromListOfArray( $arr_item,$prodcode);
     $_SESSION['details'] = $arr_item;
 
-    return include('_partial_podetails.php');  
+    return include('_partial_podetails.php');
 }
 
 
@@ -184,11 +200,11 @@ if (isset($_SESSION['redirect'])) {
     $_SESSION['details'] == null;
 
     foreach($all_PODetsils as $row => $value){
-        $arr_item[]  = array($value["ProductCode"],$value["ProductDesc"],$value["CostPrice"],$value["Qty"]);
-        $_SESSION['details'] = $arr_item; 
+        $arr_item[]  = array($value["ProductCode"],$value["ProductDesc"],$value["CostPrice"],$value["Qty"],$value["TaxRate"],$value["TaxAmount"],$value["TaxCode"]);
+        $_SESSION['details'] = $arr_item;
     }
 
-    $_SESSION['details'] = $arr_item;   
+    $_SESSION['details'] = $arr_item;
 
     unset($_SESSION['redirect']);
 }
@@ -209,7 +225,7 @@ if (isset($_POST['Edit'])) {
 
     $_SESSION['details'] = $arr_item;
 
-    return include('_partial_podetails.php');  
+    return include('_partial_podetails.php');
 }
 
 
@@ -225,11 +241,11 @@ if (isset($_POST['_PONo'])) {
     if($_SESSION['details'] == null) $arr_item = $_SESSION['details']; else $arr_item[] = $_SESSION['details'];
 
     foreach($all_PODetsils as $row => $value){
-        $arr_item[]  = array($value["ProductCode"],$value["ProductDesc"],$value["CostPrice"],$value["Qty"]);
-        $_SESSION['details'] = $arr_item; 
+        $arr_item[]  = array($value["ProductCode"],$value["ProductDesc"],$value["CostPrice"],$value["Qty"],$value["TaxRate"],$value["TaxAmount"],$value["TaxCode"]);
+        $_SESSION['details'] = $arr_item;
     }
 
-    return include('_partial_podetails.php'); 
+    return include('_partial_podetails.php');
 }
 
 
@@ -237,7 +253,7 @@ if (isset($_POST['_RowNo'])) {
     $ProductCode = remove_junk($db->escape($_POST['_RowNo']));
     $serchitem = ArraySearch($arr_item,$ProductCode);
 
-    return include('_partial_poitem.php'); 
+    return include('_partial_poitem.php');
 }
 
 
@@ -248,7 +264,7 @@ if (isset($_POST['Supplier'])) {
     $Remarks = remove_junk($db->escape($_POST['Remarks']));
 
     $all_PO = find_by_sql("call spSelectAllPurchaseOrderFromSupplierCode('{$SupplierCode}');");
-  
+
     echo "<option>Select Purchase Order</option>";
     foreach($all_PO as &$value){
         $arr_PONo[]  = array('PoNo' =>$value["PoNo"]);
@@ -349,7 +365,7 @@ if (isset($_POST['Supplier'])) {
                                 </option><?php endforeach; ?>
                             </select>
                         </div>
-                       
+
                     </div>
 
 
@@ -384,6 +400,15 @@ if (isset($_POST['Supplier'])) {
                         <div class="form-group">
                             <label>Product Code</label>
                             <input type="text" class="form-control" id="ProductCode" name="ProductCode" placeholder="Product Code" required="required" autocomplete="off" />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Item Tax(s)</label>
+                            <select class="form-control select2" name="Taxs" style="width: 100%;" id="Taxs">
+                                <option value="">Select Tax</option><?php  foreach ($all_Taxs as $tax): ?>
+                                <option value="<?php echo $tax['TaxCode'] ?>"><?php echo $tax['TaxDesc'] ?>
+                                </option><?php endforeach; ?>
+                            </select>
                         </div>
                     </div>
 

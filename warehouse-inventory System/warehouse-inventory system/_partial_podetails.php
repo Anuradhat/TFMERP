@@ -7,6 +7,8 @@
             <th>Product Description</th>
             <th>Cost Price</th>
             <th>Qty</th>
+            <th>Tax Rate</th>
+            <th>Tax Amount</th>
             <th>Amount</th>
         </tr>
     </thead>
@@ -16,11 +18,13 @@
             <td></td>
             <td></td>
             <td></td>
+            <td></td>
+            <td></td>
             <td>
                 <b>Total:</b>
             </td>
             <td>
-                <?php $TotalCost = 0;foreach($arr_item  as &$value){ $TotalCost += $value[2] * $value[3];} echo '<b>'.number_format($TotalCost,2).'</b>'; ?>
+                <?php $TotalCost = 0;foreach($arr_item  as &$value){ $TotalCost += $value[2] * $value[3] + $value[5];} echo '<b>'.number_format($TotalCost,2).'</b>'; ?>
             </td>
         </tr>
     </tfoot>
@@ -48,7 +52,13 @@
                 <?php echo $value[3] ?>
             </td>
             <td>
-                <?php echo number_format(($value[2] == null ? 0 :$value[2] * $value[3]),2) ?>
+                <?php echo $value[4] ?>
+            </td>
+            <td>
+                <?php echo number_format($value[5],2) ?>
+            </td>
+            <td>
+                <?php echo number_format(($value[2] == null ? 0 :$value[2] * $value[3] + $value[5]),2) ?>
             </td>
         </tr><?php  } ?>
     </tbody>

@@ -13,6 +13,7 @@ $all_Supplier = find_by_sql("call spSelectAllSuppliers();");
 $all_workflows = find_by_sql("call spSelectAllWorkFlow();");
 
 $default_flow = ReadSystemConfig('DefaultPOWorkFlow');
+$all_Taxs = find_by_sql("call spSelectAllTaxRates();");
 
 if (strtoupper($_SERVER['REQUEST_METHOD']) == 'GET' && !$flashMessages->hasErrors() && !$flashMessages->hasWarnings())
 {
@@ -21,6 +22,7 @@ if (strtoupper($_SERVER['REQUEST_METHOD']) == 'GET' && !$flashMessages->hasError
 }
 
 $arr_item = array();
+$arr_potax = array();
 
 if($_SESSION['details'] != null) $arr_item = $_SESSION['details'];
 ?>
@@ -38,8 +40,25 @@ if(isset($_POST["Add"]) && isset($_POST["ProductCode"]))
         $p_ProductDesc  = remove_junk($db->escape($_POST['hProductDesc']));
         $p_CostPrice  = remove_junk($db->escape($_POST['CostPrice']));
         $p_Qty = remove_junk($db->escape($_POST['pQty']));
+        $p_Tax  =    remove_junk($db->escape($_POST['Taxs']));
 
         $prod_count = find_by_sp("call spSelectProductFromCode('{$p_ProductCode}');");
+
+
+        //------------------  Tax calculation ----------------------------------------------
+        $ToatlTax = 0;
+
+
+        $TaxRatesM = find_by_sql("call spSelectTaxRatesFromCode('{$p_Tax}');");
+        foreach($TaxRatesM as &$TaxRt)
+        {
+            $ToatlTax += $TaxRt["TaxRate"];
+        }
+
+
+        $Amount = $p_CostPrice * $p_Qty;
+        $TaxAmount = round((($Amount * $ToatlTax)/100));
+        //-----------------------------------------------------------------------------------
 
 
         if(!$prod_count)
@@ -52,7 +71,8 @@ if(isset($_POST["Add"]) && isset($_POST["ProductCode"]))
 
         if ($_SESSION['details'] == null)
         {
-            $arr_item[]  = array($p_ProductCode,$p_ProductDesc,$p_CostPrice,$p_Qty);
+
+            $arr_item[]  = array($p_ProductCode,$p_ProductDesc,$p_CostPrice,$p_Qty,$ToatlTax,$TaxAmount,$p_Tax);
             $_SESSION['details'] = $arr_item;
             return include('_partial_podetails.php');
         }
@@ -62,7 +82,7 @@ if(isset($_POST["Add"]) && isset($_POST["ProductCode"]))
 
             if(!ExistInArray($arr_item,$p_ProductCode))
             {
-                $arr_item[] = array($p_ProductCode,$p_ProductDesc,$p_CostPrice,$p_Qty);
+                $arr_item[] = array($p_ProductCode,$p_ProductDesc,$p_CostPrice,$p_Qty,$ToatlTax,$TaxAmount,$p_Tax);
                 $_SESSION['details'] = $arr_item;
                 return include('_partial_podetails.php');
             }
@@ -108,7 +128,7 @@ if(isset($_POST['create_po'])){
                 {
                     $p_POCode  = autoGenerateNumber('tfmPoHT',1);
 
-                    
+
 
                     $Po_count = find_by_sp("call spSelectPurchaseOrderFromCode('{$p_POCode}');");
 
@@ -128,9 +148,10 @@ if(isset($_POST['create_po'])){
                     //Insert purchase order item details
                     foreach($arr_item as $row => $value)
                     {
-                        $amount = $value[2] * $value[3];
+                        $amount = $value[2] * $value[3] + $value[5];
                         $TotalAmount += $amount;
-                        $query  = "call spInsertPurchaseOrderD('{$p_POCode}','{$value[0]}','{$value[1]}',{$value[2]},{$value[3]},{$amount});";
+
+                        $query  = "call spInsertPurchaseOrderD('{$p_POCode}','{$value[0]}','{$value[1]}',{$value[2]},{$value[3]},{$value[4]},{$value[5]},'{$value[6]}',{$amount});";
                         $db->query($query);
                     }
 
@@ -138,7 +159,7 @@ if(isset($_POST['create_po'])){
 
                     $db->commit();
 
-                    
+
                     //Send Mail
                     $WorkFlowDetForMail = find_by_sp("call spSelectWorkFlowLevel1DetailsForMail('{$p_WorkFlowCode}');");
                     $Supplier = find_by_sp("call spSelectSupplierByCode('{$p_SupplierCode}');");
@@ -157,7 +178,7 @@ if(isset($_POST['create_po'])){
                             </tr>
                             <tr style="background-color: #e0e0e0;">
                                 <th align="left">Purchase Order Date: </th><td>'.$date.'</td>
-                            </tr> 
+                            </tr>
                             <tr >
                                 <th align="left">Supplier: </th><td>'.$Supplier['SupplierName'].'</td>
                             </tr>
@@ -166,7 +187,7 @@ if(isset($_POST['create_po'])){
                             </tr>
                             <tr>
                                 <th align="left">Log In</th><td><a href="http://erp.tfm.lk/">TFM ERP System</a></td>
-                            </tr>                
+                            </tr>
                         </table>
                          <br><br>
                           <i>This is a system generated email – please do not reply. </i>
@@ -212,13 +233,37 @@ if (isset($_POST['Edit'])) {
     $ProductCode = remove_junk($db->escape($_POST['ProductCode']));
     $Qty = remove_junk($db->escape($_POST['Qty']));
     $CostPrice = remove_junk($db->escape($_POST['CostPrice']));
+    $p_Tax  =  remove_junk($db->escape($_POST['Taxs']));
 
     $arr_item = $_SESSION['details'];
+
+    //------------------  Tax calculation ----------------------------------------------
+    $ToatlTax = 0;
+
+
+    $TaxRatesM = find_by_sql("call spSelectTaxRatesFromCode('{$p_Tax}');");
+    foreach($TaxRatesM as &$TaxRt)
+    {
+        $ToatlTax += $TaxRt["TaxRate"];
+    }
+
+
+    $Amount = $CostPrice * $Qty;
+    $TaxAmount = round((($Amount * $ToatlTax)/100));
+    //-----------------------------------------------------------------------------------
+
+
 
     //Change Qty
     $arr_item = ChangValueFromListOfArray( $arr_item,$ProductCode,3,$Qty);
     //Change Cost price
     $arr_item = ChangValueFromListOfArray( $arr_item,$ProductCode,2,$CostPrice);
+    //Change total tax rate
+    $arr_item = ChangValueFromListOfArray( $arr_item,$ProductCode,4,$ToatlTax);
+    //Change total tax amount
+    $arr_item = ChangValueFromListOfArray( $arr_item,$ProductCode,5,$TaxAmount);
+    //Change tax code
+    $arr_item = ChangValueFromListOfArray( $arr_item,$ProductCode,6,$p_Tax);
 
     $_SESSION['details'] = $arr_item;
 
@@ -403,6 +448,15 @@ if (isset($_POST['Supplier'])) {
                         <div class="form-group">
                             <label>Product Code</label>
                             <input type="text" class="form-control" id="ProductCode" name="ProductCode" placeholder="Product Code" required="required" autocomplete="off" />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Item Tax(s)</label>
+                            <select class="form-control select2" name="Taxs" style="width: 100%;" id="Taxs">
+                                <option value="">Select Tax</option><?php  foreach ($all_Taxs as $tax): ?>
+                                <option value="<?php echo $tax['TaxCode'] ?>"><?php echo $tax['TaxDesc'] ?>
+                                </option><?php endforeach; ?>
+                            </select>
                         </div>
                     </div>
 

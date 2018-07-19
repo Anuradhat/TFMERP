@@ -1,3 +1,6 @@
+<?php
+  $all_Taxs = find_by_sql("call spSelectAllTaxRates();");
+?>
 
 <div class="row">
     <form method="post" action="create_po.php">
@@ -8,6 +11,15 @@
                 <input type="text" class="form-control" id="ProductCode" name="ProductCode" placeholder="Product Code" required="required" autocomplete="off" value="<?php echo $serchitem[0]; ?>" readonly="readonly" disabled="disabled" />
                 <input type="hidden" name="hProductCode" id="hProductCode" value="<?php echo $serchitem[0]; ?>" />
             </div>
+
+            <div class="form-group">
+                <label>Item Tax</label>
+                <select class="form-control select2" name="Taxs" style="width: 100%;" id="pTaxs">
+                    <option value="">Select Tax</option><?php  foreach ($all_Taxs as $tax): ?>
+                       <option value="<?php echo $tax['TaxCode'] ?>"  <?php if($tax['TaxCode'] === $serchitem[6]): echo "selected"; endif; ?>  ><?php echo $tax['TaxDesc'] ?>
+                    </option><?php endforeach; ?>
+                </select>
+             </div>
         </div>
 
         <div class="col-xs-3">
@@ -45,6 +57,7 @@
         var CostPrice = parseInt($("#pCostPrice").val());
         var Qty = parseInt($("#pQty").val());
         var ProductCode = $("#hProductCode").val();
+        var Taxs = $("#pTaxs").val();
 
         if (Qty <= 0) {
             $("#pQty").focus();
@@ -55,7 +68,7 @@
             $.ajax({
                 url: "create_po.php",
                 type: "POST",
-                data: { Edit: 'Edit', ProductCode: ProductCode, Qty: Qty, CostPrice: CostPrice },
+                data: { Edit: 'Edit', ProductCode: ProductCode, Qty: Qty, CostPrice: CostPrice, Taxs: Taxs },
                 success: function (result) {
                     $("#table").html(result);
                     $('#myModal').modal('toggle');
@@ -91,5 +104,10 @@
         }
         else
             return false;
+    });
+
+    $(function () {
+        //Initialize Select2 Elements
+        $('.select2').select2();
     });
 </script>
