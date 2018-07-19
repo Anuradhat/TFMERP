@@ -63,7 +63,7 @@ if(isset($_POST['edit_customerpo_'])){
 
                     if(!$CusPo_count)
                     {
-                        $flashMessages->warning('This customer purchase order not exist in the system.','edit_customerpo_.php?TransactionCode=005');
+                        $flashMessages->warning('This customer purchase order not exist in the system.','edit_customerpo_.php');
                     }
 
                     $db->begin();
@@ -81,7 +81,7 @@ if(isset($_POST['edit_customerpo_'])){
 
                     $db->commit();
                     
-                    $flashMessages->success('Customer purchase order has been successfully updated.','approval_task.php');
+                    $flashMessages->success('Customer purchase order has been successfully updated.','approval_task.php?TransactionCode=005');
                     
 
                 }
