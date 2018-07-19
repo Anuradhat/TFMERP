@@ -507,6 +507,7 @@ if (isset($_POST['Supplier'])) {
                 },
                 complete: function (result) {
                     $('#ProductCode').val('');
+                    $('#Taxs').val('').trigger('change');
                     $('#ProductDesc').val('');
                     $('#CostPrice').val('');
                     $('#Qty').val('');

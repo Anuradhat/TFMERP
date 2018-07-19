@@ -60,7 +60,7 @@
         //    $("#SalePrice").focus();
         //    bootbox.alert('Invalid sale price.');
         //}
-        if (Qty <= 0 || isNaN(Qty)) {
+        if (Qty < 0 || isNaN(Qty)) {
             $("#pQty").focus();
             $('.loader').fadeOut();
             bootbox.alert('You enter qty is invalid.');
