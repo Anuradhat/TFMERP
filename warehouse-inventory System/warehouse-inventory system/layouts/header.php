@@ -424,6 +424,7 @@ desired effect
                                 </a>
                                 <ul class="treeview-menu">
                                     <li><a href="create_invoice.php"><i class="fa fa-plus-square-o"></i>Create</a></li>
+                                    <li><a href="InvoiceStatus.php"><i class="fa fa-check-square-o"></i>Invoice Status</a></li>
                                 </ul>
                             </li>
                             <!--End Invoice Menu-->
