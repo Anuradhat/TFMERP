@@ -144,10 +144,6 @@ if(isset($_POST['invoice_payment'])){
                     $db->query($query);
 
 
-                    //Update customer PO to process
-                    $query  = "call spUpdateCusPurchaseOrderToProcess('{$p_CustomerPoCode}','{$date}');";
-                    $db->query($query);
-
 
                     //Insert invoice details and TAX
                     foreach($arr_item as $row => $value)
@@ -174,7 +170,16 @@ if(isset($_POST['invoice_payment'])){
                           $db->query($query);
                         }
 
+                        //Update customer po recived qty
+                        $query  = "call spUpdatePurchaseOrderD_RecivedQty('{$p_CustomerPoCode}','{$value[0]}',{$value[4]});";
+                        $db->query($query);
                     }
+
+
+                    //Update customer PO to process
+                    $query  = "call spUpdateCusPurchaseOrderToProcess('{$p_CustomerPoCode}','{$date}');";
+                    $db->query($query);
+
 
                     //Update Customer Due
                     $query  = "call spUpdateCustomerDue('{$p_CustomerCode}',{$Credit});";

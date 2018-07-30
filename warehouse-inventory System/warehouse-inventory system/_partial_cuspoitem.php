@@ -26,7 +26,7 @@ foreach($UserAccess as $UAccess){
 
             <div class="form-group checkbox">
                 <label class="form-check-label">
-                    <input type="checkbox" name="ExcludeTax" id="ExcludeTax" class="form-check-input" <?php if($AccessStatus == '1'){ echo '';} else {echo "disabled=\"disabled\"";} ?> />
+                    <input type="checkbox" name="ExcludeTax" id="ExcludeTax" class="form-check-input" <?php if($AccessStatus == '1'){ echo '';} else {echo "disabled=\"disabled\"";} ?> <?php if($serchitem[6] == 1): echo "checked"; endif; ?> />
                     Exclude Tax
                 </label>
             </div>

@@ -73,71 +73,71 @@ if(isset($_POST['create_invoice'])){
             if(count($arr_item)>0)
             {
 
-                    //Check transaction qty
-                    $IsQtyExist = true;
+                //Check transaction qty
+                $IsQtyExist = true;
 
-                    foreach($arr_item as $row => $value)
-                        if ($value[4] <= 0)
-                            $IsQtyExist = false;
+                foreach($arr_item as $row => $value)
+                    if ($value[4] <= 0)
+                        $IsQtyExist = false;
 
-                    if(!$IsQtyExist)
+                if(!$IsQtyExist)
+                {
+                    //$session->msg("d", "Some invoice item qty not found.");
+                    //redirect('create_invoice.php',false);
+                    $flashMessages->warning('Some invoice item qty not found.','create_invoice.php');
+                }
+
+
+                //******* Check with SIH ***************************************
+                foreach($arr_item as $row => $value)
+                {
+                    if (SelectStockSIHFormProduct($value[0],$p_LocationCode) < $value[4])
                     {
-                        //$session->msg("d", "Some invoice item qty not found.");
+                        //$session->msg("d", "Some invoice qty is greater than SIH.");
                         //redirect('create_invoice.php',false);
-                        $flashMessages->warning('Some invoice item qty not found.','create_invoice.php');
+                        $flashMessages->warning('Some invoice qty is greater than SIH.','create_invoice.php');
+                        exit;
                     }
+                }
 
+                //********************** Check serial qty ************************
+                foreach($arr_item as $row => $value)
+                {
+                    $ProductCode = $value[0];
+                    $InvQty = $value[4];
 
-                    //******* Check with SIH ***************************************
-                    foreach($arr_item as $row => $value)
+                    if($InvQty > 0)
                     {
-                        if (SelectStockSIHFormProduct($value[0],$p_LocationCode) < $value[4])
+                        $SerialCount = count($value[6]);
+                        if($InvQty != $SerialCount)
                         {
-                            //$session->msg("d", "Some invoice qty is greater than SIH.");
+                            $flashMessages->warning('Invoice serial details are invalid. Reference: '.$ProductCode,'create_invoice.php');
+                            //$session->msg("d", "Invoice serial details are invalid. Reference: ");
                             //redirect('create_invoice.php',false);
-                            $flashMessages->warning('Some invoice qty is greater than SIH.','create_invoice.php');
                             exit;
                         }
                     }
+                }
 
-                    //********************** Check serial qty ************************
-                    foreach($arr_item as $row => $value)
-                    {
-                        $ProductCode = $value[0];
-                        $InvQty = $value[4];
+                //Invoice Amount
+                $GrossAmount = 0;
+                foreach($arr_item as $row => $value)
+                {
+                    $GrossAmount += $value[3] * $value[4];
+                }
 
-                        if($InvQty > 0)
-                        {
-                            $SerialCount = count($value[6]);
-                            if($InvQty != $SerialCount)
-                            {
-                                $flashMessages->warning('Invoice serial details are invalid. Reference: '.$ProductCode,'create_invoice.php');
-                                //$session->msg("d", "Invoice serial details are invalid. Reference: ");
-                                //redirect('create_invoice.php',false);
-                                exit;
-                            }
-                        }
-                    }
+                $_SESSION['DiscountAmount'] = $_SESSION['DiscountAmount'] == null ? 0 : $_SESSION['DiscountAmount'];
 
-                    //Invoice Amount
-                      $GrossAmount = 0;
-                     foreach($arr_item as $row => $value)
-                     {
-                         $GrossAmount += $value[3] * $value[4];
-                     }
+                //Gross Amount
+                $arr_header = ChangValueOfArray($arr_header,'GrossAmount',$GrossAmount);
+                //Discount Amount
+                $arr_header = ChangValueOfArray($arr_header,'Discount',$_SESSION['DiscountAmount']);
+                //Net Amount
+                $arr_header = ChangValueOfArray($arr_header,'NetAmount',($GrossAmount - $_SESSION['DiscountAmount']));
+                $_SESSION['header'] = $arr_header;
 
-                     $_SESSION['DiscountAmount'] = $_SESSION['DiscountAmount'] == null ? 0 : $_SESSION['DiscountAmount'];
-
-                    //Gross Amount
-                     $arr_header = ChangValueOfArray($arr_header,'GrossAmount',$GrossAmount);
-                    //Discount Amount
-                     $arr_header = ChangValueOfArray($arr_header,'Discount',$_SESSION['DiscountAmount']);
-                    //Net Amount
-                     $arr_header = ChangValueOfArray($arr_header,'NetAmount',($GrossAmount - $_SESSION['DiscountAmount']));
-                    $_SESSION['header'] = $arr_header;
-
-                    //Redirect to payment page
-                    redirect('invoice_payment.php',false);
+                //Redirect to payment page
+                redirect('invoice_payment.php',false);
             }
             else
             {
@@ -174,7 +174,7 @@ if (isset($_POST['_LocationCode'])) {
     $LocationCode = remove_junk($db->escape($_POST['_LocationCode']));
     $_SESSION['LocationCode'] = $LocationCode;
 
-   return;
+    return;
 }
 
 if (isset($_POST['InvoiceNo'])) {
@@ -389,32 +389,39 @@ if (isset($_POST['FillTable']) &&  isset($_POST['CustomerPoCode'])) {
 
     $CustomerPoCode = remove_junk($db->escape($_POST['CustomerPoCode']));
 
-    $CPO_Details = find_by_sql("call spSelectCustomerPurchaseOrderDFromCode('{$CustomerPoCode}');");
+    $CPO_Details = find_by_sql("call spSelectCustomerPurchaseOrderD_Invoice_FromCode('{$CustomerPoCode}');");
     $arr_serial = array();
 
     foreach($CPO_Details as &$value){
-    //    $product = find_by_sp("call spSelectProductFromCode('{$value["ProductCode"]}');");
 
-    //    $ToatlTax = 0;
+        $ToatlTax = 0;
 
-    //    if(filter_var($product["Tax"],FILTER_VALIDATE_BOOLEAN))
-    //    {
-    //        $ProductTax = find_by_sql("call spSelectProductTaxFromProductCode('{$value["ProductCode"]}');");  
-    //        foreach($ProductTax as &$pTax)
-    //        {
+        if(!filter_var($value["ExcludeTax"],FILTER_VALIDATE_BOOLEAN))
+        {
 
-    //            $TaxRatesM = find_by_sql("call spSelectTaxRatesFromCode('{$pTax["TaxCode"]}');");
-    //            foreach($TaxRatesM as &$TaxRt)
-    //            {
-    //                $ToatlTax += $TaxRt["TaxRate"];
-    //            }
-    //        }
-    //    }
+            $product = find_by_sp("call spSelectProductFromCode('{$value["ProductCode"]}');");
 
-    //    $TaxAmount = round((($value["Amount"] * $ToatlTax)/100));
-    //    $ToatlAmount = $TaxAmount + $value["Amount"];
+            if(filter_var($product["Tax"],FILTER_VALIDATE_BOOLEAN))
+            {
+                $ProductTax = find_by_sql("call spSelectProductTaxFromProductCode('{$value["ProductCode"]}');");  
+                foreach($ProductTax as &$pTax)
+                {
 
-        $arr_item[]  = array($value["ProductCode"],$value["ProductDesc"],$value["CostPrice"],$value["SellingPrice"],$value["Qty"],$value["Amount"],$arr_serial,$value["TaxAmount"]);
+                    $TaxRatesM = find_by_sql("call spSelectTaxRatesFromCode('{$pTax["TaxCode"]}');");
+                    foreach($TaxRatesM as &$TaxRt)
+                    {
+                        $ToatlTax += $TaxRt["TaxRate"];
+                    }
+                }
+            }
+        }
+
+        $LineAmount =  $value["Qty"] * $value["SellingPrice"];
+        $TaxAmount = round((($LineAmount * $ToatlTax)/100));
+        $ToatlAmount = $TaxAmount + $LineAmount;
+
+                                                                                                                             //$value["Amount"]        $value["TaxAmount"]
+        $arr_item[]  = array($value["ProductCode"],$value["ProductDesc"],$value["CostPrice"],$value["SellingPrice"],$value["Qty"],$ToatlAmount,$arr_serial,$TaxAmount);
     }
     $_SESSION['details'] = $arr_item;
 
@@ -473,6 +480,9 @@ if (isset($_POST['Edit'])) {
 
     //Change Total Amount
     $arr_item = ChangValueFromListOfArray( $arr_item,$ProductCode,5,$ToatlAmount);
+
+    //Exclude Tax
+    $arr_item = ChangValueFromListOfArray( $arr_item,$ProductCode,7,$ExcludeTax == 'true' ? 1:0);
 
     $_SESSION['details'] = $arr_item;
 
