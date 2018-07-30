@@ -73,7 +73,7 @@ if(isset($_POST['edit_customerpo_'])){
                     //Update customer purchase order details
                     foreach($arr_item as $row => $value)
                     {
-                        $query  = "call spUpdateCustomerPOFromCode('{$p_CustomerPoCode}','{$value[0]}',{$value[2]},{$value[3]},{$value[4]},{$value[5]},'{$date}','{$user["username"]}');";
+                        $query  = "call spUpdateCustomerPOFromCode('{$p_CustomerPoCode}','{$value[0]}',{$value[2]},{$value[3]},{$value[6]},{$value[4]},{$value[5]},'{$date}','{$user["username"]}');";
                         $db->query($query);
                     }
 
@@ -175,7 +175,7 @@ if (isset($_POST['Add'])) {
 
 
 
-            $arr_item[] = array($ProductCode,$ProductDesc,$SalePrice,$Qty,$ToatlAmount,$TaxAmount); 
+            $arr_item[] = array($ProductCode,$ProductDesc,$SalePrice,$Qty,$ToatlAmount,$TaxAmount,0); 
             $_SESSION['details'] = $arr_item;     
         }
     }
@@ -186,12 +186,14 @@ if (isset($_POST['CustomerChanged'])) {
     $arr_item = array();
 
     $_SESSION['details'] = null;
+    $arr_item = array();
 
     return include('_partial_cuspodetails.php'); 
 }
 
 if (isset($_POST['Customer'])) {
     $_SESSION['details']  = null;
+    $arr_item = array();
 
     $CustomerCode = remove_junk($db->escape($_POST['Customer']));
 
@@ -208,9 +210,10 @@ if (isset($_POST['Customer'])) {
 
 if (isset($_SESSION['redirect'])) {
     $CPO_Details = find_by_sql("call spSelectCustomerPurchaseOrderDFromCode('{$CustomerPO}');");
+    $arr_item = array();
 
     foreach($CPO_Details as &$value){
-        $arr_item[]  = array($value["ProductCode"],$value["ProductDesc"],$value["SellingPrice"],$value["Qty"],$value["Amount"],$value["TaxAmount"]);
+        $arr_item[]  = array($value["ProductCode"],$value["ProductDesc"],$value["SellingPrice"],$value["Qty"],$value["Amount"],$value["TaxAmount"],$value["ExcludeTax"]);
     }
 
     $_SESSION['details'] = $arr_item;   
@@ -220,13 +223,14 @@ if (isset($_SESSION['redirect'])) {
 
 if (isset($_POST['FillTable']) &&  isset($_POST['CustomerPoCode'])) {
     $_SESSION['details']  = null;
+    $arr_item = array();
 
     $CustomerPoCode = remove_junk($db->escape($_POST['CustomerPoCode']));
 
     $CPO_Details = find_by_sql("call spSelectCustomerPurchaseOrderDFromCode('{$CustomerPoCode}');");
     
     foreach($CPO_Details as &$value){
-        $arr_item[]  = array($value["ProductCode"],$value["ProductDesc"],$value["SellingPrice"],$value["Qty"],$value["Amount"],$value["TaxAmount"]);
+        $arr_item[]  = array($value["ProductCode"],$value["ProductDesc"],$value["SellingPrice"],$value["Qty"],$value["Amount"],$value["TaxAmount"],$value["ExcludeTax"]);
     }
     $_SESSION['details'] = $arr_item; 
 
@@ -572,8 +576,6 @@ if (isset($_POST['_RowNo'])) {
       });
 
 
-
-
       $.ajax({
           url: "edit_customerpo.php",
           type: "POST",
@@ -620,10 +622,10 @@ if (isset($_POST['_RowNo'])) {
           success: function (data) {
               //Fill header details
               jQuery(data).each(function (i, item) {
-                  $('#ReferencePoNo').val(item.ReferenceNo).trigger('change');
+                  $('#ReferencePoNo').val(item.ReferenceNo);
                   $('#WorkFlowCode').val(item.WorkFlowCode).trigger('change');
-                  $('#CusPoDate').val(item.CusPoDate).trigger('change');
-                  $('#Remarks').val(item.Remarks).trigger('change');
+                  $('#CusPoDate').val(item.CusPoDate);
+                  $('#Remarks').val(item.Remarks);
             });
 
           }
