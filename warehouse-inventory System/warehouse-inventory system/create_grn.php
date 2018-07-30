@@ -40,10 +40,12 @@ if(isset($_POST['create_grn'])){
 
         if(empty($errors))
         {
+            
             $p_SupplierCode  = remove_junk($db->escape($_POST['SupplierCode']));
             $p_PurchaseOrderNo  = remove_junk($db->escape($_POST['PoNo']));
             $p_LocationCode  = remove_junk($db->escape($_POST['LocationCode']));
             $p_ReferenceNo = remove_junk($db->escape($_POST['ReferenceNo']));
+            $p_BatchNo = remove_junk($db->escape($_POST['BatchNo']));
             $p_Remarks  = remove_junk($db->escape($_POST['Remarks']));
 
             $date    = make_date();
@@ -115,7 +117,7 @@ if(isset($_POST['create_grn'])){
                     //$db->begin();
 
                     //Insert good received note header details
-                    $query  = "call spInsertGoodReceivedH('{$p_GRNCode}','{$p_LocationCode}','{$p_PurchaseOrderNo}','{$p_SupplierCode}','{$date}','{$p_ReferenceNo}','{$p_Remarks}','{$datetime}','{$date}','{$user["username"]}');";
+                    $query  = "call spInsertGoodReceivedH('{$p_GRNCode}','{$p_LocationCode}','{$p_PurchaseOrderNo}','{$p_SupplierCode}','{$date}','{$p_ReferenceNo}','{$p_BatchNo}','{$p_Remarks}','{$datetime}','{$date}','{$user["username"]}');";
                     $db->query($query);
 
 
@@ -414,7 +416,7 @@ if (isset($_POST['Supplier'])) {
     $SupplierCode = remove_junk($db->escape($_POST['Supplier']));
 
     $all_Po = find_by_sql("call spSelectRelesePurchaseOrderFromSupplierCode('{$SupplierCode}');");
-    echo "<option>Select Purchase Order</option>";
+    echo "<option value= ''>Select Purchase Order</option>";
 
     foreach($all_Po as &$value){
         $arr_PRNNo[]  = array('PoNo' =>$value["PoNo"]);
@@ -499,11 +501,11 @@ if (isset($_POST['Supplier'])) {
                             </select>
                         </div>
 
-                        <div class="form-group">
-                            <div class="form-group">
-                                <label>Remarks</label>
-                                <textarea name="Remarks" id="Remarks" class="form-control" placeholder="Enter remarks here.."><?php echo remove_junk($arr_header['Remarks']) ?></textarea>
-                            </div>
+                       <div class="form-group">
+                          <div class="form-group">
+                            <label>Batch No</label>
+                            <input type="text" class="form-control" name="BatchNo" placeholder="Batch No"  />
+                          </div>
                         </div>
 
                     </div>
@@ -525,6 +527,13 @@ if (isset($_POST['Supplier'])) {
                                 <option value="<?php echo $loc['LocationCode'] ?>" <?php if($loc['LocationCode'] === $default_location): echo "selected"; endif; ?>><?php echo $loc['LocationName'] ?>
                                 </option><?php endforeach; ?>
                             </select>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="form-group">
+                                <label>Remarks</label>
+                                <textarea name="Remarks" id="Remarks" class="form-control" placeholder="Enter remarks here.."><?php echo remove_junk($arr_header['Remarks']) ?></textarea>
+                            </div>
                         </div>
 
                     </div>

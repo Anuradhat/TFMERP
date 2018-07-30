@@ -23,13 +23,10 @@ foreach($UserAccess as $UAccess){
                 <input type="hidden" name="hProductCode" id="hProductCode" value="<?php echo $serchitem[0]; ?>" />
             </div>
 
-            <div class="form-group checkbox">
-                <label class="form-check-label">
-                    <input type="checkbox" name="ExcludeTax" id="ExcludeTax" class="form-check-input" <?php if($AccessStatus == '1'){ echo '';} else {echo "disabled=\"disabled\"";} ?> />
-                    Exclude Tax
-                </label>
+            <div class="form-group">
+                <label>Average Cost</label>
+                <input type="text" class="form-control" name="pAverageCost" id="pAverageCost" placeholder="Average Cost" readonly="readonly" disabled="disabled" value="<?php echo $serchitem[7]; ?>" />
             </div>
-
         </div>
 
         <div class="col-xs-3">
@@ -37,20 +34,32 @@ foreach($UserAccess as $UAccess){
                 <label>Product Description</label>
                 <input type="text" class="form-control" name="ProductDesc" id="ProductDesc" placeholder="Product Description" required="required" readonly="readonly" disabled="disabled" value="<?php echo $serchitem[1]; ?>" />
             </div>
+
+            <div class="form-group">
+                <label>Sales Percentage (%)</label>
+                <input type="number" class="form-control integer" name="pSalesPercentage" id="pSalesPercentage" placeholder="Sales Percentage (%)" value="<?php echo $serchitem[8]; ?>" />
+            </div>
         </div>
 
 
         <div class="col-xs-3">
             <div class="form-group">
                 <label>Sale Price</label>
-                <input type="text" class="integer form-control decimal" name="SalePrice" id="pSalePrice" placeholder="Sale Price" required="required" value="<?php echo $serchitem[2]; ?>" <?php if($AccessStatus == '1'){ echo '';} else {echo "disabled=\"disabled\"";} ?> />
+                <input type="text" class="form-control decimal" name="SalePrice" id="pSalePrice" placeholder="Sale Price" required="required" value="<?php echo $serchitem[2]; ?>" <?php if($AccessStatus == '1'){ echo '';} else {echo "disabled=\"disabled\"";} ?> />
+            </div>
+
+            <div class="form-group checkbox">
+                <label class="form-check-label">
+                    <input type="checkbox" name="ExcludeTax" id="ExcludeTax" class="form-check-input" <?php if($AccessStatus == '1'){ echo '';} else {echo "disabled=\"disabled\"";} ?> <?php if($serchitem[6] == 1): echo "checked"; endif; ?> />
+                    Exclude Tax
+                </label>
             </div>
         </div>
 
         <div class="col-xs-3">
             <div class="form-group">
                 <label>Qty</label>
-                <input type="number" class="integer form-control integer" name="Qty" id="pQty" placeholder="Qty" required="required" value="<?php echo $serchitem[3]; ?>" />
+                <input type="number" class="form-control integer" name="Qty" id="pQty" placeholder="Qty" required="required" value="<?php echo $serchitem[3]; ?>" />
             </div>
         </div>
     </form>
@@ -62,13 +71,15 @@ foreach($UserAccess as $UAccess){
 <script type="text/javascript">
     function EditItem(ctrl, event) {
         event.preventDefault();
-        
+
         $('.loader').show();
 
-        var SalePrice = parseInt($("#pSalePrice").val());
+        var SalePrice = parseFloat($("#pSalePrice").val());
         var Qty = parseInt($("#pQty").val());
         var ProductCode = $("#hProductCode").val();
         var ExcludeTax = $("#ExcludeTax").prop('checked');
+        var AverageCost = parseFloat($("#pAverageCost").val() == null || $("#pAverageCost").val() == "" ? 0 : $("#pAverageCost").val());
+        var SalesPercentage = parseFloat($("#pSalesPercentage").val() == null || $("#pSalesPercentage").val() == "" ? 0 : $("#pSalesPercentage").val());
 
         if (SalePrice <= 0) {
             $("#pSalePrice").focus();
@@ -82,7 +93,7 @@ foreach($UserAccess as $UAccess){
             $.ajax({
                 url: "edit_salesorder_.php",
                 type: "POST",
-                data: { Edit: 'Edit', ProductCode: ProductCode, Qty: Qty, SalePrice: SalePrice, ExcludeTax: ExcludeTax },
+                data: { Edit: 'Edit', ProductCode: ProductCode, Qty: Qty, SalePrice: SalePrice, ExcludeTax: ExcludeTax, AverageCost: AverageCost, SalesPercentage: SalesPercentage },
                 success: function (result) {
                     $("#table").html(result);
                     $('#myModal').modal('toggle');
@@ -93,6 +104,28 @@ foreach($UserAccess as $UAccess){
             });
         }
     }
+
+
+    $('#pSalesPercentage').bind('input', function () {
+
+        var AverageCost = $('#pAverageCost').val();
+        var SalesPercentage = $(this).val();
+
+        if ($(this).val() < 0) {
+            bootbox.alert('Sales percentage cannot be negative.');
+            $(this).val('');
+        }
+        else if (AverageCost == "" || AverageCost == null || AverageCost == 0) {
+            bootbox.alert('Invalid average cost price.');
+            $(this).val('');
+        }
+        else {
+            var value = (parseFloat((AverageCost * SalesPercentage) / 100) + parseFloat(AverageCost)).toFixed(2);
+            $('#pSalePrice').val(value);
+        }
+    });
+
+
 
 
     //Textbox integer accept

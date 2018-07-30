@@ -58,13 +58,13 @@ if(isset($_POST['create_salesorder'])){
             //check details values
             if(count($arr_item)>0)
             {
-                //save quotation 
+                //save quotation
                 try
                 {
-                    
+
                     $p_SOCode  = autoGenerateNumber('tfmSalesOrderHT',1);
 
-                    
+
 
                     $So_count = find_by_sp("call spSelectSalesOrderHFromCode('{$p_SOCode}');");
 
@@ -84,11 +84,11 @@ if(isset($_POST['create_salesorder'])){
                     foreach($arr_item as $row => $value)
                     {
                         $TotalAmount += $value[4];
-                        $query  = "call spInsertSalesOrderD('{$p_SOCode}','{$value[0]}','{$value[1]}',0,{$value[2]},{$value[3]},{$value[5]},{$value[4]});";
+                        $query  = "call spInsertSalesOrderD('{$p_SOCode}','{$value[0]}','{$value[1]}',0,{$value[2]},{$value[3]},{$value[5]},{$value[4]},{$value[6]},{$value[7]},{$value[8]});";
                         $db->query($query);
                     }
 
-                    InsertRecentActvity("Quotation","Reference No. ".$p_TransferNoteNo);
+                    InsertRecentActvity("Quotation","Reference No. ".$p_SOCode);
 
                     $db->commit();
 
@@ -110,7 +110,7 @@ if(isset($_POST['create_salesorder'])){
                             </tr>
                             <tr style="background-color: #e0e0e0;">
                                 <th align="left">Quotation Date: </th><td>'.$date.'</td>
-                            </tr> 
+                            </tr>
                             <tr >
                                 <th align="left">Customer: </th><td>'.$Customer['CustomerName'].'</td>
                             </tr>
@@ -119,7 +119,7 @@ if(isset($_POST['create_salesorder'])){
                             </tr>
                             <tr>
                                 <th align="left">Log In</th><td><a href="http://erp.tfm.lk/">TFM ERP System</a></td>
-                            </tr>                
+                            </tr>
                         </table>
                          <br><br>
                           <i>This is a system generated email – please do not reply. </i>
@@ -161,25 +161,25 @@ if (isset($_POST['_stockcode'])) {
     $arr_item = RemoveValueFromListOfArray( $arr_item,$stockcode);
     $_SESSION['details'] = $arr_item;
 
-    return include('_partial_sodetails.php');  
+    return include('_partial_sodetails.php');
 }
 
 if (isset($_POST['SalesmanCodeSelection'])) {
     $SalesmanCode = remove_junk($db->escape($_POST['SalesmanCodeSelection']));
-    
+
     $Customer = find_by_sql("call spSelectCustomerFromSalesmanCode('{$SalesmanCode}');");
     echo "<option value=''>Select Customer</option>";
 
     foreach($Customer as &$value){
         echo "<option value ={$value["CustomerCode"]}>{$value["CustomerName"]}</option>";
-    } 
+    }
     return;
 }
 
 if (isset($_POST['SalePriceValidate'])) {
     $SalesPrice = remove_junk($db->escape($_POST['SalePriceValidate']));
     $ProductCode = remove_junk($db->escape($_POST['ProductCode']));
-    
+
     $product = find_by_sp("call spSelectProductFromCode('{$ProductCode}');");
 
     //Read system settings
@@ -190,17 +190,27 @@ if (isset($_POST['SalePriceValidate'])) {
 
 }
 
+if (isset($_POST['_productcode'])) {
+    $productcode = remove_junk($db->escape($_POST['_productcode']));
+    $arr_item = $_SESSION['details'];
+    $arr_item = RemoveValueFromListOfArray( $arr_item,$productcode);
+    $_SESSION['details'] = $arr_item;
 
+    return include('_partial_sodetails.php');
+}
 
 if (isset($_POST['Add'])) {
     $ProductCode = remove_junk($db->escape($_POST['ProductCode']));
     $ProductDesc = remove_junk($db->escape($_POST['ProductDesc']));
+    $AverageCost = remove_junk($db->escape($_POST['AverageCost']));
+    $SalesPercentage = remove_junk($db->escape($_POST['SalesPercentage']));
     $SalePrice = remove_junk($db->escape($_POST['SalePrice']));
     $Qty = remove_junk($db->escape($_POST['Qty']));
 
     
+
     $arr_item = $_SESSION['details'];
-    
+
     if($SalePrice == "" || $SalePrice < 0)
     {
 
@@ -219,14 +229,14 @@ if (isset($_POST['Add'])) {
         }
         else
         {
-            
+
             $product = find_by_sp("call spSelectProductFromCode('{$ProductCode}');");
 
             $ToatlTax = 0;
 
             if(filter_var($product["Tax"],FILTER_VALIDATE_BOOLEAN))
             {
-                $ProductTax = find_by_sql("call spSelectProductTaxFromProductCode('{$ProductCode}');");  
+                $ProductTax = find_by_sql("call spSelectProductTaxFromProductCode('{$ProductCode}');");
                 foreach($ProductTax as &$pTax)
                 {
 
@@ -237,17 +247,17 @@ if (isset($_POST['Add'])) {
                     }
                 }
             }
-            
+
             $ItemAmount = $Qty * $SalePrice;
             $TaxAmount = round((($ItemAmount * $ToatlTax)/100));
             $ToatlAmount = $TaxAmount + $ItemAmount;
-            
-            
-            $arr_item[] = array($ProductCode,$ProductDesc,$SalePrice,$Qty,$ToatlAmount,$TaxAmount); 
-            $_SESSION['details'] = $arr_item;     
+
+
+            $arr_item[] = array($ProductCode,$ProductDesc,$SalePrice,$Qty,$ToatlAmount,$TaxAmount,0,$AverageCost,$SalesPercentage);
+            $_SESSION['details'] = $arr_item;
         }
     }
-    return include('_partial_sodetails.php'); 
+    return include('_partial_sodetails.php');
 }
 
 
@@ -335,7 +345,6 @@ if (isset($_POST['CustomerCode'])) {
                             </div>
                         </div>
 
-                        
                         <div class="form-group">
                             <label>Approvals Flow</label>
                             <select class="form-control select2" style="width: 100%;" name="WorkFlowCode" id="WorkFlowCode" required="required">
@@ -348,9 +357,9 @@ if (isset($_POST['CustomerCode'])) {
                         <div class="form-group">
                             <label>Remarks</label>
                             <textarea name="Remarks" id="Remarks" class="form-control" placeholder="Enter remarks here.."></textarea>
-                        </div>  
+                        </div>
                     </div>
-                    
+
                     <div class="col-md-4">
                         <div class="form-group">
                             <label>Salesman</label>
@@ -365,7 +374,7 @@ if (isset($_POST['CustomerCode'])) {
                         <div class="form-group">
                             <label>Valid Period</label>
                             <input type="text" class="form-control pull-right integer" autocomplete="off" name="ValidThru" id="ValidThru" placeholder="Days" required="required"  onkeyup='if(!validnum(this.value)) this.value="";'/>
-                        </div>          
+                        </div>
                     </div>
 
 
@@ -385,7 +394,7 @@ if (isset($_POST['CustomerCode'])) {
                                 <label>Date</label>
                                 <input type="text" class="form-control" name="SoDate" placeholder="Date" readonly="readonly" disabled="disabled" value="<?php echo make_date(); ?>" />
                             </div>
-                        </div>            
+                        </div>
                     </div>
 
                 </div>
@@ -397,7 +406,7 @@ if (isset($_POST['CustomerCode'])) {
     <div class="box box-default">
         <!-- /.box-header -->
         <form method="post" action="create_salesorder.php">
-            <input type="hidden" value="create_salesorder"name="create_salesorder" />
+            <input type="hidden" value="create_salesorder" name="create_salesorder" />
 
             <div class="box-body">
                 <div class="row">
@@ -405,7 +414,12 @@ if (isset($_POST['CustomerCode'])) {
                         <div class="form-group">
                             <label>Product Code</label>
                             <input type="text" class="form-control" name="ProductCode" id="ProductCode" placeholder="Product Code" required="required" autocomplete="off" />
-                        </div>                        
+                        </div>
+
+                        <div class="form-group">
+                            <label>Average Cost</label>
+                            <input type="text" class="form-control" name="AverageCost" id="AverageCost" placeholder="Average Cost" readonly="readonly" disabled="disabled" />
+                        </div>
                     </div>
 
                     <div class="col-md-3">
@@ -413,13 +427,23 @@ if (isset($_POST['CustomerCode'])) {
                             <label>Product Description</label>
                             <input type="text" class="form-control" name="ProductDesc" id="ProductDesc" placeholder="Product Description" required="required" readonly="readonly" disabled="disabled" />
                             <input type="hidden" name="hProductDesc" id="hProductDesc" />
-                        </div>      
+                        </div>
+
+                         <div class="form-group">
+                            <label>Stock In Hand</label>
+                            <input type="text" class="form-control" name="SIH" id="SIH" placeholder="Stock In Hand" readonly="readonly" disabled="disabled" />
+                        </div>
                     </div>
 
                     <div class="col-md-3">
                         <div class="form-group">
                             <label>Sale Price</label>
                             <input type="text" class="form-control decimal" name="SalePrice" id="SalePrice" pattern="([0-9]+\.)?[0-9]+" placeholder="Sale Price" required="required" onchange="ValidateSalePrice();" disabled />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Sales Percentage (%)</label>
+                            <input type="number" class="form-control integer" name="SalesPercentage" id="SalesPercentage" placeholder="Sales Percentage (%)" />
                         </div>
 
                     </div>
@@ -429,10 +453,10 @@ if (isset($_POST['CustomerCode'])) {
                             <label>Qty</label>
                             <input type="number" class="form-control integer" name="pQty" id="Qty" placeholder="Qty" required="required" />
                         </div>
-                                      
+
                         <div class="form-group pull-right">
                             <label>&nbsp;</label><br>
-                            <button type="button" class="btn btn-info" id="item"  onclick="AddItem(this, event);" value="item">&nbsp;&nbsp;&nbsp;Add&nbsp;&nbsp;&nbsp;</button>
+                            <button type="button" class="btn btn-info" id="item" onclick="AddItem(this, event);" value="item">&nbsp;&nbsp;&nbsp;Add&nbsp;&nbsp;&nbsp;</button>
                             <button type="reset" class="btn btn-success">&nbsp;Reset&nbsp;</button>
                         </div>
                     </div>
@@ -477,7 +501,10 @@ if (isset($_POST['CustomerCode'])) {
         var ProductCode = $('#ProductCode').val();
         var ProductDesc = $('#ProductDesc').val();
         var SalePrice = $('#SalePrice').val();
+        var AverageCost =     $('#AverageCost').val() == null || $('#AverageCost').val() == "" ? 0 : $('#AverageCost').val();
+        var SalesPercentage = $('#SalesPercentage').val() == null || $('#SalesPercentage').val() == "" ? 0:$('#SalesPercentage').val();
         var Qty = $('#Qty').val();
+       
 
         if ($('#ProductCode').val() == "") {
             bootbox.alert('Please select correct product.');
@@ -497,7 +524,7 @@ if (isset($_POST['CustomerCode'])) {
             $.ajax({
                 url: 'create_salesorder.php',
                 type: "POST",
-                data: { Add: 'Add', ProductCode: ProductCode, ProductDesc: ProductDesc, SalePrice: SalePrice, Qty: Qty },
+                data: { Add: 'Add', ProductCode: ProductCode, ProductDesc: ProductDesc, SalePrice: SalePrice, Qty: Qty, AverageCost: AverageCost, SalesPercentage: SalesPercentage },
                 success: function (result) {
                     $("#table").html(result);
                     $('#message').load('_partial_message.php');
@@ -510,13 +537,17 @@ if (isset($_POST['CustomerCode'])) {
                     $('#CostPrice').val('');
                     $('#Qty').val('');
 
+                    $('#AverageCost').val('');
+                    $('#SIH').val('');
+                    $('#SalesPercentage').val('');
+
                     $('.loader').fadeOut();
                     $('#ProductCode').focus();
                 }
             });
         }
     }
-  
+
     $(document).ready(function () {
 
         $('#ProductCode').typeahead({
@@ -539,8 +570,9 @@ if (isset($_POST['CustomerCode'])) {
                             var name = item.text;
                             var cprice = parseFloat(item.cprice).toFixed(2);
                             var sprice = parseFloat(item.sprice).toFixed(2);
+                            var avgcost = parseFloat(item.avgcost).toFixed(2);
                             var sih = parseFloat(item.sih);
-                            map[name] = { id: id, name: name, cprice: cprice, sprice: sprice,sih: sih};
+                            map[name] = { id: id, name: name, cprice: cprice, sprice: sprice, avgcost: avgcost, sih: sih };
                             items.push(name);
                         });
                         response(items);
@@ -553,7 +585,9 @@ if (isset($_POST['CustomerCode'])) {
                 $('#ProductDesc').val(map[item].name.substring(map[item].name.indexOf('|') + 2));
                 $('#hProductDesc').val(map[item].name.substring(map[item].name.indexOf('|') + 2));
                 $('#CostPrice').val(map[item].cprice);
-                $('#SalePrice').val(map[item].sprice);
+                $('#SalePrice').val("0.00");
+                $('#AverageCost').val(map[item].avgcost);
+                $('#SIH').val(map[item].sih);
 
                 $('#SalePrice').focus();
                 return map[item].id;
@@ -562,7 +596,7 @@ if (isset($_POST['CustomerCode'])) {
     });
 
 
- 
+
     function FillCustomer() {
         $('.loader').show();
 
@@ -618,7 +652,26 @@ if (isset($_POST['CustomerCode'])) {
     }
 
 
- 
+    $('#SalesPercentage').bind('input', function () {
+
+        var AverageCost = $('#AverageCost').val();
+        var SalesPercentage = $(this).val();
+
+        if ($(this).val() < 0) {
+            bootbox.alert('Sales percentage cannot be negative.');
+            $(this).val('');
+        }
+        else if (AverageCost == "" || AverageCost == null || AverageCost == 0)
+        {
+            bootbox.alert('Invalid average cost price.');
+            $(this).val('');
+        }
+        else
+        {
+            var value = (parseFloat((AverageCost * SalesPercentage) / 100) + parseFloat(AverageCost)).toFixed(2);
+            $('#SalePrice').val(value);
+        }
+    });
 
 
   //  function FillSalesRep() {

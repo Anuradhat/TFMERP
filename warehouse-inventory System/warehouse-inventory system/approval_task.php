@@ -28,18 +28,22 @@ if(isset($_POST['ReferenceNo']))
 {
     $ReferenceNo = remove_junk($db->escape($_POST['ReferenceNo']));
     $TransactionCode = remove_junk($db->escape($_POST['TransactionCode']));
+    $Level = remove_junk($db->escape($_POST['Level']));
 
     if ($TransactionCode == "001")
     {
         $_SESSION['PurchaseOrder'] = $ReferenceNo;
+        $_SESSION['Level'] = $Level;
     }
     else if ($TransactionCode == "004")
     {
         $_SESSION['SalesOrder'] = $ReferenceNo;
+        $_SESSION['Level'] = $Level;
     }
     else if ($TransactionCode == "005")
     {
         $_SESSION['CustomerPO'] = $ReferenceNo;
+        $_SESSION['Level'] = $Level;
     }
 
     $_SESSION['redirect'] = true;
@@ -124,7 +128,7 @@ if (isset($_POST['Approved']) && isset($_POST['TransactionCode']) && isset($_POS
             </div>
         </div>
 
-   
+
         <!-- /.box-header -->
         <div class="box-body">
             <div class="row">
@@ -272,12 +276,12 @@ if (isset($_POST['Approved']) && isset($_POST['TransactionCode']) && isset($_POS
            var $row = $(this).closest("tr");
            var RefNo = $row.find(".clsRefNo").text().trim();
            var TranCode = $row.find(".clsTransactionCode").text().trim();
+           var Level = $row.find(".clsLevel").text().trim();
 
-           
            $.ajax({
                url: "approval_task.php",
                type: "POST",
-               data: { ReferenceNo: RefNo, TransactionCode: TranCode },
+               data: { ReferenceNo: RefNo, TransactionCode: TranCode, Level: Level },
                success: function (result) {
                    if (TranCode == '001')
                       window.location = 'edit_po_.php';

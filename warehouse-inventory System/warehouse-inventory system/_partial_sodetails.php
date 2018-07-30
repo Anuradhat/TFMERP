@@ -5,6 +5,8 @@
             <th>Action</th>
             <th>Product Code</th>
             <th>Product Description</th>
+            <th>Average Cost</th>
+            <th>Sales(%)</th>
             <th>Sale Price</th>
             <th>Qty</th>
             <th>Tax Amount</th>
@@ -13,6 +15,8 @@
     </thead>
     <tfoot>
         <tr>
+            <td></td>
+            <td></td>
             <td></td>
             <td></td>
             <td></td>
@@ -30,7 +34,7 @@
         <?php  foreach($arr_item  as &$value) { ?>
         <tr>
             <td>
-                <div> 
+                <div>
                     <button type="button" class="EditBtn btn btn-warning btn-xs glyphicon glyphicon-edit" data-toggle="modal" data-target="#myModal" contenteditable="false"></button>
                     <button type="button" class="btn btn-danger btn-xs glyphicon glyphicon-trash DeleteBtn" id="btnDelete"></button>
                 </div>
@@ -40,6 +44,12 @@
             </td>
             <td>
                 <?php echo $value[1] ?>
+            </td>
+            <td>
+                <?php  echo number_format(($value[7] == null ? 0 : $value[7]),2) ?> <!--Average Cost -->
+            </td>
+            <td>
+                <?php echo $value[8] == null ? 0 : $value[8] ?>  <!--Sales(%) -->
             </td>
             <td>
                 <?php echo number_format(($value[2] == null ? 0 : $value[2]),2) ?>

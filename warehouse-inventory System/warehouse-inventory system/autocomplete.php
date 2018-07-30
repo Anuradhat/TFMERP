@@ -15,7 +15,9 @@ if (isset($_POST['productcode'])) {
             'text' => $row['ProductCode'].' | '.$row['ProductDesc'],
             'value' => $row['ProductCode'],
             'cprice' => $row['CostPrice'],
-            'sprice' => $row['SalePrice']
+            'sprice' => $row['SalePrice'],
+            'avgcost' => $row['AvgCostPrice'],
+            'sih' => $row['SIH']== null?0:$row['SIH']
         );
     }
     //RETURN JSON ARRAY

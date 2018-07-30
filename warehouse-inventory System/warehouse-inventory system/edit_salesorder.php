@@ -59,7 +59,7 @@ if(isset($_POST['edit_salesorder'])){
             //check details values
             if(count($arr_item)>0)
             {
-                //update quotation order 
+                //update quotation order
                 try
                 {
                     $So_count = find_by_sp("call spSelectSalesOrderHFromCode('{$p_SalesOrderCode}');");
@@ -83,14 +83,14 @@ if(isset($_POST['edit_salesorder'])){
                     //Insert quotation item details
                     foreach($arr_item as $row => $value)
                     {
-                        $query  = "call spInsertSalesOrderD('{$p_SalesOrderCode}','{$value[0]}','{$value[1]}',0,{$value[2]},{$value[3]},{$value[5]},{$value[4]});";
+                        $query  = "call spInsertSalesOrderD('{$p_SalesOrderCode}','{$value[0]}','{$value[1]}',0,{$value[2]},{$value[3]},{$value[5]},{$value[4]},{$value[6]},{$value[7]},{$value[8]});";
                         $db->query($query);
                     }
 
                     InsertRecentActvity("Quotation updated","Reference No. ".$p_SalesOrderCode);
 
                     $db->commit();
-                    
+
                     $flashMessages->success('Quotation has been successfully updated.','edit_salesorder.php');
 
                 }
@@ -121,7 +121,7 @@ if (isset($_POST['CustomerChanged'])) {
 
     $_SESSION['details'] = null;
 
-    return include('_partial_sodetails.php'); 
+    return include('_partial_sodetails.php');
 }
 
 if (isset($_POST['_productcode'])) {
@@ -130,7 +130,7 @@ if (isset($_POST['_productcode'])) {
     $arr_item = RemoveValueFromListOfArray( $arr_item,$productcode);
     $_SESSION['details'] = $arr_item;
 
-    return include('_partial_sodetails.php');  
+    return include('_partial_sodetails.php');
 }
 
 
@@ -139,12 +139,14 @@ if (isset($_POST['_productcode'])) {
 if (isset($_POST['Add'])) {
     $ProductCode = remove_junk($db->escape($_POST['ProductCode']));
     $ProductDesc = remove_junk($db->escape($_POST['ProductDesc']));
+    $AverageCost = remove_junk($db->escape($_POST['AverageCost']));
+    $SalesPercentage = remove_junk($db->escape($_POST['SalesPercentage']));
     $SalePrice = remove_junk($db->escape($_POST['SalePrice']));
     $Qty = remove_junk($db->escape($_POST['Qty']));
 
-    
+
     $arr_item = $_SESSION['details'];
-    
+
     if($ProductCode == "")
     {
         $flashMessages->warning('Product code is not found!');
@@ -173,7 +175,7 @@ if (isset($_POST['Add'])) {
 
             if(filter_var($product["Tax"],FILTER_VALIDATE_BOOLEAN))
             {
-                $ProductTax = find_by_sql("call spSelectProductTaxFromProductCode('{$ProductCode}');");  
+                $ProductTax = find_by_sql("call spSelectProductTaxFromProductCode('{$ProductCode}');");
                 foreach($ProductTax as &$pTax)
                 {
 
@@ -190,11 +192,11 @@ if (isset($_POST['Add'])) {
             $ToatlAmount = $TaxAmount + $ItemAmount;
 
 
-            $arr_item[] = array($ProductCode,$ProductDesc,$SalePrice,$Qty,$ToatlAmount,$TaxAmount); 
-            $_SESSION['details'] = $arr_item;     
+            $arr_item[] = array($ProductCode,$ProductDesc,$SalePrice,$Qty,$ToatlAmount,$TaxAmount,0,$AverageCost,$SalesPercentage);
+            $_SESSION['details'] = $arr_item;
         }
     }
-    return include('_partial_sodetails.php'); 
+    return include('_partial_sodetails.php');
 }
 
 
@@ -203,7 +205,7 @@ if (isset($_POST['_RowNo'])) {
     $ProductCode = remove_junk($db->escape($_POST['_RowNo']));
     $serchitem = ArraySearch($arr_item,$ProductCode);
 
-    return include('_partial_poitem.php'); 
+    return include('_partial_poitem.php');
 }
 
 
@@ -226,7 +228,7 @@ if (isset($_POST['_RowNo'])) {
 
 if (isset($_POST['SalesmanCodeSelection'])) {
     $SalesmanCode = remove_junk($db->escape($_POST['SalesmanCodeSelection']));
-    
+
     $Customer = null;
 
     $Customer = find_by_sql("call spSelectCustomerFromSalesmanCode('{$SalesmanCode}');");
@@ -234,17 +236,18 @@ if (isset($_POST['SalesmanCodeSelection'])) {
 
     foreach($Customer as &$value){
         echo "<option value ={$value["CustomerCode"]}>{$value["CustomerName"]}</option>";
-    } 
+    }
     return;
 }
 
 if (isset($_POST['Customer'])) {
     $_SESSION['details']  = null;
+    $arr_item = array();
 
     $CustomerCode = remove_junk($db->escape($_POST['Customer']));
 
     $all_SO = find_by_sql("call spSelectAllSalesOrderFromCustomerCode('{$CustomerCode}');");
-    
+
     echo "<option value=''>Select Quotation</option>";
     foreach($all_SO as &$value){
         echo "<option value ={$value["SoNo"]}>{$value["SoNo"]}</option>";
@@ -256,15 +259,16 @@ if (isset($_POST['Customer'])) {
 
 if (isset($_POST['SalesOrderCode'])) {
     $_SESSION['details']  = null;
+    $arr_item = array();
 
     $SalesOrderCode = remove_junk($db->escape($_POST['SalesOrderCode']));
 
     $SO_Details = find_by_sql("call spSelectSalesOrderDFromCode('{$SalesOrderCode}');");
-    
+
     foreach($SO_Details as &$value){
-        $arr_item[]  = array($value["ProductCode"],$value["ProductDesc"],$value["SellingPrice"],$value["Qty"],$value["Amount"],$value["TaxAmount"]);
+        $arr_item[]  = array($value["ProductCode"],$value["ProductDesc"],$value["SellingPrice"],$value["Qty"],$value["Amount"],$value["TaxAmount"],$value["ExcludeTax"],$value["AverageCost"],$value["SalesPercentage"]);
     }
-    $_SESSION['details'] = $arr_item; 
+    $_SESSION['details'] = $arr_item;
 
     return include('_partial_sodetails.php');
 }
@@ -350,7 +354,7 @@ if (isset($_POST['SalesOrderCode'])) {
                         <div class="form-group">
                             <label>Remarks</label>
                             <textarea name="Remarks" id="Remarks" class="form-control" placeholder="Enter remarks here.."></textarea>
-                        </div> 
+                        </div>
 
                     </div>
 
@@ -369,7 +373,7 @@ if (isset($_POST['SalesOrderCode'])) {
                             <label>Valid Period</label>
                             <input type="text" class="form-control pull-right integer" autocomplete="off" name="ValidThru" id="ValidThru" placeholder="Days" required="required" />
                         </div>
-       
+
                     </div>
 
 
@@ -400,7 +404,7 @@ if (isset($_POST['SalesOrderCode'])) {
     <div class="box box-default">
         <!-- /.box-header -->
         <form method="post" action="edit_salesorder.php">
-            <input type="hidden" value="edit_salesorder"name="edit_salesorder" />
+            <input type="hidden" value="edit_salesorder" name="edit_salesorder" />
 
             <div class="box-body">
                 <div class="row">
@@ -408,7 +412,12 @@ if (isset($_POST['SalesOrderCode'])) {
                         <div class="form-group">
                             <label>Product Code</label>
                             <input type="text" class="form-control" name="ProductCode" id="ProductCode" placeholder="Product Code" required="required" autocomplete="off" />
-                        </div>                    
+                        </div>
+
+                        <div class="form-group">
+                            <label>Average Cost</label>
+                            <input type="text" class="form-control" name="AverageCost" id="AverageCost" placeholder="Average Cost" readonly="readonly" disabled="disabled" />
+                        </div>
                     </div>
 
                     <div class="col-md-3">
@@ -416,7 +425,12 @@ if (isset($_POST['SalesOrderCode'])) {
                             <label>Product Description</label>
                             <input type="text" class="form-control" name="ProductDesc" id="ProductDesc" placeholder="Product Description" required="required" readonly="readonly" disabled="disabled" />
                             <input type="hidden" name="hProductDesc" id="hProductDesc" />
-                        </div>      
+                        </div>
+
+                        <div class="form-group">
+                            <label>Stock In Hand</label>
+                            <input type="text" class="form-control" name="SIH" id="SIH" placeholder="Stock In Hand" readonly="readonly" disabled="disabled" />
+                        </div>
                     </div>
 
                     <div class="col-md-3">
@@ -424,17 +438,22 @@ if (isset($_POST['SalesOrderCode'])) {
                             <label>Sale Price</label>
                             <input type="text" class="form-control decimal" name="SalePrice" id="SalePrice" pattern="([0-9]+\.)?[0-9]+" placeholder="Sale Price" required="required" disabled />
                         </div>
+
+                         <div class="form-group">
+                            <label>Sales Percentage (%)</label>
+                            <input type="number" class="form-control integer" name="SalesPercentage" id="SalesPercentage" placeholder="Sales Percentage (%)" />
+                        </div>
                     </div>
 
-                    <div class="col-md-3">                   
+                    <div class="col-md-3">
                         <div class="form-group">
                             <label>Qty</label>
                             <input type="number" class="form-control integer" name="pQty" id="Qty" placeholder="Qty" required="required" />
                         </div>
-                                      
+
                         <div class="form-group pull-right">
                             <label>&nbsp;</label><br>
-                            <button type="button" class="btn btn-info" id="item"  onclick="AddItem(this, event);" value="item">&nbsp;&nbsp;&nbsp;Add&nbsp;&nbsp;&nbsp;</button>
+                            <button type="button" class="btn btn-info" id="item" onclick="AddItem(this, event);" value="item">&nbsp;&nbsp;&nbsp;Add&nbsp;&nbsp;&nbsp;</button>
                             <button type="reset" class="btn btn-success">&nbsp;Reset&nbsp;</button>
                         </div>
                     </div>
@@ -479,6 +498,8 @@ if (isset($_POST['SalesOrderCode'])) {
         var ProductDesc = $('#ProductDesc').val();
         var CostPrice = $('#CostPrice').val()
         var SalePrice = $('#SalePrice').val();
+        var AverageCost = $('#AverageCost').val() == null || $('#AverageCost').val() == "" ? 0 : $('#AverageCost').val();
+        var SalesPercentage = $('#SalesPercentage').val() == null || $('#SalesPercentage').val() == "" ? 0 : $('#SalesPercentage').val();
         var Qty = $('#Qty').val();
 
 
@@ -500,7 +521,7 @@ if (isset($_POST['SalesOrderCode'])) {
             $.ajax({
                 url: 'edit_salesorder.php',
                 type: "POST",
-                data: { Add: 'Add', ProductCode: ProductCode, ProductDesc: ProductDesc, SalePrice: SalePrice, Qty: Qty },
+                data: { Add: 'Add', ProductCode: ProductCode, ProductDesc: ProductDesc, SalePrice: SalePrice, Qty: Qty, AverageCost: AverageCost, SalesPercentage: SalesPercentage },
                 success: function (result) {
                     $("#table").html(result);
                     $('#message').load('_partial_message.php');
@@ -512,13 +533,17 @@ if (isset($_POST['SalesOrderCode'])) {
                     $('#SalePrice').val('');
                     $('#Qty').val('');
 
+                    $('#AverageCost').val('');
+                    $('#SIH').val('');
+                    $('#SalesPercentage').val('');
+
                     $('.loader').fadeOut();
                     $('#StockCode').focus();
                 }
             });
         }
     }
-  
+
     $(document).ready(function () {
         $('#ProductCode').typeahead({
             hint: true,
@@ -540,8 +565,9 @@ if (isset($_POST['SalesOrderCode'])) {
                             var name = item.text;
                             var cprice = parseFloat(item.cprice).toFixed(2);
                             var sprice = parseFloat(item.sprice).toFixed(2);
+                            var avgcost = parseFloat(item.avgcost).toFixed(2);
                             var sih = parseFloat(item.sih);
-                            map[name] = { id: id, name: name, cprice: cprice, sprice: sprice,sih: sih};
+                            map[name] = { id: id, name: name, cprice: cprice, sprice: sprice, avgcost: avgcost, sih: sih};
                             items.push(name);
                         });
                         response(items);
@@ -555,6 +581,8 @@ if (isset($_POST['SalesOrderCode'])) {
                 $('#hProductDesc').val(map[item].name.substring(map[item].name.indexOf('|') + 2));
                 $('#CostPrice').val(map[item].cprice);
                 $('#SalePrice').val(map[item].sprice);
+                $('#AverageCost').val(map[item].avgcost);
+                $('#SIH').val(map[item].sih);
 
                 $('#SalePrice').focus();
                 return map[item].id;
@@ -576,6 +604,21 @@ if (isset($_POST['SalesOrderCode'])) {
             success: function (result) {
                 $("#CustomerCode").html(""); // clear before appending new list
                 $("#CustomerCode").html(result);
+            },
+            complete: function (result) {
+                $('.loader').fadeOut();
+            }
+        });
+
+        $.ajax({
+            url: "edit_salesorder.php",
+            type: "POST",
+            data: { CustomerChanged: 'OK'},
+            success: function (result) {
+                $("#table").html(result);
+                $('#message').load('_partial_message.php');
+            },
+            complete: function (result) {
                 $('.loader').fadeOut();
             }
         });
@@ -584,7 +627,20 @@ if (isset($_POST['SalesOrderCode'])) {
 
   function FillSO() {
       $('.loader').show();
+
       var Customer = $('#CustomerCode').val();
+
+      $.ajax({
+          url: "edit_salesorder.php",
+          type: "POST",
+          data: { CustomerChanged: 'OK' },
+          success: function (result) {
+              $("#table").html(result);
+              $('#message').load('_partial_message.php');
+          }
+      });
+
+
       $.ajax({
           url: "edit_salesorder.php",
           type: "POST",
@@ -592,21 +648,33 @@ if (isset($_POST['SalesOrderCode'])) {
           success: function (result) {
               $("#SalesOrderCode").html(""); // clear before appending new list
               $("#SalesOrderCode").html(result);
+          },
+          complete: function (result) {
+              $('.loader').fadeOut();
           }
       });
-    
-
-    $.ajax({
-        url: "edit_salesorder.php",
-        type: "POST",
-        data: { CustomerChanged: 'OK'},
-        success: function (result) {
-            $("#table").html(result);
-            $('#message').load('_partial_message.php');
-            $('.loader').fadeOut();
-        }
-    });
   }
+
+
+
+  $('#SalesPercentage').bind('input', function () {
+
+      var AverageCost = $('#AverageCost').val();
+      var SalesPercentage = $(this).val();
+
+      if ($(this).val() < 0) {
+          bootbox.alert('Sales percentage cannot be negative.');
+          $(this).val('');
+      }
+      else if (AverageCost == "" || AverageCost == null || AverageCost == 0) {
+          bootbox.alert('Invalid average cost price.');
+          $(this).val('');
+      }
+      else {
+          var value = (parseFloat((AverageCost * SalesPercentage) / 100) + parseFloat(AverageCost)).toFixed(2);
+          $('#SalePrice').val(value);
+      }
+  });
 
 
   function FillSODetails() {
@@ -635,23 +703,23 @@ if (isset($_POST['SalesOrderCode'])) {
                 //$('#SalesmanCode').val(item.SalesmanCode).trigger('change');
                 $('#WorkFlowCode').val(item.WorkFlowCode).trigger('change');
                 $('#SoDate').val(item.SoDate);
-                $('#Remarks').val(item.Remarks); 
+                $('#Remarks').val(item.Remarks);
                 $('#ValidThru').val(item.ValidThru);
             });
 
           }
       });
 
- 
-      $.ajax({
-          url: "edit_salesorder.php",
-          type: "POST",
-          data: { CustomerChanged: 'OK' },
-          success: function (result) {
-              $("#table").html(result);
-              $('#message').load('_partial_message.php');
-          }
-      });
+
+      //$.ajax({
+      //    url: "edit_salesorder.php",
+      //    type: "POST",
+      //    data: { CustomerChanged: 'OK' },
+      //    success: function (result) {
+      //        $("#table").html(result);
+      //        $('#message').load('_partial_message.php');
+      //    }
+      //});
 
 
       //Fill details
@@ -661,7 +729,10 @@ if (isset($_POST['SalesOrderCode'])) {
           data: { SalesOrderCode: SalesOrderCode },
           success: function (result) {
               $("#table").html(result);
-              $('.loader').fadeOut();
+          },
+          complete: function (result)
+          {
+             $('.loader').fadeOut();
           }
       });
   }
