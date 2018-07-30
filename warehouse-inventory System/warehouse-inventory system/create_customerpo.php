@@ -10,10 +10,13 @@ require_once('includes/load.php');
 UserPageAccessControle(1,'Customer PO Create');
 
 $default_flow = ReadSystemConfig('DefaultCUSPOWorkFlow');
+$default_salesrepDesig = ReadSystemConfig('DefaultSalesRepDesigCode');
 
+$current_user = current_user();
 
 $all_Customers = find_by_sql("call spSelectAllCustomers();");
 $all_workflows = find_by_sql("call spSelectAllWorkFlow();");
+$all_salesrep = find_by_sql("call spSelectEmployeeFromDesignationCode('{$default_salesrepDesig}');");
 //$all_locations = find_by_sql("call spSelectAllLocations();");
 
 
@@ -34,7 +37,7 @@ if(isset($_POST['create_customerpo'])){
 
     if($_POST['create_customerpo'] == "save")
     {
-        $req_fields = array('CustomerCode','ReferencePoNo','SalesOrderCode','WorkFlowCode');
+        $req_fields = array('CustomerCode','ReferencePoNo','WorkFlowCode');
 
         validate_fields($req_fields);
 
@@ -79,7 +82,7 @@ if(isset($_POST['create_customerpo'])){
                     foreach($arr_item as $row => $value)
                     {
                         $TotalAmount += $value[4];
-                        $query  = "call spInsertCusPurchaseOrderD('{$p_CusPoCode}','{$value[0]}','{$value[1]}',0,{$value[2]},{$value[3]},{$value[5]},{$value[4]});";
+                        $query  = "call spInsertCusPurchaseOrderD('{$p_CusPoCode}','{$value[0]}','{$value[1]}',0,{$value[2]},{$value[3]},{$value[5]},{$value[6]},{$value[4]});";
                         $db->query($query);
                     }
 
@@ -161,6 +164,36 @@ if (isset($_POST['_productcode'])) {
 
 
 
+if (isset($_POST['_Customer'])) {
+    $Customer = remove_junk($db->escape($_POST['_Customer']));
+
+    $_SESSION['details']  = null;
+    $arr_item = array();
+
+    $SO_Details = find_by_sql("call spSelectSalesOrderDFromCustomer('{$Customer}');");
+    
+    foreach($SO_Details as &$value){
+        $arr_item[]  = array($value["ProductCode"],$value["ProductDesc"],$value["SellingPrice"],$value["Qty"],$value["Amount"],$value["TaxAmount"],$value["ExcludeTax"]);
+    }
+
+    $_SESSION['details'] = $arr_item; 
+
+    return include('_partial_cuspodetails.php'); 
+ }
+
+
+if (isset($_POST['SalesmanCodeSelection'])) {
+    $SalesmanCode = remove_junk($db->escape($_POST['SalesmanCodeSelection']));
+
+    $Customer = find_by_sql("call spSelectCustomerFromSalesmanCode('{$SalesmanCode}');");
+    echo "<option value=''>Select Customer</option>";
+
+    foreach($Customer as &$value){
+        echo "<option value ={$value["CustomerCode"]}>{$value["CustomerName"]}</option>";
+    }
+    return;
+}
+
 
 if (isset($_POST['Add'])) {
     $ProductCode = remove_junk($db->escape($_POST['ProductCode']));
@@ -218,7 +251,7 @@ if (isset($_POST['Add'])) {
 
 
 
-            $arr_item[] = array($ProductCode,$ProductDesc,$SalePrice,$Qty,$ToatlAmount,$TaxAmount); 
+            $arr_item[] = array($ProductCode,$ProductDesc,$SalePrice,$Qty,$ToatlAmount,$TaxAmount,0); 
             $_SESSION['details'] = $arr_item;     
         }
     }
@@ -259,7 +292,7 @@ if (isset($_POST['Customer'])) {
 
     $all_SO = find_by_sql("call spSelectApprovedSalesOrderFromCustomerCode('{$CustomerCode}');");
     
-    echo "<option value=''>Select Sales Order</option>";
+    echo "<option value=''>Select Quotation</option>";
     foreach($all_SO as &$value){
         echo "<option value ={$value["SoNo"]}>{$value["SoNo"]}</option>";
     }
@@ -276,7 +309,7 @@ if (isset($_POST['SalesOrderCode'])) {
     $SO_Details = find_by_sql("call spSelectSalesOrderDFromCode('{$SalesOrderCode}');");
     
     foreach($SO_Details as &$value){
-        $arr_item[]  = array($value["ProductCode"],$value["ProductDesc"],$value["SellingPrice"],$value["Qty"],$value["Amount"],$value["TaxAmount"]);
+        $arr_item[]  = array($value["ProductCode"],$value["ProductDesc"],$value["SellingPrice"],$value["Qty"],$value["Amount"],$value["TaxAmount"],$value["ExcludeTax"]);
     }
     $_SESSION['details'] = $arr_item; 
 
@@ -333,6 +366,8 @@ if (isset($_POST['Edit'])) {
     $arr_item = ChangValueFromListOfArray( $arr_item,$ProductCode,4,$ToatlAmount);
     //Change Tax Amount
     $arr_item = ChangValueFromListOfArray( $arr_item,$ProductCode,5,$TaxAmount);
+    //Exclude Tax
+    $arr_item = ChangValueFromListOfArray( $arr_item,$ProductCode,6,$ExcludeTax == 'true' ? 1:0);
 
     $_SESSION['details'] = $arr_item;
 
@@ -404,6 +439,37 @@ if (isset($_POST['Edit'])) {
                             </div>
                         </div>
 
+                         <div class="form-group">
+                            <label>Quotation</label>
+                            <select class="form-control select2" style="width: 100%;" name="SalesOrderCode" id="SalesOrderCode" onchange="FillSODetails();">
+                                <option value="">Select Quotation</option>
+                            </select>
+                        </div>
+
+                        
+                         <div class="form-group">
+                            <label>Approvals Flow</label>
+                            <select class="form-control select2" style="width: 100%;" name="WorkFlowCode" id="WorkFlowCode" required="required">
+                                <option value="">Select Approvals Work-Flow</option><?php  foreach ($all_workflows as $wflow): ?>
+                                <option value="<?php echo $wflow['WorkFlowCode'] ?>" <?php if($wflow['WorkFlowCode'] === $default_flow): echo "selected"; endif; ?>><?php echo $wflow['Description'] ?>
+                                </option><?php endforeach; ?>
+                            </select>
+                        </div>
+                        
+                    </div>
+
+                    <div class="col-md-4">
+                         <div class="form-group">
+                            <label>Salesman</label>
+                            <select class="form-control select2" style="width: 100%;" name="SalesmanCode" id="SalesmanCode" required="required"onchange="FillCustomer();">
+                                <option value="">Select Salesman</option><?php  foreach ($all_salesrep as $srep): ?>
+                                <option value="<?php echo $srep['EpfNumber'] ?>" <?php if($srep['EpfNumber'] === $current_user["EmployeeCode"]): echo "selected"; endif; ?>><?php echo $srep['EmployeeName'] ?>
+                                </option><?php endforeach; ?>
+                            </select>
+                        </div>
+
+
+                    
                         <div class="form-group">
                             <div class="form-group">
                                 <label>Date</label>
@@ -415,10 +481,12 @@ if (isset($_POST['Edit'])) {
                             <label>Remarks</label>
                             <textarea name="Remarks" id="Remarks" class="form-control" placeholder="Enter remarks here.."></textarea>
                         </div>
+                       
                     </div>
 
+
                     <div class="col-md-4">
-                        <div class="form-group">
+                            <div class="form-group">
                             <label>Customer <span class="text-danger">(Credit Amount:&nbsp;<output class="inline" for="fader" id="creditamount">0</output>)</span></label>
                             <select class="form-control select2" style="width: 100%;" name="CustomerCode" id="CustomerCode" required="required" onchange="FillSO();">
                                 <option value="">Select Customer</option><?php  foreach ($all_Customers as $cus): ?>
@@ -427,29 +495,13 @@ if (isset($_POST['Edit'])) {
                             </select>
                         </div>
 
-                        <div class="form-group">
+                       
+                       
+                         <div class="form-group">
                             <label>Customer PO No (Reference No)</label>
-                            <input type="text" class="form-control" name="ReferencePoNo" id="ReferencePoNo" placeholder="Customer PO"/>
-                        </div>
-                    </div>
-
-
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label>Sales Order</label>
-                            <select class="form-control select2" style="width: 100%;" name="SalesOrderCode" id="SalesOrderCode" required="required" onchange="FillSODetails();">
-                                <option value="">Select Sales Order</option>
-                            </select>
+                            <input type="text" class="form-control" name="ReferencePoNo" id="ReferencePoNo" placeholder="Customer PO" required/>
                         </div>
                        
-                        <div class="form-group">
-                            <label>Approvals Flow</label>
-                            <select class="form-control select2" style="width: 100%;" name="WorkFlowCode" id="WorkFlowCode" required="required">
-                                <option value="">Select Approvals Work-Flow</option><?php  foreach ($all_workflows as $wflow): ?>
-                                <option value="<?php echo $wflow['WorkFlowCode'] ?>" <?php if($wflow['WorkFlowCode'] === $default_flow): echo "selected"; endif; ?>><?php echo $wflow['Description'] ?>
-                                </option><?php endforeach; ?>
-                            </select>
-                        </div>
 
                     </div>
 
@@ -625,6 +677,22 @@ if (isset($_POST['Edit'])) {
     });
 
 
+    function FillCustomer() {
+        $('.loader').show();
+
+        var SalesmanCode = $('#SalesmanCode').val();
+        $.ajax({
+            url: "create_customerpo.php",
+            type: "POST",
+            data: { SalesmanCodeSelection: SalesmanCode },
+            success: function (result) {
+                $("#CustomerCode").html(""); // clear before appending new list
+                $("#CustomerCode").html(result);
+                $('.loader').fadeOut();
+            }
+        });
+    }
+
 
     function FillSO() {
       $('.loader').show();
@@ -678,6 +746,20 @@ if (isset($_POST['Edit'])) {
         success: function (result) {
             $("#table").html(result);
             $('#message').load('_partial_message.php');
+            //$('.loader').fadeOut();
+        }
+    });
+
+
+        //Fill details
+    $.ajax({
+        type: "POST",
+        url: "create_customerpo.php", // Name of the php files
+        data: { _Customer: Customer },
+        success: function (result) {
+            $("#table").html(result);
+        },
+        complete: function (result) {
             $('.loader').fadeOut();
         }
     });
