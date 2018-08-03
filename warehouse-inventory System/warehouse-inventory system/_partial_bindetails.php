@@ -155,6 +155,25 @@
     });
 
 
+    $(function () {
+        if ($.fn.DataTable.isDataTable("table"))
+            $('table').DataTable().clear().destroy();
+
+        var table = $('table').DataTable({
+            scrollY: "500px",
+            scrollCollapse: true,
+            paging: true,
+            columnDefs: [
+                { width: '20%', targets: 0 }
+            ],
+            fixedColumns: true
+        });
+        table.columns.adjust().draw();
+
+
+        //$("table").dataTable({"autoWidth": true });
+    })
+
     //Item Delete
     //$(document).ready(function () {
     //    $(".DeleteBtn").click(function () {
