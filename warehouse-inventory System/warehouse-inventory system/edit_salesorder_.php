@@ -329,7 +329,7 @@ if (isset($_POST['Edit'])) {
                 <div class="row">
                     <div class="col-md-12 ">
                         <div class="btn-group">
-                            <button type="submit" name="edit_salesorder_" class="btn btn-primary" value="save">&nbsp;Save&nbsp;&nbsp;</button>
+                            <button type="submit" name="edit_salesorder_" class="btn btn-primary" value="save">&nbsp;Approve&nbsp;&nbsp;</button>
                             <button type="button" class="btn btn-warning" onclick="window.location = 'edit_salesorder_.php'">Back  </button>
                         </div>
                     </div>

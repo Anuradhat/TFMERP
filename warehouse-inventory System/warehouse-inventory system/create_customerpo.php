@@ -303,6 +303,7 @@ if (isset($_POST['Customer'])) {
 
 if (isset($_POST['SalesOrderCode'])) {
     $_SESSION['details']  = null;
+    $arr_item = array();
 
     $SalesOrderCode = remove_junk($db->escape($_POST['SalesOrderCode']));
 
@@ -776,15 +777,15 @@ if (isset($_POST['Edit'])) {
  
     //Fill header details
     
-      $.ajax({
-          url: "create_customerpo.php",
-          type: "POST",
-          data: { CustomerChanged: 'OK' },
-          success: function (result) {
-              $("#table").html(result);
-              $('#message').load('_partial_message.php');
-          }
-      });
+      //$.ajax({
+      //    url: "create_customerpo.php",
+      //    type: "POST",
+      //    data: { CustomerChanged: 'OK' },
+      //    success: function (result) {
+      //        $("#table").html(result);
+      //        $('#message').load('_partial_message.php');
+      //    }
+      //});
 
 
       //Fill details
