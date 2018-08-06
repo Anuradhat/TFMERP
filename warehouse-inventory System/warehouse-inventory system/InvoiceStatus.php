@@ -3,9 +3,44 @@ ob_start();
 
 $page_title = 'Invoice Status';
 require_once('includes/load.php');
-//UserPageAccessControle(1,'Bank Accounts');
+UserPageAccessControle(1,'Invoice Status');
+
+
+
+if (isset($_POST['_RowNo'])) {
+    $InvoiceNo = remove_junk($db->escape($_POST['_RowNo']));
+    $InvoiceStatus = remove_junk($db->escape($_POST['_RowNoInvSts']));
+    $all_InvoicesStatusM = find_by_sql("call spSelectAllInvoiceStatusM();");
+
+    return include('_partial_invoicestatus.php');
+}
+
+// Update Invoice Status
+if (isset($_POST['InvNo'])) {
+    $InvoiceNo = remove_junk($db->escape($_POST['InvNo']));
+    $InvoiceStatus = remove_junk($db->escape($_POST['InvSts']));
+
+    try{
+        $db->begin();
+
+        $query  = "call spUpdateActiveInvoiceStatus('{$InvoiceNo}','{$InvoiceStatus}');";
+        $db->query($query);
+
+        InsertRecentActvity("Active invoice status updated manually to " .$InvoiceStatus,"Invoice No. ".$InvoiceNo);
+
+        $db->commit();
+
+        $flashMessages->success('Invoice status successfully updated.','InvoiceStatus.php');
+    }
+    catch(Exception $ex){
+        $db->rollback();
+
+        $flashMessages->error('Failed to update invoice status. '.$ex->getMessage(),'InvoiceStatus.php');
+    }
+}
 
 $all_ActiveInvoices = find_by_sql("call spSelectAllActiveInvoiceStatusDetails();");
+
 ?>
 
 
@@ -84,7 +119,7 @@ $all_ActiveInvoices = find_by_sql("call spSelectAllActiveInvoiceStatusDetails();
                                         <th>ID</th>
                                         <th>Invoice No</th>
                                         <th>Inv Date</th>
-                                        <th>Location</th>
+                                        <!--<th>Location</th>-->
                                         <th>Customer</th>
                                         <th>Gross Amount</th>
                                         <th>Credit Amount</th>
@@ -99,21 +134,18 @@ $all_ActiveInvoices = find_by_sql("call spSelectAllActiveInvoiceStatusDetails();
                                     <tr>
                                         <td>
                                             <div class="form-group">
-                                                <button type="button" name="employee" class="DeleteBtn btn btn-danger btn-xs glyphicon glyphicon-trash"></button>
+                                                <button type="button" name="employee" class="EditBtn btn btn-warning btn-xs glyphicon glyphicon-edit" data-toggle="modal" data-target="#myModal" contenteditable="false"></button>
                                             </div>
                                         </td>
-                                        <td class="clsRowId">
+                                        <td >
                                             <?php echo remove_junk(ucfirst($ActiveInvoices['ID'])); ?>
                                         </td>
-                                        <td>
+                                        <td class="clsRowId">
                                             <?php echo remove_junk($ActiveInvoices['InvoiceNo']); ?>
                                         </td>
-                                        <td>
+                                        <td >
                                             <?php echo remove_junk($ActiveInvoices['InvDate']); ?>
-                                        </td>
-                                        <td>
-                                            <?php echo remove_junk($ActiveInvoices['LocationName']); ?>
-                                        </td>
+                                        </td>                                        
                                         <td>
                                             <?php echo remove_junk($ActiveInvoices['CustomerName']); ?>
                                         </td>
@@ -131,7 +163,7 @@ $all_ActiveInvoices = find_by_sql("call spSelectAllActiveInvoiceStatusDetails();
                                         </td>
                                         <td><?php echo remove_junk($ActiveInvoices['EmployeeName']); ?>
                                         </td>
-                                        <td>
+                                        <td id="InvSts" class="clsRowInvoiceStatus">
                                             <?php echo remove_junk($ActiveInvoices['InvoiceStatusDescription']); ?>
                                         </td>
                                     </tr>
@@ -149,43 +181,34 @@ $all_ActiveInvoices = find_by_sql("call spSelectAllActiveInvoiceStatusDetails();
 
 </section>
 
-<script>
-   $(document).ready(function () {
-      $(".DeleteBtn").click(function () {
-          var $row = $(this).closest("tr");
-          var RowNo = $row.find(".clsRowId").text().trim();
+<script>  
 
-        bootbox.confirm({
-            title: "Delete Confirmation",
-            message: "Do you want to delete this account? This cannot be undo.",
-            buttons: {
-                cancel: {
-                    label: '<i class="fa fa-times"></i> Cancel'
+    $(document).ready(function () {
+        $(".EditBtn").click(function () {
+
+            $('.loader').show();
+
+            var $row = $(this).closest("tr");
+            var RowNo = $row.find(".clsRowId").text();
+            var RowNoInvSts = $row.find(".clsRowInvoiceStatus").text();
+
+            $.ajax({
+                url: "InvoiceStatus.php",
+                type: "POST",
+                data: { _RowNo: RowNo.trim(), _RowNoInvSts: RowNoInvSts.trim() },
+                success: function (result) {
+                    var modalBody = $('<div id="modalContent"></div>');
+                    modalBody.append(result);
+                    $("#myModalLabel").text('Invoice Status');
+                    //$("#InvSts").remove();
+                    $('.modal-body').html(modalBody);
                 },
-                confirm: {
-                    label: '<i class="fa fa-check"></i> Confirm'
+                complete: function (result) {
+                    $('.loader').fadeOut();
                 }
-            },
-            callback: function (result) {
-                if (result === true) {
-                    $('.loader').show();
-
-                    $.ajax({
-                        url: 'delete_bank_account_details.php',
-                     type: "POST",
-                     data: { AccountID: RowNo },
-                     success: function (result) {
-                        location.reload();
-                    },
-                    complete: function (result) {
-                        $('.loader').fadeOut();
-                    }
-                });
-               }
-            }
+            });            
         });
     });
-  });
 </script>
 
 <?php include_once('layouts/footer.php'); ?>

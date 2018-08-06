@@ -351,6 +351,7 @@
     <Compile Include="_partial_cuspodetails.php" />
     <Compile Include="_partial_cuspoitem.php" />
     <Compile Include="_partial_invoiceserial.php" />
+    <Compile Include="_partial_invoicestatus.php" />
     <Compile Include="_partial_soitem.php" />
     <Compile Include="_partial_sodetails.php" />
     <Compile Include="_partial_stockdetails.php" />
