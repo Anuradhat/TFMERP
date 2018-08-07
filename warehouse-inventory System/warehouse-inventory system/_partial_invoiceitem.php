@@ -11,7 +11,7 @@
 
             <div class="form-group checkbox">
                 <label class="form-check-label">
-                    <input type="checkbox" name="ExcludeTax" id="ExcludeTax" class="form-check-input" />
+                    <input type="checkbox" name="ExcludeTax" id="ExcludeTax" class="form-check-input" <?php if($serchitem[8] == 1): echo "checked"; endif; ?> />
                     Exclude Tax
                 </label>
             </div>

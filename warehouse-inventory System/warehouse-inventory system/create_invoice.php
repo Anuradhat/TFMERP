@@ -386,6 +386,7 @@ if (isset($_POST['Customer'])) {
 
 if (isset($_POST['FillTable']) &&  isset($_POST['CustomerPoCode'])) {
     $_SESSION['details']  = null;
+    $arr_item = array();
 
     $CustomerPoCode = remove_junk($db->escape($_POST['CustomerPoCode']));
 
@@ -421,7 +422,7 @@ if (isset($_POST['FillTable']) &&  isset($_POST['CustomerPoCode'])) {
         $ToatlAmount = $TaxAmount + $LineAmount;
 
                                                                                                                              //$value["Amount"]        $value["TaxAmount"]
-        $arr_item[]  = array($value["ProductCode"],$value["ProductDesc"],$value["CostPrice"],$value["SellingPrice"],$value["Qty"],$ToatlAmount,$arr_serial,$TaxAmount);
+        $arr_item[]  = array($value["ProductCode"],$value["ProductDesc"],$value["CostPrice"],$value["SellingPrice"],$value["Qty"],$ToatlAmount,$arr_serial,$TaxAmount,$value["ExcludeTax"]);
     }
     $_SESSION['details'] = $arr_item;
 
@@ -482,7 +483,7 @@ if (isset($_POST['Edit'])) {
     $arr_item = ChangValueFromListOfArray( $arr_item,$ProductCode,5,$ToatlAmount);
 
     //Exclude Tax
-    $arr_item = ChangValueFromListOfArray( $arr_item,$ProductCode,7,$ExcludeTax == 'true' ? 1:0);
+    $arr_item = ChangValueFromListOfArray( $arr_item,$ProductCode,8,$ExcludeTax == 'true' ? 1:0);
 
     $_SESSION['details'] = $arr_item;
 
