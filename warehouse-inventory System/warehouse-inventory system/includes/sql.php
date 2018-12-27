@@ -406,7 +406,7 @@ function find_all_user(){
     $sql .="g.group_name,u.EmployeeCode ";
     $sql .="FROM users u ";
     $sql .="LEFT JOIN user_groups g ";
-    $sql .="ON g.group_level=u.user_level ORDER BY u.name ASC";
+    $sql .="ON g.group_level=u.user_level AND g.group_name=u.group_name ORDER BY u.name ASC";
     $result = find_by_sql($sql);
     return $result;
 }
@@ -524,6 +524,67 @@ function check_pending_approvels($transaction_code = "")
             else
             {
                 $sql  =  "call spViewPendingApprovelsFromEmployeeTransactionCode('{$EmployeeCode}','{$transaction_code}');";
+            }
+
+            return find_by_sql($sql);
+            //return $db->fetch_assoc($result);
+        }
+    }
+    return "";
+}
+
+
+/*--------------------------------------------------------------*/
+/* Function for Finding all Pending Preperation CPO'
+/*--------------------------------------------------------------*/
+function check_alerts_UserGroup($transaction_code = "")
+{
+    global $db;
+    $current_user = current_user();
+
+    if(isset($current_user))
+    {
+        if($current_user["group_name"] != "")
+        {
+            $UserGroup = $current_user["group_name"];
+
+            if($transaction_code == "")
+            {
+                $sql  = "call spGetAlertByUserGroup('{$UserGroup}');";
+            }
+            else
+            {
+                $sql  =  "call spViewPendingApprovelsFromEmployeeTransactionCode('{$UserGroup}','{$transaction_code}');";
+            }
+
+            return find_by_sql($sql);
+            //return $db->fetch_assoc($result);
+        }
+    }
+    return "";
+}
+
+/*--------------------------------------------------------------*/
+/* Function for Finding all Pending Invoice'
+/*--------------------------------------------------------------*/
+function check_alerts_UserGroupPendingInvoice($transaction_code = "")
+{
+    global $db;
+    $current_user = current_user();
+
+    if(isset($current_user))
+    {
+        if($current_user["group_name"] != "")
+        {
+            $UserGroup = $current_user["group_name"];
+
+            if($transaction_code == "")
+            {
+                $sql  = "call spGetAlertPendingInvoiceByUserGroup('{$UserGroup}');";
+            }
+            else
+            {
+                $sql  =  "call spViewPendingApprovelsFromEmployeeTransactionCode('{$UserGroup}','{$transaction_code}');";
             }
 
             return find_by_sql($sql);

@@ -271,7 +271,7 @@ if (isset($_POST['Approved']) && isset($_POST['TransactionCode']) && isset($_POS
 
 
    $(document).ready(function () {
-       $(".EditBtn").click(function () {
+       $("#table").on("click", ".EditBtn",function () {
            $('.loader').show();
            var $row = $(this).closest("tr");
            var RefNo = $row.find(".clsRefNo").text().trim();

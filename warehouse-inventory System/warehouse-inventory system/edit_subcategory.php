@@ -118,11 +118,11 @@ if(isset($_POST['edit_subcategory'])){
                             <label>Category</label>
                             <select class="form-control select2" name="Category" placeholder="Select Category" required="required" readonly="readonly" disabled="disabled">
                                 <option value="">Select Category</option><?php  foreach ($all_Category as $cat): ?>
-                                <option value="<?php echo $cat['CategoryCode'] ?>" <?php if($cat['CategoryCode'] === $subcategory['CategoryCode']): echo "selected"; endif; ?>  ><?php echo $cat['CategoryDesc'] ?>
+                                <option value="<?php echo $cat['CategoryCode'] ?>" <?php if($cat['CategoryCode'] === $subcategory['CategoryCode']): echo "selected"; endif; ?>><?php echo $cat['CategoryDesc'] ?>
                                 </option><?php endforeach; ?>
                             </select>
                         </div>
-               
+
                         <div class="form-group">
                             <label>Subcategory Description</label>
                             <input type="text" class="form-control" name="SubcategoryDesc" placeholder="Subcategory Description" required="required" value="<?php echo remove_junk($subcategory['SubcategoryDesc']);?>" />
@@ -134,10 +134,11 @@ if(isset($_POST['edit_subcategory'])){
                             <label>Subcategory Code</label>
                             <input type="text" class="form-control" name="SubcategoryCode" placeholder="Subcategory Code" required="required" value="<?php echo remove_junk($subcategory['SubcategoryCode']);?>" readonly="readonly" disabled="disabled" />
                             <input type="hidden" name="hSubcategoryCode" value="<?php echo remove_junk($subcategory['SubcategoryCode']);?>" />
-                        </div> 
+                        </div>
                         <div class="form-group">
                             <label>Commission (<output class="inline" for="fader" id="rate"><?php echo remove_junk($subcategory['Commission']);?></output>%)</label>
-                            <input type="range" class="form-control" data-slider-id="blue" min="0" max="100"  step="1" data-slider-tooltip="show" name="Commission" placeholder="Commission (%)" oninput="outputUpdate(value)" value="<?php echo remove_junk($subcategory['Commission']);?>"/>
+                            <input type="text" class="form-control" name="Commission" placeholder="Commission (%)" value="<?php echo remove_junk($subcategory['Commission']);?>"/>
+                            <!--<input type="range" class="form-control" data-slider-id="blue" min="0" max="100" step="1" data-slider-tooltip="show" name="Commission" placeholder="Commission (%)" oninput="outputUpdate(value)" value="<?php echo remove_junk($subcategory['Commission']);?>" />-->
                         </div>
                     </div>
                 </div>

@@ -234,7 +234,7 @@ if(isset($_POST['edit_product'])){
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Product Description</label>
-                            <input type="text" class="form-control" name="ProductDesc" placeholder="Product Description" required="required" value="<?php echo remove_junk($product['ProductDesc']);?>"/>
+                            <input type="text" class="form-control" name="ProductDesc" placeholder="Product Description" required="required" value="<?php echo remove_junk($product['ProductDesc']);?>" />
                         </div>
 
                         <!--<div class="form-group">
@@ -269,12 +269,10 @@ if(isset($_POST['edit_product'])){
                             <label>Cost Price</label>
                             <input type="text" class="form-control" name="CostPrice" placeholder="Cost Price" pattern="([0-9]+\.)?[0-9]+" required="required" value=""/>
                         </div>-->
-
                         <!--<div class="form-group">
                             <label>Whole Sale Price</label>
                             <input type="text" class="form-control" name="WholeSalePrice" placeholder="Whole Sale Price" pattern="([0-9]+\.)?[0-9]+" value=""/>
                         </div>-->
-          
                         <!--<div class="form-group">
                             <label>Discount Percentage (<output class="inline" for="fader" id="discrate"></output>%)</label>
                             <input type="range" class="form-control" data-slider-id="blue" min="0" max="100" value="" step="1" data-slider-tooltip="show" name="DiscountPer" placeholder="Discount Percentage (%)" oninput="outputDiscountRateUpdate(value)" />
@@ -282,14 +280,15 @@ if(isset($_POST['edit_product'])){
 
                         <div class="form-group">
                             <label>Sales Percentage (<output class="inline" for="fader" id="discrate"><?php echo remove_junk($product['SalesPer']);?></output>%)</label>
-                            <input type="range" class="form-control" data-slider-id="blue" min="0" max="100" value="<?php echo remove_junk($product['SalesPer']);?>" step="1" data-slider-tooltip="show" name="SalesPer" placeholder="Sales Percentage (%)" oninput="outputDiscountRateUpdate(value)" />
+                            <input type="text" class="form-control" value="<?php echo remove_junk($product['SalesPer']);?>" name="SalesPer" placeholder="Sales Percentage (%)" />
+                            <!--<input type="range" class="form-control" data-slider-id="blue" min="0" max="100" value="<?php echo remove_junk($product['SalesPer']);?>" step="1" data-slider-tooltip="show" name="SalesPer" placeholder="Sales Percentage (%)" oninput="outputDiscountRateUpdate(value)" />-->
                         </div>
-                        
+
                         <div class="form-group">
                             <label>Item Tax(s)</label>
                             <select class="form-control select2" name="Taxs[]" multiple="multiple" data-placeholder="Select Tax(s)" style="width: 100%;">
                                 <option value="">Select Tax(s)</option><?php  foreach ($all_Taxs as $tax): ?>
-                                <option value="<?php echo $tax['TaxCode'] ?>"  <?php if(EqualValue($tax['TaxCode'],$Product_taxs)): echo "selected"; endif; ?>><?php echo $tax['TaxDesc'] ?>
+                                <option value="<?php echo $tax['TaxCode'] ?>" <?php if(EqualValue($tax['TaxCode'],$Product_taxs)): echo "selected"; endif; ?>><?php echo $tax['TaxDesc'] ?>
                                 </option><?php endforeach; ?>
 
                             </select>
@@ -301,7 +300,6 @@ if(isset($_POST['edit_product'])){
                             <label>Sale Price</label>
                             <input type="text" class="form-control" name="SalePrice" placeholder="Sale Price" pattern="([0-9]+\.)?[0-9]+"  required="required" value=""/>
                         </div>-->
-
                         <!--<div class="form-group">
                             <label>Discount Amount</label>
                             <input type="text" class="form-control" name="DiscountAmount" placeholder="Discount Amount" pattern="([0-9]+\.)?[0-9]+" value=""/>
@@ -309,7 +307,8 @@ if(isset($_POST['edit_product'])){
 
                         <div class="form-group">
                             <label>Sales Commission (<output class="inline" for="fader" id="salesrate"><?php echo remove_junk($product['SalesComPer']);?></output>%)</label>
-                            <input type="range" class="form-control" data-slider-id="blue" min="0" max="100" value="<?php echo remove_junk($product['SalesComPer']);?>" step="1" data-slider-tooltip="show" name="SalesComPer" placeholder="Sales Commission (%)" oninput="outputSalesRateUpdate(value)" />
+                            <input type="text" class="form-control" value="<?php echo remove_junk($product['SalesComPer']);?>" name="SalesComPer" placeholder="Sales Commission (%)"/>
+                            <!--<input type="range" class="form-control" data-slider-id="blue" min="0" max="100" value="<?php echo remove_junk($product['SalesComPer']);?>" step="1" data-slider-tooltip="show" name="SalesComPer" placeholder="Sales Commission (%)" oninput="outputSalesRateUpdate(value)" />-->
                         </div>
 
                     </div>
@@ -334,7 +333,7 @@ if(isset($_POST['edit_product'])){
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Re-order Level</label>
-                            <input type="number" class="form-control" name="ReorderLevel" placeholder="Reorder Level" required="required" value="<?php echo remove_junk($product['ReorderLevel']);?>"/>
+                            <input type="number" class="form-control" name="ReorderLevel" placeholder="Reorder Level" required="required" value="<?php echo remove_junk($product['ReorderLevel']);?>" />
                         </div>
 
                     </div>
@@ -342,14 +341,14 @@ if(isset($_POST['edit_product'])){
                     <div class="col-md-6">
                         <div class="form-group checkbox">
                             <label class="form-check-label"> Warranty </label><br>
-                                <input type="checkbox" name="Warranty" class="form-check-input"  <?php if(remove_junk($product['Warranty'] === "1")): echo "checked"; endif; ?> >
+                            <input type="checkbox" name="Warranty" class="form-check-input" <?php if(remove_junk($product['Warranty'] === "1")): echo "checked"; endif; ?>>
                         </div>
                     </div>
 
                 </div>
             </div>
         </div>
-       </form>
+    </form>
 </section>
 
 <?php include_once('layouts/footer.php'); ?>
@@ -369,7 +368,7 @@ if(isset($_POST['edit_product'])){
         });
 </script>
 
-<script>
+<!--<script>
     function outputDiscountRateUpdate(vol) {
         document.querySelector('#discrate').value = vol;
     }
@@ -377,4 +376,4 @@ if(isset($_POST['edit_product'])){
     function outputSalesRateUpdate(vol) {
         document.querySelector('#salesrate').value = vol;
     }
-</script>
+</script>-->

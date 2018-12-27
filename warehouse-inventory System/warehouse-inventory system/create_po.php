@@ -57,7 +57,7 @@ if(isset($_POST["Add"]) && isset($_POST["ProductCode"]))
 
 
         $Amount = $p_CostPrice * $p_Qty;
-        $TaxAmount = round((($Amount * $ToatlTax)/100));
+        $TaxAmount = (($Amount * $ToatlTax)/100);
         //-----------------------------------------------------------------------------------
 
 
@@ -249,7 +249,7 @@ if (isset($_POST['Edit'])) {
 
 
     $Amount = $CostPrice * $Qty;
-    $TaxAmount = round((($Amount * $ToatlTax)/100));
+    $TaxAmount = (($Amount * $ToatlTax)/100);
     //-----------------------------------------------------------------------------------
 
 
@@ -281,7 +281,7 @@ if (isset($_POST['_PRNo'])) {
     $all_PRDetsils = find_by_sql("call spSelectAllPRDetailsFromPRNo('{$PRNo}');");
     if($_SESSION['details'] == null) $arr_item = $_SESSION['details']; else $arr_item[] = $_SESSION['details'];
     foreach($all_PRDetsils as $row => $value){
-        $arr_item[]  = array($value["ProductCode"],$value["ProductDesc"],$value["LastPurchasePrice"],$value["Qty"]);
+        $arr_item[]  = array($value["ProductCode"],$value["ProductDesc"],$value["LastPurchasePrice"],$value["Qty"],$value["TotalTaxRate"],$value["TaxAmount"],$value["TaxCode"]);
         $_SESSION['details'] = $arr_item;
     }
     return include('_partial_podetails.php');

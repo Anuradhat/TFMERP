@@ -17,6 +17,8 @@
     <IncludeDebugInformation>false</IncludeDebugInformation>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="customer_po_itemscan.php" />
+    <Compile Include="customer_po_preparation.php" />
     <Compile Include="InvoiceStatus.php" />
     <Compile Include="BankTransaction.php" />
     <Compile Include="add_BankAccountDetails.php" />
@@ -352,6 +354,7 @@
     <Compile Include="_partial_cuspoitem.php" />
     <Compile Include="_partial_invoiceserial.php" />
     <Compile Include="_partial_invoicestatus.php" />
+    <Compile Include="_partial_alert.php" />
     <Compile Include="_partial_soitem.php" />
     <Compile Include="_partial_sodetails.php" />
     <Compile Include="_partial_stockdetails.php" />

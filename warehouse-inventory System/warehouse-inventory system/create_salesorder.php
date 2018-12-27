@@ -11,6 +11,7 @@ UserPageAccessControle(1,'Quotation Create');
 
 $default_flow = ReadSystemConfig('DefaultSOWorkFlow');
 $default_salesrepDesig = ReadSystemConfig('DefaultSalesRepDesigCode');
+$defaultAdminGroup = ReadSystemConfig('AdminGroup');
 
 $current_user = current_user();
 
@@ -249,11 +250,11 @@ if (isset($_POST['Add'])) {
             }
 
             $ItemAmount = $Qty * $SalePrice;
-            $TaxAmount = round((($ItemAmount * $ToatlTax)/100));
+            $TaxAmount = (($ItemAmount * $ToatlTax)/100);
             $ToatlAmount = $TaxAmount + $ItemAmount;
 
 
-            $arr_item[] = array($ProductCode,$ProductDesc,$SalePrice,$Qty,$ToatlAmount,$TaxAmount,0,$AverageCost,$SalesPercentage);
+            $arr_item[] = array($ProductCode,$ProductDesc,$SalePrice,$Qty,$ToatlAmount,$TaxAmount,0,$AverageCost,$SalesPercentage,$ToatlTax);
             $_SESSION['details'] = $arr_item;
         }
     }
@@ -363,7 +364,7 @@ if (isset($_POST['CustomerCode'])) {
                     <div class="col-md-4">
                         <div class="form-group">
                             <label>Salesman</label>
-                            <select class="form-control select2" style="width: 100%;" name="SalesmanCode" id="SalesmanCode" required="required"onchange="FillCustomer();">
+                            <select class="form-control select2" style="width: 100%;" name="SalesmanCode" id="SalesmanCode" required="required"onchange="FillCustomer();" readonly="readonly" <?php if($current_user["group_name"] != $defaultAdminGroup): echo disabled; endif; ?>  >
                                 <option value="">Select Salesman</option><?php  foreach ($all_salesrep as $srep): ?>
                                 <option value="<?php echo $srep['EpfNumber'] ?>" <?php if($srep['EpfNumber'] === $current_user["EmployeeCode"]): echo "selected"; endif; ?>><?php echo $srep['EmployeeName'] ?>
                                 </option><?php endforeach; ?>

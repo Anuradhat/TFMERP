@@ -296,7 +296,7 @@ function SendMailForApprovals($ToMail,$subject,$htmlContent)
     $headers .= 'From: TFM ERP Mail Notification <erp@tfm.lk>' . "\r\n";
 
 
-    mail($ToMail,$subject,$htmlContent,$headers);
+    //mail($ToMail,$subject,$htmlContent,$headers);
 
 }
 

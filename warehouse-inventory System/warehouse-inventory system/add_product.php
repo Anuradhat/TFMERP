@@ -277,7 +277,8 @@ if(isset($_POST['add_product'])){
 
                         <div class="form-group">
                           <label>Sales Percentage (<output class="inline" for="fader" id="discrate">0</output>%)</label>
-                          <input type="range" class="form-control" data-slider-id="blue" min="0" max="100" value="0" step="1" data-slider-tooltip="show" name="SalesPer" placeholder="Sales Percentage (%)" oninput="outputDiscountRateUpdate(value)" />
+                          <input type="text" class="form-control" name="SalesPer" placeholder="Sales Percentage (%)"/>
+                          <!--<input type="range" class="form-control" data-slider-id="blue" min="0" max="100" value="0" step="1" data-slider-tooltip="show" name="SalesPer" placeholder="Sales Percentage (%)" oninput="outputDiscountRateUpdate(value)" />-->
                         </div>
 
 
@@ -304,7 +305,8 @@ if(isset($_POST['add_product'])){
 
                         <div class="form-group">
                             <label>Sales Commission (<output class="inline" for="fader" id="salesrate">0</output>%)</label>
-                            <input type="range" class="form-control" data-slider-id="blue" min="0" max="100" value="0" step="1" data-slider-tooltip="show" name="SalesComPer" placeholder="Sales Commission (%)" oninput="outputSalesRateUpdate(value)" />
+                            <input type="text" class="form-control" name="SalesComPer" placeholder="Sales Commission (%)" />
+                            <!--<input type="range" class="form-control" data-slider-id="blue" min="0" max="100" value="0" step="1" data-slider-tooltip="show" name="SalesComPer" placeholder="Sales Commission (%)" oninput="outputSalesRateUpdate(value)" />-->
                         </div>
 
                     </div>

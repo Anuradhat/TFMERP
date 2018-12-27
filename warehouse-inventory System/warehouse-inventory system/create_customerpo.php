@@ -1,6 +1,7 @@
 <?php
 ob_start();
 
+
 session_set_cookie_params(0);
 session_start();
 
@@ -11,10 +12,11 @@ UserPageAccessControle(1,'Customer PO Create');
 
 $default_flow = ReadSystemConfig('DefaultCUSPOWorkFlow');
 $default_salesrepDesig = ReadSystemConfig('DefaultSalesRepDesigCode');
+$defaultAdminGroup = ReadSystemConfig('AdminGroup');
 
 $current_user = current_user();
 
-$all_Customers = find_by_sql("call spSelectAllCustomers();");
+//$all_Customers = find_by_sql("call spSelectAllCustomers();");
 $all_workflows = find_by_sql("call spSelectAllWorkFlow();");
 $all_salesrep = find_by_sql("call spSelectEmployeeFromDesignationCode('{$default_salesrepDesig}');");
 //$all_locations = find_by_sql("call spSelectAllLocations();");
@@ -462,7 +464,7 @@ if (isset($_POST['Edit'])) {
                     <div class="col-md-4">
                          <div class="form-group">
                             <label>Salesman</label>
-                            <select class="form-control select2" style="width: 100%;" name="SalesmanCode" id="SalesmanCode" required="required"onchange="FillCustomer();">
+                            <select class="form-control select2" style="width: 100%;" name="SalesmanCode" id="SalesmanCode" required="required" onchange="FillCustomer();" <?php if($current_user["group_name"] != $defaultAdminGroup): echo disabled; endif; ?>  >
                                 <option value="">Select Salesman</option><?php  foreach ($all_salesrep as $srep): ?>
                                 <option value="<?php echo $srep['EpfNumber'] ?>" <?php if($srep['EpfNumber'] === $current_user["EmployeeCode"]): echo "selected"; endif; ?>><?php echo $srep['EmployeeName'] ?>
                                 </option><?php endforeach; ?>
@@ -512,7 +514,7 @@ if (isset($_POST['Edit'])) {
     </form>
 
 
-    <div class="box box-default">
+    <div class="box box-default" >
         <!-- /.box-header -->
         <form method="post" action="create_customerpo.php">
             <input type="hidden" value="create_customerpo"name="create_customerpo" />
@@ -550,7 +552,7 @@ if (isset($_POST['Edit'])) {
                                       
                         <div class="form-group pull-right">
                             <label>&nbsp;</label><br>
-                            <button type="button" class="btn btn-info" id="item"  onclick="AddItem(this, event);" value="item">&nbsp;&nbsp;&nbsp;Add&nbsp;&nbsp;&nbsp;</button>
+                            <button type="button" class="btn btn-info" id="item"  onclick="AddItem(this, event);" value="item" disabled >&nbsp;&nbsp;&nbsp;Add&nbsp;&nbsp;&nbsp;</button>
                             <button type="reset" class="btn btn-success">&nbsp;Reset&nbsp;</button>
                         </div>
                     </div>

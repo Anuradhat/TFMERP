@@ -422,9 +422,23 @@ if (isset($_POST['FillTable']) &&  isset($_POST['CustomerPoCode'])) {
         $ToatlAmount = $TaxAmount + $LineAmount;
 
                                                                                                                              //$value["Amount"]        $value["TaxAmount"]
-        $arr_item[]  = array($value["ProductCode"],$value["ProductDesc"],$value["CostPrice"],$value["SellingPrice"],$value["Qty"],$ToatlAmount,$arr_serial,$TaxAmount,$value["ExcludeTax"]);
+        //$arr_item[]  = array($value["ProductCode"],$value["ProductDesc"],$value["CostPrice"],$value["SellingPrice"],$value["Qty"],$ToatlAmount,$arr_serial,$TaxAmount,$value["ExcludeTax"]);
+        
+        
+        //Load Allocated Serial
+        $AllocatedSerial = find_by_sql("call spSelectCustomerPurchaseOrderSerialDetailsFromCPO('{$CustomerPoCode}','{$value["ProductCode"]}');");
+        $SerialArr = array();
+        foreach ($AllocatedSerial as &$aSerial){
+            array_push($SerialArr,$aSerial["SerialNo"]);
+            //$SerialArr = array($aSerial["SerialNo"]);
+        };
+
+        $arr_item[]  = array($value["ProductCode"],$value["ProductDesc"],$value["CostPrice"],$value["SellingPrice"],$value["Qty"],$ToatlAmount,$SerialArr,$TaxAmount,$value["ExcludeTax"]);
     }
     $_SESSION['details'] = $arr_item;
+
+    
+
 
     return include('_partial_invoicedetails.php');
 }
@@ -489,6 +503,9 @@ if (isset($_POST['Edit'])) {
 
     return include('_partial_invoicedetails.php');
 }
+
+// Load Scanded CPO sereal from stores
+
 ?>
 
 <?php include_once('layouts/header.php'); ?>

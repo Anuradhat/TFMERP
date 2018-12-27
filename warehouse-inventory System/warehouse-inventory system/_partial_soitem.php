@@ -125,6 +125,27 @@ foreach($UserAccess as $UAccess){
         }
     });
 
+    //calculate salese percebtage
+    $('#pSalePrice').bind('input', function () {
+
+        var AverageCost = $('#pAverageCost').val();
+        var SalesPrice = $(this).val();
+
+        if ($(this).val() < 0) {
+            bootbox.alert('Sales price cannot be negative.');
+            $(this).val('');
+        }
+        else if (AverageCost == "" || AverageCost == null || AverageCost == 0) {
+            
+            $('#pSalesPercentage').val(0);
+        }
+        else {
+            var value = (((SalesPrice - AverageCost) / AverageCost) * 100).toFixed(2);
+            //var value = (parseFloat((AverageCost * SalesPercentage) / 100) + parseFloat(AverageCost)).toFixed(2);
+            $('#pSalesPercentage').val(value);
+        }
+    });
+
 
 
 

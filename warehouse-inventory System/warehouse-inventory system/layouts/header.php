@@ -127,34 +127,7 @@ desired effect
                     <ul class="nav navbar-nav">
                         <!-- Messages: style can be found in dropdown.less-->
                         <li class="dropdown messages-menu">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <i class="fa fa-envelope-o"></i>
-                                <span class="label label-success">1</span>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li class="header">You have 1 message(s)</li>
-                                <li>
-                                    <!-- inner menu: contains the actual data -->
-                                    <ul class="menu">
-                                        <li>
-                                            <!-- start message -->
-                                            <a href="#">
-                                                <div class="pull-left">
-                                                    <img src="../libs/images/user.png" class="img-circle" alt="User Image">
-                                                </div>
-                                                <h4>
-                                                    Support Team
-                                                    <small><i class="fa fa-clock-o"></i> 5 mins</small>
-                                                </h4>
-                                                <p>This event under construction</p>
-                                            </a>
-                                        </li>
-                                        <!-- end message -->
- 
-                                    </ul>
-                                </li>
-                                <li class="footer"><a href="#">See All Messages</a></li>
-                            </ul>
+                            <?php  include('_partial_alert.php');  ?>
                         </li>
 
                         <!-- Tasks Menu -->
@@ -411,6 +384,7 @@ desired effect
                                 <ul class="treeview-menu">
                                     <li><a href="create_customerpo.php"><i class="fa fa-plus-square-o"></i>Create</a></li>
                                     <li><a href="edit_customerpo.php"><i class="fa fa-pencil-square-o "></i>Update</a></li>
+                                    <li><a href="customer_po_preparation.php"><i class="fa fa-truck "></i>CPO Preparation</a></li>
                                 </ul>
                             </li>
                             <!--End Customer Purchase Order Menu-->

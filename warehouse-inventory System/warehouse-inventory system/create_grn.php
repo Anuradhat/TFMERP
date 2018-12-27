@@ -327,12 +327,15 @@ if (isset($_POST['Edit'])) {
     $StockCode = remove_junk($db->escape($_POST['hStockCode']));
     $GrnQty = remove_junk($db->escape($_POST['GrnQty']));
     $ExpireDate = convert_date(remove_junk($db->escape($_POST['ExpireDate'])));
+    $GrnPrice = remove_junk($db->escape($_POST['GrnPrice']));
 
     $arr_item = $_SESSION['details'];
     //Change Grn qty
     $arr_item = ChangValueFromListOfArray( $arr_item,$ProductCode,5,$GrnQty);
     //Change Expire date
     $arr_item = ChangValueFromListOfArray( $arr_item,$ProductCode,6,$ExpireDate);
+    //Change Grn price
+    $arr_item = ChangValueFromListOfArray( $arr_item,$ProductCode,3,$GrnPrice);
 
     $productdetails = ReadProductDatails($ProductCode);
 

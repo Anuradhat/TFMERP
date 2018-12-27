@@ -4,7 +4,7 @@ ob_start();
 session_set_cookie_params(0);
 session_start();
 
-$page_title = 'Update Customer Purchase Order';
+$page_title = 'Approve Customer Purchase Order';
 require_once('includes/load.php');
 // Checkin What level user has permission to view this page
 UserPageAccessControle(1,'Customer PO Update');
@@ -13,8 +13,8 @@ $all_Customers = find_by_sql("call spSelectAllCustomers();");
 $all_workflows = find_by_sql("call spSelectAllWorkFlow();");
 
 
-
-$CustomerPO  = $_SESSION['CustomerPO'];
+$CustomerPO=$_SESSION['CustomerPO'];
+$Level  = $_SESSION['Level'];
 
 $CusPurchaseOrderH = find_by_sp("call spSelectCustomerPurchaseOrderHFromCode('{$CustomerPO}');");
 $Customer = find_by_sql("call spSelectCustomerFromCode('{$CusPurchaseOrderH['CustomerCode']}');");
@@ -77,11 +77,15 @@ if(isset($_POST['edit_customerpo_'])){
                         $db->query($query);
                     }
 
-                    InsertRecentActvity("Customer purchase order updated","Reference No. ".$p_CustomerPoCode); 
+                    //Transaction Approve
+                    $query  = "call spTransactionApproved('005','{$p_CustomerPoCode}',{$Level});";
+                    $db->query($query);
+
+                    InsertRecentActvity("Customer purchase order approved","Reference No. ".$p_CustomerPoCode); 
 
                     $db->commit();
                     
-                    $flashMessages->success('Customer purchase order has been successfully updated.','approval_task.php?TransactionCode=005');
+                    $flashMessages->success('Customer purchase order has been approved.','approval_task.php?TransactionCode=005');
                     
 
                 }
@@ -89,7 +93,7 @@ if(isset($_POST['edit_customerpo_'])){
                 {
                     $db->rollback();
 
-                    $flashMessages->error('Sorry failed to update customer purchase order. '.$ex->getMessage(),'edit_customerpo_.php');
+                    $flashMessages->error('Sorry failed to approve customer purchase order. '.$ex->getMessage(),'edit_customerpo_.php');
 
                 }
 
@@ -268,7 +272,7 @@ if (isset($_POST['_RowNo'])) {
 
 <section class="content-header">
     <h1>
-        Update Customer Purchase Order
+        Approve Customer Purchase Order
     </h1>
     <ol class="breadcrumb">
         <li>
@@ -294,9 +298,9 @@ if (isset($_POST['_RowNo'])) {
                 <div class="row">
                     <div class="col-md-12 ">
                         <div class="btn-group">
-                            <button type="submit" name="edit_customerpo_" class="btn btn-primary" value="save">&nbsp;Save&nbsp;&nbsp;</button>
+                            <button type="submit" name="edit_customerpo_" class="btn btn-primary" value="save">&nbsp;Approve&nbsp;&nbsp;</button>
                             <button type="reset" class="btn btn-success">&nbsp;Reset&nbsp;&nbsp;</button>
-                            <button type="button" class="btn btn-warning" onclick="window.location = 'home.php'">Cancel  </button>
+                            <button type="button" class="btn btn-warning" onclick="window.location = 'approval_task.php?TransactionCode=005'">Cancel  </button>
                         </div>
                     </div>
                 </div>

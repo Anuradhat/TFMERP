@@ -16,7 +16,7 @@ $all_Supplier = find_by_sql("call spSelectAllSuppliers();");
 $all_workflows = find_by_sql("call spSelectAllWorkFlow();");
 
 $PurchaseOrder  = $_SESSION['PurchaseOrder'];
-
+$Level  = $_SESSION['Level'];
 
 $PurchaseOrderH = find_by_sp("call spSelectPurchaseOrderFromCode('{$PurchaseOrder}');");
 
@@ -59,7 +59,7 @@ if(isset($_POST["ProductCode"]))
 
 
         $Amount = $p_CostPrice * $p_Qty;
-        $TaxAmount = round((($Amount * $ToatlTax)/100));
+        $TaxAmount = (($Amount * $ToatlTax)/100);
         //-----------------------------------------------------------------------------------
 
         if(!$prod_count)
@@ -156,17 +156,24 @@ if(isset($_POST['edit_po'])){
                         $db->query($query);
                     }
 
-                    InsertRecentActvity("Purchase order updated","Reference No. ".$PurchaseOrder);
+                    //Transaction Approve
+                    $query  = "call spTransactionApproved('001','{$PurchaseOrder}',{$Level});";
+                    $db->query($query);
+
+                    InsertRecentActvity("Purchase order approved","Reference No. ".$PurchaseOrder);
 
                     $db->commit();
 
-                    $flashMessages->success('Purchase order has been successfully updated.','approval_task.php');
+                    unset($_SESSION['PurchaseOrder']);
+                    unset($_SESSION['Level']);
+
+                    $flashMessages->success('Purchase order has been successfully approved.','approval_task.php?TransactionCode=001');
 
                 }
                 catch(Exception $ex)
                 {
                     $db->rollback();
-                    $flashMessages->error('Sorry failed to update purchase order. '.$ex->getMessage(),'edit_po_.php');
+                    $flashMessages->error('Sorry failed to approve purchase order. '.$ex->getMessage(),'edit_po_.php');
 
                 }
 
@@ -222,6 +229,30 @@ if (isset($_POST['Edit'])) {
     $arr_item = ChangValueFromListOfArray( $arr_item,$ProductCode,3,$Qty);
     //Change Cost price
     $arr_item = ChangValueFromListOfArray( $arr_item,$ProductCode,2,$CostPrice);
+
+    $_SESSION['details'] = $arr_item;
+
+    return include('_partial_podetails.php');
+}
+
+if (isset($_POST['Edit2'])) {
+    $ProductCode = remove_junk($db->escape($_POST['ProductCode']));
+    $Qty = remove_junk($db->escape($_POST['Qty']));
+    $CostPrice = remove_junk($db->escape($_POST['AverageCost']));
+    $TaxRate = remove_junk($db->escape($_POST['Tax']));
+    $TaxAmount = remove_junk($db->escape($_POST['TaxAmmount']));
+
+    $arr_item = $_SESSION['details'];
+
+    //Change Qty
+    $arr_item = ChangValueFromListOfArray( $arr_item,$ProductCode,3,$Qty);
+    //Change Cost price
+    $arr_item = ChangValueFromListOfArray( $arr_item,$ProductCode,2,$CostPrice);
+    //Change Tax Rate
+    $arr_item = ChangValueFromListOfArray( $arr_item,$ProductCode,4,$TaxRate);
+    //Change Tax Ammount
+    $arr_item = ChangValueFromListOfArray( $arr_item,$ProductCode,5,$TaxAmount);
+
 
     $_SESSION['details'] = $arr_item;
 
@@ -306,9 +337,9 @@ if (isset($_POST['Supplier'])) {
                 <div class="row">
                     <div class="col-md-12 ">
                         <div class="btn-group">
-                            <button type="submit" name="edit_po" class="btn btn-primary" value="save">&nbsp;Save&nbsp;&nbsp;</button>
+                            <button type="submit" name="edit_po" class="btn btn-primary" value="save" id="btnApprove">&nbsp;Approve&nbsp;&nbsp;</button>
                             <button type="reset" class="btn btn-success">&nbsp;Reset&nbsp;&nbsp;</button>
-                            <button type="button" class="btn btn-warning" onclick="window.location = 'home.php'">Cancel  </button>
+                            <button type="button" class="btn btn-warning" onclick="window.location = 'approval_task.php?TransactionCode=001'">Cancel  </button>
                         </div>
                     </div>
                 </div>
@@ -460,6 +491,7 @@ if (isset($_POST['Supplier'])) {
             <div class="row">
                 <div class="col-md-12">
                     <div class="form-group">
+                        <button id="btnUpdateChanges" class="btn btn-primary">Update Changes </button>                       
                         <?php include('_partial_podetails.php'); ?>
                     </div>
                     </div>

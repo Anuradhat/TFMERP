@@ -11,6 +11,7 @@ UserPageAccessControle(1,'Quotation Update');
 
 $default_flow = ReadSystemConfig('DefaultSOWorkFlow');
 $default_salesrepDesig = ReadSystemConfig('DefaultSalesRepDesigCode');
+$defaultAdminGroup = ReadSystemConfig('AdminGroup');
 
 $current_user = current_user();
 
@@ -42,7 +43,7 @@ if(isset($_POST['edit_salesorder'])){
 
         validate_fields($req_fields);
 
-        if(empty($errors))
+        if(empty($errors))  
         {
             $p_CustomerCode  = remove_junk($db->escape($_POST['CustomerCode']));
             $p_SalesOrderCode  = remove_junk($db->escape($_POST['SalesOrderCode']));
@@ -188,7 +189,7 @@ if (isset($_POST['Add'])) {
             }
 
             $ItemAmount = $Qty * $SalePrice;
-            $TaxAmount = round((($ItemAmount * $ToatlTax)/100));
+            $TaxAmount = (($ItemAmount * $ToatlTax)/100);
             $ToatlAmount = $TaxAmount + $ItemAmount;
 
 
@@ -333,7 +334,7 @@ if (isset($_POST['SalesOrderCode'])) {
                     <div class="col-md-4">
                         <div class="form-group">
                             <label>Salesman</label>
-                            <select class="form-control select2" style="width: 100%;" name="SalesmanCode" id="SalesmanCode" required="required" onchange="FillCustomer();">
+                            <select class="form-control select2" style="width: 100%;" name="SalesmanCode" id="SalesmanCode" required="required" onchange="FillCustomer();" <?php if($current_user["group_name"] != $defaultAdminGroup): echo disabled; endif; ?> >
                                 <option value="">Select Salesman</option><?php  foreach ($all_salesrep as $srep): ?>
                                 <option value="<?php echo $srep['EpfNumber'] ?>" <?php if($srep['EpfNumber'] === $current_user["EmployeeCode"]): echo "selected"; endif; ?>><?php echo $srep['EmployeeName'] ?>
                                 </option><?php endforeach; ?>

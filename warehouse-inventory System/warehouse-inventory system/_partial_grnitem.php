@@ -44,6 +44,11 @@
                 <input type="number" class="integer form-control integer" name="GrnQty" id="pGrnQty" placeholder="Grn Qty" required="required" value="<?php echo $serchitem[4]; ?>" />
             </div>
 
+            <div class="form-group">
+                <label>Grn Price</label>
+                <input type="number" class="integer form-control integer" name="GrnPrice" id="pGrnPrice" placeholder="Grn Price" required="required" value="<?php echo $serchitem[3]; ?>" />
+            </div>
+
        
         </div>
         <!-- /.box-body -->
@@ -62,6 +67,7 @@
         var Qty = parseInt($("#pQty").val());
         var GrnQty = $("#pGrnQty").val();
         var ProductCode = $("#hProductCode").val();
+        var GrnPrice = $("#pGrnPrice").val();
 
         if (GrnQty <= 0) {
             $("#pGrnQty").focus();
@@ -72,6 +78,11 @@
             $("#pGrnQty").focus();
             $('.loader').fadeOut();
             bootbox.alert('You cannot exceed original PO qty.');
+        }
+        else if (GrnPrice < 0 || GrnPrice == '') {
+            $("#pGrnQty").focus();
+            $('.loader').fadeOut();
+            bootbox.alert('Need valid value.');
         }
         else {
             $.ajax({

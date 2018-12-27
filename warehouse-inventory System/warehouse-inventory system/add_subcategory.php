@@ -129,7 +129,8 @@ if(isset($_POST['add_subcategory'])){
 
                         <div class="form-group">
                             <label >Commission (<output class="inline" for="fader" id="rate">0</output>%)</label>
-                            <input type="range" class="form-control" data-slider-id="blue" min="0" max="100" value="0" step="1" data-slider-tooltip="show" name="Commission" placeholder="Commission (%)" oninput="outputUpdate(value)" />
+                            <input type="text" class="form-control" name="Commission" placeholder="Commission (%)"/>
+                            <!--<input type="range" class="form-control" data-slider-id="blue" min="0" max="100" value="0" step="1" data-slider-tooltip="show" name="Commission" placeholder="Commission (%)" oninput="outputUpdate(value)" />-->
                         </div>
                     </div>
                 </div>

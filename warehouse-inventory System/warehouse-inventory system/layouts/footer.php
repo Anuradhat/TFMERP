@@ -115,7 +115,8 @@ immediately after the control sidebar -->
         //$("#tblBinDetails").DataTable({ destroy: true });
 
         $('.datatable').DataTable({
-            responsive: true
+            responsive: true,
+            "pageLength": 50
         });
     });
 

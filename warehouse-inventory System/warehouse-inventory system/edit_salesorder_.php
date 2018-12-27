@@ -140,7 +140,7 @@ if (isset($_SESSION['redirect'])) {
     $SO_Details = find_by_sql("call spSelectSalesOrderDFromCode('{$SalesOrder}');");
 
     foreach($SO_Details as &$value){
-        $arr_item[]  = array($value["ProductCode"],$value["ProductDesc"],$value["SellingPrice"],$value["Qty"],$value["Amount"],$value["TaxAmount"],$value["ExcludeTax"],$value["AverageCost"],$value["SalesPercentage"]);
+        $arr_item[]  = array($value["ProductCode"],$value["ProductDesc"],$value["SellingPrice"],$value["Qty"],$value["Amount"],$value["TaxAmount"],$value["ExcludeTax"],$value["AverageCost"],$value["SalesPercentage"],$value["TaxRate"]);
     }
 
     $_SESSION['details'] = $arr_item;
@@ -202,7 +202,7 @@ if (isset($_POST['Add'])) {
             }
 
             $ItemAmount = $Qty * $SalePrice;
-            $TaxAmount = round((($ItemAmount * $ToatlTax)/100));
+            $TaxAmount = (($ItemAmount * $ToatlTax)/100);
             $ToatlAmount = $TaxAmount + $ItemAmount;
 
 
@@ -272,7 +272,76 @@ if (isset($_POST['Edit'])) {
     }
 
     $ItemAmount = $Qty * $SalePrice;
-    $TaxAmount = round((($ItemAmount * $ToatlTax)/100));
+    $TaxAmount = (($ItemAmount * $ToatlTax)/100);
+    $ToatlAmount = $TaxAmount + $ItemAmount;
+
+    //Change Qty
+    $arr_item = ChangValueFromListOfArray( $arr_item,$ProductCode,3,$Qty);
+    //Change sale price
+    $arr_item = ChangValueFromListOfArray( $arr_item,$ProductCode,2,$SalePrice);
+    //Change Amount
+    $arr_item = ChangValueFromListOfArray( $arr_item,$ProductCode,4,$ToatlAmount);
+    //Change Tax Amount
+    $arr_item = ChangValueFromListOfArray( $arr_item,$ProductCode,5,$TaxAmount);
+    //Change Exclude Tax
+    $arr_item = ChangValueFromListOfArray( $arr_item,$ProductCode,6,$ExcludeTax == 'true' ? 1:0);
+    //Change Average Cost
+    $arr_item = ChangValueFromListOfArray( $arr_item,$ProductCode,7,$AverageCost);
+    //Change Sales Percentage
+    $arr_item = ChangValueFromListOfArray( $arr_item,$ProductCode,8,$SalesPercentage);
+
+    $_SESSION['details'] = $arr_item;
+
+
+    return include('_partial_sodetails.php');
+}
+
+if (isset($_POST['Edit2'])) {
+    $ProductCode = remove_junk($db->escape($_POST['ProductCode']));
+    $Qty = remove_junk($db->escape($_POST['Qty']));
+    $SalePrice = remove_junk($db->escape($_POST['SalePrice']));
+    $ExcludeTax = remove_junk($db->escape($_POST['ExcludeTax']));
+    $AverageCost = remove_junk($db->escape($_POST['AverageCost']));
+    $SalesPercentage = remove_junk($db->escape($_POST['SalesPercentage']));
+    $Tax = remove_junk($db->escape($_POST['Tax']));
+
+    $arr_item = $_SESSION['details'];
+
+
+
+    //$product = find_by_sp("call spSelectProductFromCode('{$ProductCode}');");
+
+    $ToatlTax = 0;
+
+    //if($Tax != 0){
+    //    if(!filter_var($ExcludeTax,FILTER_VALIDATE_BOOLEAN)){
+    //        if(filter_var($product["Tax"],FILTER_VALIDATE_BOOLEAN))
+    //        {
+    //            $ProductTax = find_by_sql("call spSelectProductTaxFromProductCode('{$ProductCode}');");
+    //            foreach($ProductTax as &$pTax)
+    //            {
+
+    //                $TaxRatesM = find_by_sql("call spSelectTaxRatesFromCode('{$pTax["TaxCode"]}');");
+    //                foreach($TaxRatesM as &$TaxRt)
+    //                {
+    //                    $ToatlTax += $TaxRt["TaxRate"];
+    //                }
+    //            }
+    //        }
+    //    }
+
+    //    $ItemAmount = $Qty * $SalePrice;
+    //    $TaxAmount = (($ItemAmount * $ToatlTax)/100);
+    //    $ToatlAmount = $TaxAmount + $ItemAmount;
+    //}
+    //else{
+    //    $ItemAmount = $Qty * $SalePrice;
+    //    $TaxAmount = $Tax;
+    //    $ToatlAmount = $TaxAmount + $ItemAmount;
+    //}
+
+    $ItemAmount = $Qty * $SalePrice;
+    $TaxAmount = $Tax;
     $ToatlAmount = $TaxAmount + $ItemAmount;
 
     //Change Qty
@@ -329,8 +398,8 @@ if (isset($_POST['Edit'])) {
                 <div class="row">
                     <div class="col-md-12 ">
                         <div class="btn-group">
-                            <button type="submit" name="edit_salesorder_" class="btn btn-primary" value="save">&nbsp;Approve&nbsp;&nbsp;</button>
-                            <button type="button" class="btn btn-warning" onclick="window.location = 'edit_salesorder_.php'">Back  </button>
+                            <button type="submit" id="btnApprove" name="edit_salesorder_" class="btn btn-primary" value="save">&nbsp;Approve&nbsp;&nbsp;</button>
+                            <button type="button" class="btn btn-warning" onclick="window.location = 'approval_task.php?TransactionCode=004'">Back  </button>
                         </div>
                     </div>
                 </div>
@@ -395,7 +464,7 @@ if (isset($_POST['Edit'])) {
 
                         <div class="form-group">
                             <label>Valid Period</label>
-                            <input type="text" class="form-control pull-right integer" autocomplete="off" name="ValidThru" id="ValidThru" placeholder="Days" value="<?php  echo $SalesOrderH['ValidThru']; ?>"   required="required" disabled/>
+                            <input type="text" class="form-control pull-right integer" autocomplete="off" name="ValidThru" id="ValidThru" placeholder="Days" value="<?php  echo $SalesOrderH['ValidThru']; ?>"   required="required" />
                         </div>
 
                     </div>
@@ -506,6 +575,7 @@ if (isset($_POST['Edit'])) {
             <div class="row">
                 <div class="col-md-12">
                     <div class="form-group">
+                        <button id="btnUpdateChanges" class="btn btn-primary">Update Changes </button>
                         <?php include('_partial_sodetails.php'); ?>
                     </div>
                     </div>

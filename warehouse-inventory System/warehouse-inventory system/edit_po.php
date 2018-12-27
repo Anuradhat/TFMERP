@@ -54,7 +54,7 @@ if(isset($_POST["ProductCode"]))
 
 
         $Amount = $p_CostPrice * $p_Qty;
-        $TaxAmount = round((($Amount * $ToatlTax)/100));
+        $TaxAmount = (($Amount * $ToatlTax)/100);
         //-----------------------------------------------------------------------------------
 
 
