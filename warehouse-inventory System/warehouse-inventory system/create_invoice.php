@@ -967,7 +967,7 @@ if (isset($_POST['Edit'])) {
 
 
     function FillCustomer() {
-        $('.loader').show();
+        $('.loader').show();        
 
         var SalesmanCode = $('#SalesmanCode').val();
         $.ajax({
@@ -988,6 +988,8 @@ if (isset($_POST['Edit'])) {
                 $('#DeliveryAddress1').val('');
                 $('#DeliveryAddress2').val('');
                 $('#DeliveryAddress3').val('');
+
+                $("#table").empty();
 
                 $('.loader').fadeOut();
             }
@@ -1065,7 +1067,7 @@ if (isset($_POST['Edit'])) {
     }
 
 
-    function FillCPODetails() {
+    function FillCPODetails() {        
         $('.loader').show();
         var CustomerPoCode = $('#CustomerPoCode').val();
 
@@ -1074,32 +1076,16 @@ if (isset($_POST['Edit'])) {
             $('#SalesmanCode').val('').trigger('change');
         }
 
-
-        //Fill header details
         //$.ajax({
-        //    url: "autocomplete.php",
+        //    url: "create_invoice.php",
         //    type: "POST",
-        //    data: { CustomerPoCode: CustomerPoCode },
-        //    dataType: 'json',
-        //    success: function (data) {
-        //        //Fill header details
-        //        jQuery(data).each(function (i, item) {
-        //            //$('#LocationCode').val(item.LocationCode).trigger('change');
-        //            $('#SalesmanCode').val(item.SalesmanCode).trigger('change');
-        //        });
-
+        //    data: { CustomerChanged: 'OK' },
+        //    success: function (result) {
+        //        $("#table").empty();
+        //        $("#table").html(result);
+        //        $('#message').load('_partial_message.php');
         //    }
         //});
-
-        $.ajax({
-            url: "create_invoice.php",
-            type: "POST",
-            data: { CustomerChanged: 'OK' },
-            success: function (result) {
-                $("#table").html(result);
-                $('#message').load('_partial_message.php');
-            }
-        });
 
 
         //Fill details
@@ -1108,6 +1094,7 @@ if (isset($_POST['Edit'])) {
             url: "create_invoice.php", // Name of the php files
             data: { FillTable: 'OK', CustomerPoCode: CustomerPoCode },
             success: function (result) {
+                $("#table").empty();
                 $("#table").html(result);
                 $('.loader').fadeOut();
             }
@@ -1116,7 +1103,7 @@ if (isset($_POST['Edit'])) {
 
     function LocationChange()
     {
-        $('.loader').show();
+        $('.loader').show();       
 
         var LocationCode = $('#LocationCode').val();
         $.ajax({
@@ -1124,7 +1111,12 @@ if (isset($_POST['Edit'])) {
             type: "POST",
             data: { _LocationCode: LocationCode },
             success: function (result) {
-                //$("#table").html(result);
+                $("#table").empty();
+                // load 
+                FillCustomer();
+                FillCPO();
+                FillCPODetails();
+
                 $('.loader').fadeOut();
             }
         });

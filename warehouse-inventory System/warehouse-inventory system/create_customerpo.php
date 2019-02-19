@@ -157,9 +157,17 @@ if(isset($_POST['create_customerpo'])){
 
 if (isset($_POST['_productcode'])) {
     $productcode = remove_junk($db->escape($_POST['_productcode']));
+    $p_CustomerPoCode  = remove_junk($db->escape($_SESSION['CustomerPO']));
     $arr_item = $_SESSION['details'];
     $arr_item = RemoveValueFromListOfArray( $arr_item,$productcode);
     $_SESSION['details'] = $arr_item;
+
+    // Delete CPO Item permenantly from tfmCusPurchaseOrderDT table
+    
+    $query  = "call spDeleteCustomerPurchseOrderDFromItemCode('{$p_CustomerPoCode}','{$productcode}')";
+    $db->query($query);
+    
+    //--------------------------------------------------------------
 
     return include('_partial_cuspodetails.php');  
 }

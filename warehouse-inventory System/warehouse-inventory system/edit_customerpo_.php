@@ -112,10 +112,10 @@ if(isset($_POST['edit_customerpo_'])){
 }
 
 if (isset($_POST['_productcode'])) {
-    $productcode = remove_junk($db->escape($_POST['_productcode']));
+    $productcode = remove_junk($db->escape($_POST['_productcode']));    
     $arr_item = $_SESSION['details'];
     $arr_item = RemoveValueFromListOfArray( $arr_item,$productcode);
-    $_SESSION['details'] = $arr_item;
+    $_SESSION['details'] = $arr_item;   
 
     return include('_partial_cuspodetails.php');  
 }

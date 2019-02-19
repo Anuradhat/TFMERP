@@ -90,6 +90,7 @@
 
 
 <script>
+
 //Item Delete
     $(document).ready(function () {
         $(".DeleteBtn").click(function () {

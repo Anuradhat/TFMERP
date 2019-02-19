@@ -64,16 +64,36 @@
         $(".DeleteBtn").click(function () {
             var $row = $(this).closest("tr");
             var prodcode = $row.find(".clsRowId").text().trim();
-            $.ajax({
-                url: "create_customerpo.php",
-                type: "POST",
-                data: { "_productcode": prodcode },
-                success: function (result) {
-                    $('#table').html(result);
+
+            event.preventDefault();
+            bootbox.confirm({
+                title: "Delete Confirmation",
+                message: "Do you want to delete the selected item? This cannot be undone.",
+                buttons: {
+                    cancel: {
+                        label: '<i class="fa fa-times"></i> Cancel'
+                    },
+                    confirm: {
+                        label: '<i class="fa fa-check"></i> Confirm'
+                    }
+                },
+                callback: function (result) {                    
+                    if (result === true) {
+                        $('.loader').show();
+                        $.ajax({
+                            url: "create_customerpo.php",
+                            type: "POST",
+                            data: { "_productcode": prodcode },
+                            success: function (result) {
+                                $('#table').html(result);
+                            },
+                            complete: function (result) {
+                                $('.loader').fadeOut();
+                            }
+                        });
+                    }
                 }
-            });
-
-
+            }); 
         });
     });
 
